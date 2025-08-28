@@ -1,0 +1,157 @@
+{
+  "agente": {
+    "nombre": "IAtiva - Asesor de Costeo",
+    "version": "2.0.0",
+    "idioma": "es",
+    "personalidad": "amigable, educativo, motivador",
+    "especialidad": "costeo_y_proyecciones",
+    "contacto": "iativagm@gmail.com",
+    "descripcion": "Asesor Virtual Experto en Costeo y Proyecciones de Negocios"
+  },
+  "flujo": {
+    "pasos": [
+      "bienvenida",
+      "solicitar_nombre", 
+      "recopilacion_datos",
+      "calculos",
+      "presentacion_resultados",
+      "recomendaciones",
+      "generar_reporte",
+      "cierre_motivacional"
+    ]
+  },
+  "datos_requeridos": {
+    "costos": [
+      {
+        "nombre": "materia_prima",
+        "pregunta": "¿Cuánto gastaste en materia prima/insumos?",
+        "tipo": "numero",
+        "requerido": true
+      },
+      {
+        "nombre": "mano_obra",
+        "pregunta": "¿Cuánto gastaste en mano de obra directa?",
+        "tipo": "numero",
+        "requerido": true
+      },
+      {
+        "nombre": "empaque",
+        "pregunta": "¿Cuánto gastaste en empaque o presentación?",
+        "tipo": "numero",
+        "requerido": false
+      },
+      {
+        "nombre": "servicios",
+        "pregunta": "¿Cuánto gastaste en servicios (luz, agua, internet, etc.)?",
+        "tipo": "numero",
+        "requerido": false
+      },
+      {
+        "nombre": "transporte",
+        "pregunta": "¿Cuánto gastaste en transporte o distribución?",
+        "tipo": "numero",
+        "requerido": false
+      },
+      {
+        "nombre": "marketing",
+        "pregunta": "¿Cuánto gastaste en marketing y publicidad?",
+        "tipo": "numero",
+        "requerido": false
+      },
+      {
+        "nombre": "arriendo_sueldos",
+        "pregunta": "¿Cuánto gastaste en arriendo o sueldos administrativos?",
+        "tipo": "numero",
+        "requerido": false
+      },
+      {
+        "nombre": "otros_costos",
+        "pregunta": "¿Otros costos fijos o financieros (ej: préstamos, intereses)?",
+        "tipo": "numero",
+        "requerido": false
+      },
+      {
+        "nombre": "margen_ganancia",
+        "pregunta": "¿Qué margen de ganancia deseas (%)?",
+        "tipo": "porcentaje",
+        "requerido": true,
+        "min": 5,
+        "max": 100
+      }
+    ]
+  },
+  "nlp": {
+    "palabrasVacias": ["el", "la", "de", "que", "y", "a", "en", "un", "es", "se", "no", "te", "lo", "le", "da", "su", "por", "son", "con", "para", "al", "del", "los", "las", "una", "como", "pero", "sus", "me", "ya", "muy", "sin", "sobre", "ser", "ha", "esta", "si", "porque", "hasta", "donde", "cuando", "quien", "mas", "todo", "esto", "otros", "hace"],
+    "patrones": {
+      "saludo": ["hola", "buenos", "buenas", "que tal", "como estas", "hey", "saludos"],
+      "despedida": ["adios", "hasta luego", "nos vemos", "chao", "bye", "hasta pronto", "gracias"],
+      "iniciar_costeo": ["empezar", "comenzar", "iniciar", "calcular", "costeo", "proyeccion", "precio", "negocio"],
+      "ayuda": ["ayuda", "help", "socorro", "no entiendo", "explicame", "como funciona", "que puedes hacer"],
+      "afirmacion": ["si", "claro", "exacto", "correcto", "por supuesto", "definitivamente", "ok", "vale", "bien"],
+      "negacion": ["no", "nunca", "jamas", "para nada", "de ninguna manera", "nope"],
+      "numeros": ["\\d+", "\\d+\\.\\d+", "\\d+,\\d+"],
+      "continuar": ["continuar", "siguiente", "seguir", "adelante", "continua"],
+      "reporte": ["reporte", "informe", "documento", "pdf", "excel", "descargar"],
+      "reiniciar": ["reiniciar", "empezar de nuevo", "comenzar otra vez", "nuevo calculo"]
+    }
+  },
+  "respuestas": {
+    "bienvenida": [
+      "¡Hola! Soy tu asistente de costos y proyecciones IAtiva 🧠✨",
+      "Te ayudaré a calcular el precio ideal de tu producto o servicio, conocer tu punto de equilibrio, proyectar ventas y darte consejos para crecer.",
+      "¡Bienvenido a IAtiva! Tu aliado en crecimiento financiero 💼"
+    ],
+    "solicitar_nombre": [
+      "Para personalizar nuestra conversación, ¿cuál es tu nombre?",
+      "¿Cómo te gustaría que te llame?",
+      "Me gustaría conocerte mejor, ¿cuál es tu nombre?"
+    ],
+    "despedidas": [
+      "¡Hasta luego {nombre}! Ha sido un placer ayudarte con tu proyecto. 🚀",
+      "¡Adiós {nombre}! Recuerda: un negocio sostenible no solo depende del precio, sino de cómo gestionas tus costos y conectas con tus clientes. ¡Tú puedes lograrlo! 💪",
+      "¡Nos vemos {nombre}! Que tengas mucho éxito con tu emprendimiento. Con IAtiva, tu aliado en crecimiento financiero.",
+      "¡Hasta pronto {nombre}! Siempre estaré aquí cuando necesites calcular costos o proyecciones. 📊"
+    ],
+    "ayuda": [
+      "Te ayudo a calcular costos, precios de venta, punto de equilibrio y proyecciones de tu negocio.",
+      "Puedo guiarte paso a paso para determinar el precio ideal de tu producto o servicio.",
+      "Soy experto en costeo y proyecciones. Te haré preguntas sencillas y te daré resultados claros.",
+      "Mi especialidad es ayudarte a que tu negocio sea rentable y sostenible."
+    ],
+    "motivacionales": [
+      "¡Excelente! Vamos paso a paso para hacer crecer tu negocio 📈",
+      "¡Perfecto! Cada emprendedor exitoso empezó calculando bien sus costos 💡",
+      "¡Muy bien! Estás tomando las decisiones correctas para tu futuro financiero ⭐"
+    ],
+    "transiciones": [
+      "Perfecto, continuemos con el siguiente dato...",
+      "¡Excelente! Ahora necesito saber...",
+      "Muy bien, sigamos adelante...",
+      "¡Genial! El siguiente paso es..."
+    ]
+  },
+  "recomendaciones_marketing": [
+    "📱 Crea perfiles en redes sociales (Instagram, Facebook, TikTok) y publica contenido de valor regularmente",
+    "💬 Configura WhatsApp Business para atender clientes de forma profesional",
+    "🤝 Implementa un sistema de referidos: ofrece descuentos a clientes que traigan nuevos compradores",
+    "📧 Recopila emails de tus clientes y envía newsletters con ofertas especiales",
+    "⭐ Solicita reseñas y testimonios de clientes satisfechos",
+    "📊 Reinvierte al menos el 10% de tus ganancias en marketing y mejoras",
+    "🎯 Define claramente tu cliente ideal y enfoca tu mensaje hacia él",
+    "🏷️ Usa promociones estratégicas en fechas especiales o temporadas bajas",
+    "🤝 Participa en eventos locales y ferias para darte a conocer",
+    "📞 Ofrece excelente servicio al cliente para generar lealtad"
+  ],
+  "consejos_optimizacion": [
+    "🔍 Negocia mejores precios con proveedores comprando en mayor volumen",
+    "♻️ Reduce desperdicios optimizando procesos de producción",
+    "⚡ Automatiza tareas repetitivas para ahorrar tiempo y costos de mano de obra",
+    "📦 Busca alternativas de empaque más económicas sin perder calidad",
+    "🚚 Optimiza rutas de entrega o considera alianzas para transporte compartido",
+    "💡 Invierte en herramientas que aumenten la productividad",
+    "📋 Lleva un control estricto de inventarios para evitar pérdidas",
+    "🎯 Enfócate en los productos más rentables de tu catálogo",
+    "📊 Revisa y ajusta precios periódicamente según el mercado",
+    "🤝 Considera alianzas estratégicas para reducir costos compartidos"
+  ]
+}

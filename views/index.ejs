@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-blue': '#667eea',
+                        'iativa-purple': '#764ba2'
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out',
+                        'bounce-slow': 'bounce 2s infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="h-full bg-white">
+    <!-- Header/Navegación -->
+    <header class="gradient-bg shadow-lg" x-data="{ mobileMenuOpen: false }">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-brain text-white text-2xl mr-2"></i>
+                    <span class="text-white text-xl font-bold">IAtiva</span>
+                </div>
+                
+                <!-- Navegación desktop -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#inicio" class="text-white hover:text-gray-200 transition-colors">Inicio</a>
+                    <a href="#funcionalidades" class="text-white hover:text-gray-200 transition-colors">Funcionalidades</a>
+                    <a href="#como-funciona" class="text-white hover:text-gray-200 transition-colors">¿Cómo Funciona?</a>
+                    <a href="#contacto" class="text-white hover:text-gray-200 transition-colors">Contacto</a>
+                </nav>
+                
+                <!-- Botones de acción -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <% if (locals.user) { %>
+                        <a href="/dashboard" class="bg-white text-iativa-blue px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                        </a>
+                    <% } else { %>
+                        <a href="/login" class="text-white hover:text-gray-200 transition-colors">Iniciar Sesión</a>
+                        <a href="/register" class="bg-white text-iativa-blue px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition-colors">
+                            Registrarse
+                        </a>
+                    <% } %>
+                </div>
+                
+                <!-- Botón menú móvil -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Menú móvil -->
+        <div x-show="mobileMenuOpen" class="md:hidden bg-black bg-opacity-20">
+            <div class="px-4 py-3 space-y-3">
+                <a href="#inicio" class="block text-white hover:text-gray-200">Inicio</a>
+                <a href="#funcionalidades" class="block text-white hover:text-gray-200">Funcionalidades</a>
+                <a href="#como-funciona" class="block text-white hover:text-gray-200">¿Cómo Funciona?</a>
+                <a href="#contacto" class="block text-white hover:text-gray-200">Contacto</a>
+                <div class="border-t border-white border-opacity-20 pt-3">
+                    <% if (locals.user) { %>
+                        <a href="/dashboard" class="block text-white hover:text-gray-200">Dashboard</a>
+                    <% } else { %>
+                        <a href="/login" class="block text-white hover:text-gray-200">Iniciar Sesión</a>
+                        <a href="/register" class="block text-white hover:text-gray-200 mt-2">Registrarse</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="gradient-bg py-20 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center animate-fade-in-up">
+                <div class="mb-8">
+                    <i class="fas fa-brain text-6xl mb-6 animate-bounce-slow"></i>
+                </div>
+                
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    <span class="block">IAtiva</span>
+                    <span class="block text-2xl md:text-3xl font-normal mt-2">Tu Aliado en Crecimiento Financiero</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
+                    Asesor Virtual Experto en <strong>Costeo y Proyecciones</strong> de Negocios. 
+                    Calcula precios, analiza punto de equilibrio y proyecta el éxito de tu emprendimiento.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <% if (locals.user) { %>
+                        <a href="/analisis/nuevo" class="bg-white text-iativa-blue px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-chart-line mr-2"></i>
+                            Comenzar Análisis
+                        </a>
+                        <a href="/dashboard" class="border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-iativa-blue transition-all">
+                            <i class="fas fa-tachometer-alt mr-2"></i>
+                            Ir al Dashboard
+                        </a>
+                    <% } else { %>
+                        <a href="/register" class="bg-white text-iativa-blue px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-rocket mr-2"></i>
+                            Comenzar Gratis
+                        </a>
+                        <a href="#como-funciona" class="border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-iativa-blue transition-all">
+                            <i class="fas fa-play mr-2"></i>
+                            Ver Demo
+                        </a>
+                    <% } %>
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <p class="text-lg mb-4">🎯 <strong>100% Gratuito</strong> • ✅ <strong>Sin Límites</strong> • 🚀 <strong>Resultados Inmediatos</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Funcionalidades -->
+    <section id="funcionalidades" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    ¿Qué puede hacer IAtiva por ti?
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Herramientas profesionales de análisis financiero al alcance de todo emprendedor
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Funcionalidad 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow animate-on-scroll">
+                    <div class="text-iativa-blue text-4xl mb-4">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Cálculo de Costos</h3>
+                    <p class="text-gray-600 mb-4">
+                        Analiza todos tus costos: materia prima, mano de obra, empaque, servicios, marketing y más.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>✅ 8 categorías de costos</li>
+                        <li>✅ Clasificación automática</li>
+                        <li>✅ Precio sugerido</li>
+                    </ul>
+                </div>
+                
+                <!-- Funcionalidad 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow animate-on-scroll">
+                    <div class="text-iativa-blue text-4xl mb-4">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Punto de Equilibrio</h3>
+                    <p class="text-gray-600 mb-4">
+                        Descubre exactamente cuántas unidades necesitas vender para no perder dinero.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>✅ Unidades mínimas</li>
+                        <li>✅ Ventas mínimas en pesos</li>
+                        <li>✅ Margen de contribución</li>
+                    </ul>
+                </div>
+                
+                <!-- Funcionalidad 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow animate-on-scroll">
+                    <div class="text-iativa-blue text-4xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Proyecciones</h3>
+                    <p class="text-gray-600 mb-4">
+                        Simula 3 escenarios (pesimista, realista, optimista) para planificar mejor.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>✅ 3 escenarios completos</li>
+                        <li>✅ Análisis de utilidades</li>
+                        <li>✅ Proyecciones de ventas</li>
+                    </ul>
+                </div>
+                
+                <!-- Funcionalidad 4 -->
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow animate-on-scroll">
+                    <div class="text-iativa-blue text-4xl mb-4">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Recomendaciones</h3>
+                    <p class="text-gray-600 mb-4">
+                        Recibe consejos personalizados de marketing y optimización basados en tus números.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>✅ Estrategias de marketing</li>
+                        <li>✅ Optimización de costos</li>
+                        <li>✅ Consejos personalizados</li>
+                    </ul>
+                </div>
+                
+                <!-- Funcionalidad 5 -->
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow animate-on-scroll">
+                    <div class="text-iativa-blue text-4xl mb-4">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Plan de Acción</h3>
+                    <p class="text-gray-600 mb-4">
+                        Obtén un plan estructurado de 30 días para implementar tu estrategia.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>✅ Plan semanal detallado</li>
+                        <li>✅ Objetivos cuantificables</li>
+                        <li>✅ Lista de tareas</li>
+                    </ul>
+                </div>
+                
+                <!-- Funcionalidad 6 -->
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow animate-on-scroll">
+                    <div class="text-iativa-blue text-4xl mb-4">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Reportes</h3>
+                    <p class="text-gray-600 mb-4">
+                        Genera reportes profesionales en PDF y HTML para presentar o compartir.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>✅ Formato HTML/PDF</li>
+                        <li>✅ Diseño profesional</li>
+                        <li>✅ Descarga instantánea</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cómo Funciona -->
+    <section id="como-funciona" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    ¡Es súper fácil de usar!
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Solo 3 pasos para obtener un análisis completo de tu negocio
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Paso 1 -->
+                <div class="text-center animate-on-scroll">
+                    <div class="bg-iativa-blue text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                        1
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Ingresa tus Datos</h3>
+                    <p class="text-gray-600">
+                        Responde preguntas simples sobre tus costos. IAtiva te guía paso a paso.
+                    </p>
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-500">💡 Solo toma 5-10 minutos</p>
+                    </div>
+                </div>
+                
+                <!-- Paso 2 -->
+                <div class="text-center animate-on-scroll">
+                    <div class="bg-iativa-blue text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                        2
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Obtén tu Análisis</h3>
+                    <p class="text-gray-600">
+                        Recibe cálculos automáticos, punto de equilibrio y proyecciones instantáneamente.
+                    </p>
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-500">⚡ Resultados en tiempo real</p>
+                    </div>
+                </div>
+                
+                <!-- Paso 3 -->
+                <div class="text-center animate-on-scroll">
+                    <div class="bg-iativa-blue text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                        3
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Implementa y Crece</h3>
+                    <p class="text-gray-600">
+                        Usa las recomendaciones y el plan de acción para hacer crecer tu negocio.
+                    </p>
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-500">🚀 Plan de 30 días incluido</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16 animate-on-scroll">
+                <% if (!locals.user) { %>
+                    <a href="/register" class="bg-iativa-blue text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-iativa-purple transition-all transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-rocket mr-2"></i>
+                        ¡Empezar Ahora Gratis!
+                    </a>
+                <% } else { %>
+                    <a href="/analisis/nuevo" class="bg-iativa-blue text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-iativa-purple transition-all transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Crear Nuevo Análisis
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonios/Beneficios -->
+    <section class="py-20 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    ¿Por qué elegir IAtiva?
+                </h2>
+                <p class="text-xl opacity-90 max-w-2xl mx-auto">
+                    Más que una calculadora, es tu asesor financiero personal
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center animate-on-scroll">
+                    <i class="fas fa-gift text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">100% Gratuito</h3>
+                    <p class="opacity-90">Sin costos ocultos, sin límites de uso</p>
+                </div>
+                
+                <div class="text-center animate-on-scroll">
+                    <i class="fas fa-zap text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Súper Rápido</h3>
+                    <p class="opacity-90">Resultados en menos de 10 minutos</p>
+                </div>
+                
+                <div class="text-center animate-on-scroll">
+                    <i class="fas fa-graduation-cap text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Fácil de Usar</h3>
+                    <p class="opacity-90">No necesitas ser experto en finanzas</p>
+                </div>
+                
+                <div class="text-center animate-on-scroll">
+                    <i class="fas fa-shield-alt text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Datos Seguros</h3>
+                    <p class="opacity-90">Tu información está protegida</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    ¿Tienes preguntas?
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Estamos aquí para ayudarte a hacer crecer tu negocio
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="animate-on-scroll">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Contáctanos</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-iativa-blue text-xl mr-4"></i>
+                            <span class="text-gray-700">iativagm@gmail.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-globe text-iativa-blue text-xl mr-4"></i>
+                            <span class="text-gray-700">www.iativa.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-iativa-blue text-xl mr-4"></i>
+                            <span class="text-gray-700">Colombia</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Síguenos</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-iativa-blue hover:text-iativa-purple text-2xl">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-iativa-blue hover:text-iativa-purple text-2xl">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-iativa-blue hover:text-iativa-purple text-2xl">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-iativa-blue hover:text-iativa-purple text-2xl">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="animate-on-scroll">
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¿Listo para empezar?</h3>
+                        <p class="text-gray-600 mb-6">
+                            Únete a cientos de emprendedores que ya están usando IAtiva para hacer crecer sus negocios.
+                        </p>
+                        
+                        <% if (!locals.user) { %>
+                            <div class="space-y-4">
+                                <a href="/register" class="w-full bg-iativa-blue text-white px-6 py-3 rounded-lg font-bold text-center hover:bg-iativa-purple transition-all transform hover:scale-105 shadow-lg block">
+                                    <i class="fas fa-user-plus mr-2"></i>
+                                    Crear Cuenta Gratuita
+                                </a>
+                                <a href="/login" class="w-full border-2 border-iativa-blue text-iativa-blue px-6 py-3 rounded-lg font-bold text-center hover:bg-iativa-blue hover:text-white transition-all block">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>
+                                    Ya Tengo Cuenta
+                                </a>
+                            </div>
+                        <% } else { %>
+                            <a href="/analisis/nuevo" class="w-full bg-iativa-blue text-white px-6 py-3 rounded-lg font-bold text-center hover:bg-iativa-purple transition-all transform hover:scale-105 shadow-lg block">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Crear Nuevo Análisis
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-4">
+                    <i class="fas fa-brain text-iativa-blue text-2xl mr-2"></i>
+                    <span class="text-xl font-bold">IAtiva</span>
+                </div>
+                <p class="text-gray-400 mb-4">Tu aliado en crecimiento financiero</p>
+                <p class="text-gray-500 text-sm">
+                    &copy; <%= new Date().getFullYear() %> IAtiva - Asesor de Costeo. Todos los derechos reservados.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animaciones on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(el => observer.observe(el));
+        });
+
+        // Smooth scroll para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

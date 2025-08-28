@@ -1,0 +1,382 @@
+<%- include('partials/header', { title: title, user: user }) %>
+
+<div class="min-h-full bg-gray-50">
+    <!-- Header del dashboard -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                        <i class="fas fa-tachometer-alt text-iativa-blue mr-3"></i>
+                        ¡Bienvenido, <%= user.name %>!
+                    </h2>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Aquí puedes ver todos tus análisis y crear nuevos proyectos financieros
+                    </p>
+                </div>
+                <div class="mt-4 flex md:mt-0 md:ml-4">
+                    <a href="/analisis/nuevo" 
+                       class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-iativa-blue hover:bg-iativa-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-iativa-blue transition-colors">
+                        <i class="fas fa-plus mr-2"></i>
+                        Nuevo Análisis
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            
+            <!-- Estadísticas rápidas -->
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                <!-- Total de análisis -->
+                <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-chart-line text-2xl text-iativa-blue"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Total Análisis
+                                    </dt>
+                                    <dd class="text-2xl font-bold text-gray-900">
+                                        <%= analyses.length %>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis este mes -->
+                <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-calendar-alt text-2xl text-green-500"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Este Mes
+                                    </dt>
+                                    <dd class="text-2xl font-bold text-gray-900">
+                                        <%= analyses.filter(a => new Date(a.created_at).getMonth() === new Date().getMonth()).length %>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estado de cuenta -->
+                <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-user-check text-2xl text-purple-500"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Estado
+                                    </dt>
+                                    <dd class="text-lg font-bold text-green-600">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        Activa
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acceso rápido -->
+                <div class="bg-gradient-to-r from-iativa-blue to-iativa-purple overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-rocket text-2xl text-white"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-white opacity-90 truncate">
+                                        Acceso
+                                    </dt>
+                                    <dd class="text-lg font-bold text-white">
+                                        Ilimitado
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones rápidas -->
+            <div class="bg-white shadow rounded-lg mb-8">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-bolt text-yellow-500 mr-2"></i>
+                        Acciones Rápidas
+                    </h3>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <a href="/analisis/nuevo" 
+                           class="relative block p-4 border border-gray-200 rounded-lg hover:border-iativa-blue hover:shadow-md transition-all group">
+                            <div class="text-center">
+                                <i class="fas fa-plus-circle text-3xl text-iativa-blue group-hover:text-iativa-purple mb-2"></i>
+                                <h4 class="font-medium text-gray-900">Nuevo Análisis</h4>
+                                <p class="text-sm text-gray-500">Crear análisis de costeo</p>
+                            </div>
+                        </a>
+                        
+                        <div class="relative block p-4 border border-gray-200 rounded-lg cursor-not-allowed opacity-50">
+                            <div class="text-center">
+                                <i class="fas fa-file-import text-3xl text-gray-400 mb-2"></i>
+                                <h4 class="font-medium text-gray-600">Importar Datos</h4>
+                                <p class="text-sm text-gray-400">Próximamente</p>
+                            </div>
+                        </div>
+                        
+                        <div class="relative block p-4 border border-gray-200 rounded-lg cursor-not-allowed opacity-50">
+                            <div class="text-center">
+                                <i class="fas fa-users text-3xl text-gray-400 mb-2"></i>
+                                <h4 class="font-medium text-gray-600">Compartir</h4>
+                                <p class="text-sm text-gray-400">Próximamente</p>
+                            </div>
+                        </div>
+                        
+                        <div class="relative block p-4 border border-gray-200 rounded-lg cursor-not-allowed opacity-50">
+                            <div class="text-center">
+                                <i class="fas fa-cog text-3xl text-gray-400 mb-2"></i>
+                                <h4 class="font-medium text-gray-600">Configuración</h4>
+                                <p class="text-sm text-gray-400">Próximamente</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de análisis recientes -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            <i class="fas fa-history text-iativa-blue mr-2"></i>
+                            Análisis Recientes
+                        </h3>
+                        <% if (analyses.length > 10) { %>
+                            <a href="/analisis/historial" class="text-sm text-iativa-blue hover:text-iativa-purple font-medium">
+                                Ver todos →
+                            </a>
+                        <% } %>
+                    </div>
+
+                    <% if (analyses.length === 0) { %>
+                        <!-- Estado vacío -->
+                        <div class="text-center py-12">
+                            <i class="fas fa-chart-line text-6xl text-gray-300 mb-4"></i>
+                            <h4 class="text-lg font-medium text-gray-900 mb-2">
+                                ¡Comienza tu primer análisis!
+                            </h4>
+                            <p class="text-gray-500 mb-6">
+                                Aún no has creado ningún análisis. Es muy fácil y solo toma unos minutos.
+                            </p>
+                            <a href="/analisis/nuevo" 
+                               class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-iativa-blue hover:bg-iativa-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-iativa-blue transition-all transform hover:scale-105">
+                                <i class="fas fa-rocket mr-2"></i>
+                                Crear Mi Primer Análisis
+                            </a>
+                        </div>
+                    <% } else { %>
+                        <!-- Lista de análisis -->
+                        <div class="space-y-4">
+                            <% analyses.forEach((analysis, index) => { %>
+                                <div class="border border-gray-200 rounded-lg p-4 hover:border-iativa-blue hover:shadow-md transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 mr-4">
+                                                    <div class="w-10 h-10 bg-iativa-blue bg-opacity-10 rounded-full flex items-center justify-center">
+                                                        <i class="fas fa-chart-pie text-iativa-blue"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h4 class="font-medium text-gray-900">
+                                                        <%= analysis.business_name || `Análisis #${analysis.id}` %>
+                                                    </h4>
+                                                    <div class="mt-1 flex items-center text-sm text-gray-500">
+                                                        <i class="fas fa-calendar mr-1"></i>
+                                                        <%= new Date(analysis.created_at).toLocaleDateString('es-ES', { 
+                                                            weekday: 'long', 
+                                                            year: 'numeric', 
+                                                            month: 'long', 
+                                                            day: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        }) %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center space-x-2">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                      <%= analysis.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                                <i class="<%= analysis.status === 'completed' ? 'fas fa-check' : 'fas fa-clock' %> mr-1"></i>
+                                                <%= analysis.status === 'completed' ? 'Completado' : 'En proceso' %>
+                                            </span>
+                                            
+                                            <div class="flex items-center space-x-1">
+                                                <a href="/analisis/<%= analysis.id %>" 
+                                                   class="text-iativa-blue hover:text-iativa-purple text-sm font-medium px-3 py-1 rounded-md hover:bg-gray-50 transition-colors"
+                                                   title="Ver análisis">
+                                                    <i class="fas fa-eye mr-1"></i>
+                                                    Ver
+                                                </a>
+                                                
+                                                <a href="/analisis/<%= analysis.id %>/reporte/html" 
+                                                   class="text-green-600 hover:text-green-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-gray-50 transition-colors"
+                                                   title="Descargar reporte">
+                                                    <i class="fas fa-download mr-1"></i>
+                                                    Reporte
+                                                </a>
+                                                
+                                                <button class="text-red-600 hover:text-red-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-gray-50 transition-colors"
+                                                        onclick="confirmDelete(<%= analysis.id %>)"
+                                                        title="Eliminar">
+                                                    <i class="fas fa-trash mr-1"></i>
+                                                    Eliminar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <% if (isAdmin) { %>
+                <!-- Panel de administración (solo para admins) -->
+                <div class="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-crown text-2xl text-purple-600"></i>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h3 class="text-lg font-medium text-gray-900">
+                                    Panel de Administración
+                                </h3>
+                                <p class="text-sm text-gray-500">
+                                    Tienes acceso a las herramientas de administración del sistema
+                                </p>
+                            </div>
+                            <div class="ml-4">
+                                <a href="/admin" 
+                                   class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors">
+                                    <i class="fas fa-cog mr-2"></i>
+                                    Ir a Admin
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Eliminar Análisis</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    ¿Estás seguro de que quieres eliminar este análisis? Esta acción no se puede deshacer.
+                </p>
+            </div>
+            <div class="flex items-center justify-center gap-4 mt-4">
+                <button id="cancelDelete" 
+                        class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors">
+                    Cancelar
+                </button>
+                <button id="confirmDelete" 
+                        class="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300 transition-colors">
+                    <i class="fas fa-trash mr-2"></i>
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let deleteAnalysisId = null;
+
+    function confirmDelete(analysisId) {
+        deleteAnalysisId = analysisId;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.add('hidden');
+        deleteAnalysisId = null;
+    });
+
+    document.getElementById('confirmDelete').addEventListener('click', async function() {
+        if (deleteAnalysisId) {
+            try {
+                const response = await fetch(`/api/analyses/${deleteAnalysisId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    location.reload(); // Recargar la página para mostrar los cambios
+                } else {
+                    alert('Error al eliminar el análisis');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al eliminar el análisis');
+            }
+        }
+        
+        document.getElementById('deleteModal').classList.add('hidden');
+        deleteAnalysisId = null;
+    });
+
+    // Cerrar modal con ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.getElementById('deleteModal').classList.add('hidden');
+            deleteAnalysisId = null;
+        }
+    });
+
+    // Animaciones de entrada
+    document.addEventListener('DOMContentLoaded', function() {
+        const elements = document.querySelectorAll('.animate-fade-in');
+        elements.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+
+<%- include('partials/footer') %>

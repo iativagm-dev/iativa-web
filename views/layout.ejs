@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Alpine.js para interactividad -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Configuración de Tailwind personalizada -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-blue': '#667eea',
+                        'iativa-purple': '#764ba2',
+                        'iativa-green': '#38a169',
+                        'iativa-red': '#e53e3e',
+                        'iativa-orange': '#ed8936'
+                    },
+                    fontFamily: {
+                        'sans': ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-bubble {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .typing-indicator::after {
+            content: '...';
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+
+<body class="h-full bg-gray-50">
+    <div class="min-h-full">
+        <!-- Navegación -->
+        <% if (locals.user) { %>
+            <nav class="gradient-bg shadow-lg" x-data="{ mobileMenuOpen: false }">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="flex h-16 justify-between">
+                        <div class="flex items-center">
+                            <!-- Logo -->
+                            <div class="flex-shrink-0 flex items-center">
+                                <i class="fas fa-brain text-white text-2xl mr-2"></i>
+                                <span class="text-white text-xl font-bold">IAtiva</span>
+                            </div>
+                            
+                            <!-- Navegación desktop -->
+                            <div class="hidden md:ml-6 md:flex md:space-x-8">
+                                <a href="/dashboard" 
+                                   class="text-white hover:text-gray-200 px-3 py-2 text-sm font-medium transition-colors">
+                                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                </a>
+                                <a href="/analisis/nuevo" 
+                                   class="text-white hover:text-gray-200 px-3 py-2 text-sm font-medium transition-colors">
+                                    <i class="fas fa-plus-circle mr-2"></i>Nuevo Análisis
+                                </a>
+                                <% if (locals.user && user.isAdmin) { %>
+                                    <a href="/admin" 
+                                       class="text-white hover:text-gray-200 px-3 py-2 text-sm font-medium transition-colors">
+                                        <i class="fas fa-cog mr-2"></i>Admin
+                                    </a>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <!-- Usuario y menú -->
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0" x-data="{ userMenuOpen: false }">
+                                <button @click="userMenuOpen = !userMenuOpen" 
+                                        class="bg-white bg-opacity-20 flex text-sm rounded-full text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+                                    <span class="sr-only">Abrir menú de usuario</span>
+                                    <div class="h-8 w-8 rounded-full bg-white bg-opacity-30 flex items-center justify-center">
+                                        <i class="fas fa-user text-sm"></i>
+                                    </div>
+                                    <span class="ml-2 mr-3 hidden md:block"><%= user.name %></span>
+                                    <i class="fas fa-chevron-down ml-1"></i>
+                                </button>
+                                
+                                <!-- Menú dropdown -->
+                                <div x-show="userMenuOpen" 
+                                     @click.away="userMenuOpen = false"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="transform opacity-0 scale-95"
+                                     x-transition:enter-end="transform opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     x-transition:leave-start="transform opacity-100 scale-100"
+                                     x-transition:leave-end="transform opacity-0 scale-95"
+                                     class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                    <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-user mr-2"></i>Mi Perfil
+                                    </a>
+                                    <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-chart-line mr-2"></i>Mis Análisis
+                                    </a>
+                                    <div class="border-t border-gray-100"></div>
+                                    <form action="/logout" method="POST" class="block">
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón menú móvil -->
+                            <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                                    class="md:hidden ml-4 text-white p-2">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Menú móvil -->
+                <div x-show="mobileMenuOpen" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     x-transition:leave="transition ease-in duration-100"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"
+                     class="md:hidden">
+                    <div class="px-2 pt-2 pb-3 space-y-1 bg-black bg-opacity-20">
+                        <a href="/dashboard" class="text-white block px-3 py-2 text-base font-medium hover:bg-white hover:bg-opacity-10 rounded">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                        </a>
+                        <a href="/analisis/nuevo" class="text-white block px-3 py-2 text-base font-medium hover:bg-white hover:bg-opacity-10 rounded">
+                            <i class="fas fa-plus-circle mr-2"></i>Nuevo Análisis
+                        </a>
+                        <% if (locals.user && user.isAdmin) { %>
+                            <a href="/admin" class="text-white block px-3 py-2 text-base font-medium hover:bg-white hover:bg-opacity-10 rounded">
+                                <i class="fas fa-cog mr-2"></i>Administración
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </nav>
+        <% } %>
+        
+        <!-- Contenido principal -->
+        <main class="<%= locals.user ? '' : 'pt-0' %>">
+            <%- body %>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8 mt-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-brain text-iativa-blue text-2xl mr-2"></i>
+                            <span class="text-xl font-bold">IAtiva</span>
+                        </div>
+                        <p class="text-gray-300">Tu aliado en crecimiento financiero. Análisis de costeo y proyecciones para emprendedores.</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Enlaces Útiles</h3>
+                        <ul class="space-y-2 text-gray-300">
+                            <% if (locals.user) { %>
+                                <li><a href="/dashboard" class="hover:text-white transition-colors">Dashboard</a></li>
+                                <li><a href="/analisis/nuevo" class="hover:text-white transition-colors">Nuevo Análisis</a></li>
+                            <% } else { %>
+                                <li><a href="/login" class="hover:text-white transition-colors">Iniciar Sesión</a></li>
+                                <li><a href="/register" class="hover:text-white transition-colors">Registrarse</a></li>
+                            <% } %>
+                            <li><a href="/#funcionalidades" class="hover:text-white transition-colors">Funcionalidades</a></li>
+                            <li><a href="/#contacto" class="hover:text-white transition-colors">Contacto</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+                        <div class="text-gray-300 space-y-2">
+                            <p><i class="fas fa-envelope mr-2"></i>iativagm@gmail.com</p>
+                            <p><i class="fas fa-globe mr-2"></i>www.iativa.com</p>
+                            <div class="flex space-x-4 mt-4">
+                                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                    <p>&copy; <%= new Date().getFullYear() %> IAtiva - Asesor de Costeo. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Scripts adicionales -->
+    <script>
+        // Utilidades globales
+        window.IAtiva = {
+            // Formatear moneda colombiana
+            formatCurrency: function(value) {
+                return new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(value);
+            },
+            
+            // Formatear porcentaje
+            formatPercent: function(value) {
+                return `${value.toFixed(1)}%`;
+            },
+            
+            // Mostrar notificación
+            showNotification: function(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 px-4 py-3 rounded-md shadow-lg z-50 ${
+                    type === 'success' ? 'bg-green-500' :
+                    type === 'error' ? 'bg-red-500' :
+                    type === 'warning' ? 'bg-yellow-500' :
+                    'bg-blue-500'
+                } text-white`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+        };
+        
+        // Animaciones suaves para elementos que aparecen
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.animate-fade-in');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('opacity-100', 'translate-y-0');
+                    el.classList.remove('opacity-0', 'translate-y-4');
+                }, index * 100);
+            });
+        });
+    </script>
+    
+    <%- script %>
+</body>
+</html>

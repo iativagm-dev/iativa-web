@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-blue': '#667eea',
+                        'iativa-purple': '#764ba2'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+
+<body class="h-full bg-gray-50">
+    <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <a href="/" class="inline-flex items-center text-iativa-blue hover:text-iativa-purple transition-colors mb-8">
+                    <i class="fas fa-brain text-3xl mr-3"></i>
+                    <span class="text-2xl font-bold">IAtiva</span>
+                </a>
+                
+                <h2 class="text-3xl font-bold text-gray-900">
+                    Crear Cuenta Gratuita
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Comienza a analizar y hacer crecer tu negocio hoy mismo
+                </p>
+            </div>
+
+            <!-- Formulario -->
+            <form class="mt-8 space-y-6" method="POST" action="/register" id="registerForm">
+                <div class="bg-white shadow-lg rounded-lg px-8 pt-8 pb-6">
+                    <!-- Error message -->
+                    <% if (locals.error) { %>
+                        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                <%= error %>
+                            </div>
+                        </div>
+                    <% } %>
+                    
+                    <div class="space-y-6">
+                        <!-- Nombre completo -->
+                        <div>
+                            <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2 text-iativa-blue"></i>
+                                Nombre Completo *
+                            </label>
+                            <input id="full_name" 
+                                   name="full_name" 
+                                   type="text" 
+                                   required 
+                                   class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-iativa-blue focus:z-10 sm:text-sm"
+                                   placeholder="Tu nombre completo">
+                        </div>
+
+                        <!-- Username -->
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-at mr-2 text-iativa-blue"></i>
+                                Nombre de Usuario *
+                            </label>
+                            <input id="username" 
+                                   name="username" 
+                                   type="text" 
+                                   required 
+                                   class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-iativa-blue focus:z-10 sm:text-sm"
+                                   placeholder="nombreusuario">
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope mr-2 text-iativa-blue"></i>
+                                Correo Electrónico *
+                            </label>
+                            <input id="email" 
+                                   name="email" 
+                                   type="email" 
+                                   autocomplete="email" 
+                                   required 
+                                   class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-iativa-blue focus:z-10 sm:text-sm"
+                                   placeholder="tu@email.com">
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-lock mr-2 text-iativa-blue"></i>
+                                Contraseña *
+                            </label>
+                            <input id="password" 
+                                   name="password" 
+                                   type="password" 
+                                   autocomplete="new-password" 
+                                   required 
+                                   class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-iativa-blue focus:z-10 sm:text-sm"
+                                   placeholder="Mínimo 6 caracteres">
+                            <div class="mt-1 text-xs text-gray-500">
+                                La contraseña debe tener al menos 6 caracteres
+                            </div>
+                        </div>
+
+                        <!-- Empresa (opcional) -->
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-building mr-2 text-iativa-blue"></i>
+                                Empresa/Negocio (opcional)
+                            </label>
+                            <input id="company" 
+                                   name="company" 
+                                   type="text" 
+                                   class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-iativa-blue focus:z-10 sm:text-sm"
+                                   placeholder="Nombre de tu empresa o negocio">
+                        </div>
+
+                        <!-- Teléfono (opcional) -->
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-phone mr-2 text-iativa-blue"></i>
+                                Teléfono (opcional)
+                            </label>
+                            <input id="phone" 
+                                   name="phone" 
+                                   type="tel" 
+                                   class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-iativa-blue focus:z-10 sm:text-sm"
+                                   placeholder="+57 300 123 4567">
+                        </div>
+                    </div>
+
+                    <!-- Terms and conditions -->
+                    <div class="mt-6">
+                        <div class="flex items-start">
+                            <input id="terms" 
+                                   name="terms" 
+                                   type="checkbox" 
+                                   required
+                                   class="h-4 w-4 text-iativa-blue focus:ring-iativa-blue border-gray-300 rounded mt-1">
+                            <label for="terms" class="ml-3 text-sm text-gray-600">
+                                Acepto los 
+                                <a href="#" class="text-iativa-blue hover:text-iativa-purple font-medium">términos y condiciones</a>
+                                y la 
+                                <a href="#" class="text-iativa-blue hover:text-iativa-purple font-medium">política de privacidad</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Botón de registro -->
+                    <div class="mt-8">
+                        <button type="submit" 
+                                class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-iativa-blue transition-all transform hover:scale-105"
+                                id="submitBtn">
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <i class="fas fa-user-plus text-white"></i>
+                            </span>
+                            Crear Cuenta Gratuita
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Enlaces adicionales -->
+            <div class="text-center space-y-4">
+                <p class="text-sm text-gray-600">
+                    ¿Ya tienes una cuenta?
+                    <a href="/login" class="font-medium text-iativa-blue hover:text-iativa-purple transition-colors">
+                        Inicia sesión
+                    </a>
+                </p>
+                
+                <div class="text-xs text-gray-500">
+                    <a href="/" class="hover:text-gray-700 transition-colors">
+                        ← Volver al inicio
+                    </a>
+                </div>
+            </div>
+
+            <!-- Beneficios del registro -->
+            <div class="mt-12 bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">
+                    <i class="fas fa-gift text-iativa-blue mr-2"></i>
+                    ¡Todo esto completamente GRATIS!
+                </h3>
+                
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-check-circle text-green-500 mr-3 flex-shrink-0"></i>
+                        <span>Análisis de costeo ilimitados</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-check-circle text-green-500 mr-3 flex-shrink-0"></i>
+                        <span>Proyecciones de 3 escenarios</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-check-circle text-green-500 mr-3 flex-shrink-0"></i>
+                        <span>Recomendaciones personalizadas</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-check-circle text-green-500 mr-3 flex-shrink-0"></i>
+                        <span>Reportes profesionales PDF/HTML</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-check-circle text-green-500 mr-3 flex-shrink-0"></i>
+                        <span>Plan de acción de 30 días</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-check-circle text-green-500 mr-3 flex-shrink-0"></i>
+                        <span>Historial de análisis guardado</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-xs text-gray-500">
+                        🔒 Tus datos están seguros y protegidos
+                    </p>
+                </div>
+            </div>
+
+            <!-- Proceso rápido -->
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4">
+                <div class="text-center">
+                    <h4 class="text-sm font-medium text-gray-900 mb-2">
+                        <i class="fas fa-clock text-blue-500 mr-2"></i>
+                        ¡Solo toma 2 minutos!
+                    </h4>
+                    <p class="text-xs text-gray-600">
+                        Regístrate ahora y comienza tu primer análisis de inmediato
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enfocar el primer campo al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('full_name').focus();
+        });
+
+        // Manejar el formulario
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Creando cuenta...';
+            submitBtn.disabled = true;
+        });
+
+        // Validaciones en tiempo real
+        const inputs = {
+            full_name: document.getElementById('full_name'),
+            username: document.getElementById('username'),
+            email: document.getElementById('email'),
+            password: document.getElementById('password')
+        };
+
+        // Validar nombre completo
+        inputs.full_name.addEventListener('input', function() {
+            if (this.value.length < 2) {
+                this.setCustomValidity('El nombre debe tener al menos 2 caracteres');
+                this.classList.add('border-red-300');
+                this.classList.remove('border-gray-300');
+            } else {
+                this.setCustomValidity('');
+                this.classList.remove('border-red-300');
+                this.classList.add('border-gray-300');
+            }
+        });
+
+        // Validar username
+        inputs.username.addEventListener('input', function() {
+            const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+            if (this.value && !usernameRegex.test(this.value)) {
+                this.setCustomValidity('Solo letras, números y guiones bajos. 3-20 caracteres');
+                this.classList.add('border-red-300');
+                this.classList.remove('border-gray-300');
+            } else {
+                this.setCustomValidity('');
+                this.classList.remove('border-red-300');
+                this.classList.add('border-gray-300');
+            }
+        });
+
+        // Validar email
+        inputs.email.addEventListener('input', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.value && !emailRegex.test(this.value)) {
+                this.setCustomValidity('Ingresa un email válido');
+                this.classList.add('border-red-300');
+                this.classList.remove('border-gray-300');
+            } else {
+                this.setCustomValidity('');
+                this.classList.remove('border-red-300');
+                this.classList.add('border-gray-300');
+            }
+        });
+
+        // Validar contraseña
+        inputs.password.addEventListener('input', function() {
+            const strength = getPasswordStrength(this.value);
+            const strengthIndicator = this.parentNode.querySelector('.password-strength') || 
+                                    createPasswordStrengthIndicator(this.parentNode);
+            
+            if (this.value.length < 6) {
+                this.setCustomValidity('La contraseña debe tener al menos 6 caracteres');
+                this.classList.add('border-red-300');
+                this.classList.remove('border-gray-300');
+                strengthIndicator.className = 'password-strength mt-1 text-xs text-red-500';
+                strengthIndicator.textContent = 'Muy débil - mínimo 6 caracteres';
+            } else {
+                this.setCustomValidity('');
+                this.classList.remove('border-red-300');
+                this.classList.add('border-gray-300');
+                
+                if (strength.score === 1) {
+                    strengthIndicator.className = 'password-strength mt-1 text-xs text-orange-500';
+                    strengthIndicator.textContent = 'Débil - agrega números o símbolos';
+                } else if (strength.score === 2) {
+                    strengthIndicator.className = 'password-strength mt-1 text-xs text-yellow-500';
+                    strengthIndicator.textContent = 'Regular - agrega mayúsculas';
+                } else if (strength.score >= 3) {
+                    strengthIndicator.className = 'password-strength mt-1 text-xs text-green-500';
+                    strengthIndicator.textContent = '¡Fuerte!';
+                }
+            }
+        });
+
+        function createPasswordStrengthIndicator(parent) {
+            const indicator = document.createElement('div');
+            indicator.className = 'password-strength mt-1 text-xs text-gray-500';
+            parent.appendChild(indicator);
+            return indicator;
+        }
+
+        function getPasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 6) score++;
+            if (password.length >= 8) score++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            
+            return { score };
+        }
+
+        // Formatear teléfono
+        document.getElementById('phone').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.startsWith('57')) {
+                value = value.substring(2);
+            }
+            
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    this.value = `+57 ${value}`;
+                } else if (value.length <= 6) {
+                    this.value = `+57 ${value.substring(0, 3)} ${value.substring(3)}`;
+                } else {
+                    this.value = `+57 ${value.substring(0, 3)} ${value.substring(3, 6)} ${value.substring(6, 10)}`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
