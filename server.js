@@ -336,6 +336,9 @@ app.post('/api/demo-chat', async (req, res) => {
                 estadoActual: agente.estadoActual,
                 activo: agente.activo,
                 ultimosResultados: agente.ultimosResultados,
+                // Inicializar datos simples
+                datosSimples: {},
+                indicePregunta: 0,
                 // Guardar estado completo del recopilador
                 recopiladorSesion: agente.recopilador.sesion,
                 recopiladorDatosRecopilados: agente.recopilador.datosRecopilados
@@ -357,9 +360,17 @@ app.post('/api/demo-chat', async (req, res) => {
                 agente.recopilador.datosRecopilados = estadoGuardado.recopiladorDatosRecopilados;
             }
             
+            // Restaurar datos simples del nuevo flujo
+            if (estadoGuardado.datosSimples) {
+                agente.datosSimples = estadoGuardado.datosSimples;
+            }
+            if (estadoGuardado.indicePregunta !== undefined) {
+                agente.indicePregunta = estadoGuardado.indicePregunta;
+            }
+            
             console.log('🔄 Estado restaurado - Estado agente:', agente.estadoActual);
             console.log('🔄 Estado restaurado - Activo:', agente.activo);
-            console.log('🔄 Estado restaurado - Usuario:', agente.recopilador.sesion?.nombreUsuario);
+            console.log('🔄 Estado restaurado - Pregunta actual:', agente.indicePregunta);
         }
         console.log('✅ Agente listo - Estado actual:', agente.estadoActual);
         
@@ -372,12 +383,15 @@ app.post('/api/demo-chat', async (req, res) => {
         console.log('🔍 Nombre usuario DESPUÉS:', agente.recopilador.sesion?.nombreUsuario);
         console.log('✅ Respuesta del agente:', agenteResponse ? agenteResponse.substring(0, 150) + '...' : 'NULL');
         
-        // Guardar estado actualizado
+        // Guardar estado actualizado - INCLUIR DATOS SIMPLES
         req.session.agentesActivos[sessionId] = {
             estadoActual: agente.estadoActual,
             activo: agente.activo,
             ultimosResultados: agente.ultimosResultados,
-            // Guardar estado completo del recopilador
+            // Datos simples para el nuevo flujo
+            datosSimples: agente.datosSimples,
+            indicePregunta: agente.indicePregunta,
+            // Estado del recopilador (por compatibilidad)
             recopiladorSesion: agente.recopilador.sesion,
             recopiladorDatosRecopilados: agente.recopilador.datosRecopilados
         };

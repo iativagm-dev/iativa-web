@@ -136,31 +136,85 @@ class AgenteIAtiva {
     }
 
     manejarRecopilacionDatos(entrada) {
-        const entradaLimpia = entrada.toLowerCase().trim();
+        // FLUJO SUPER SIMPLE
+        const numero = parseFloat(entrada.replace(/[^\d.-]/g, ''));
         
-        // Comandos especiales durante recopilación
-        if (entradaLimpia === 'progreso' || entradaLimpia === 'estado') {
-            return this.recopilador.mostrarProgreso();
-        }
-        
-        if (entradaLimpia === 'resumen') {
-            return this.recopilador.generarResumenDatos();
+        if (isNaN(numero) || numero < 0) {
+            return "❌ Por favor ingresa solo números. Ejemplo: 50000";
         }
 
-        const resultado = this.recopilador.procesarRespuesta(entrada);
+        // Lista simple de preguntas
+        const preguntas = [
+            { nombre: 'materia_prima', pregunta: '¿Cuánto gastaste en materia prima/insumos?' },
+            { nombre: 'mano_obra', pregunta: '¿Cuánto gastaste en mano de obra directa?' },
+            { nombre: 'empaque', pregunta: '¿Cuánto gastaste en empaque o presentación?' },
+            { nombre: 'servicios', pregunta: '¿Cuánto gastaste en servicios (luz, agua, internet)?' },
+            { nombre: 'transporte', pregunta: '¿Cuánto gastaste en transporte?' },
+            { nombre: 'marketing', pregunta: '¿Cuánto gastaste en marketing?' },
+            { nombre: 'arriendo_sueldos', pregunta: '¿Cuánto gastaste en arriendo o sueldos?' },
+            { nombre: 'otros_costos', pregunta: '¿Otros costos (préstamos, intereses)?' },
+            { nombre: 'margen_ganancia', pregunta: '¿Qué margen de ganancia deseas (%)?' }
+        ];
+
+        // Inicializar datos si no existen
+        if (!this.datosSimples) {
+            this.datosSimples = {};
+            this.indicePregunta = 0;
+        }
+
+        // Guardar respuesta actual
+        if (this.indicePregunta < preguntas.length) {
+            const preguntaActual = preguntas[this.indicePregunta];
+            this.datosSimples[preguntaActual.nombre] = numero;
+            this.indicePregunta++;
+        }
+
+        // ¿Hay más preguntas?
+        if (this.indicePregunta < preguntas.length) {
+            const siguientePregunta = preguntas[this.indicePregunta];
+            return `✅ Guardado: $${numero.toLocaleString()}\n\n**Pregunta ${this.indicePregunta + 1}/9**\n\n${siguientePregunta.pregunta}\n\nEjemplo: ${siguientePregunta.nombre === 'margen_ganancia' ? '25' : '15000'}`;
+        }
+
+        // ¡ANÁLISIS COMPLETO!
+        return this.calcularResultadosSimples();
+    }
+
+    calcularResultadosSimples() {
+        const datos = this.datosSimples;
         
-        if (!resultado.exito) {
-            return resultado.mensaje;
-        }
+        // Cálculos básicos
+        const costoTotal = 
+            (datos.materia_prima || 0) +
+            (datos.mano_obra || 0) +
+            (datos.empaque || 0) +
+            (datos.servicios || 0) +
+            (datos.transporte || 0) +
+            (datos.marketing || 0) +
+            (datos.arriendo_sueldos || 0) +
+            (datos.otros_costos || 0);
+            
+        const margen = datos.margen_ganancia || 20;
+        const precioVenta = Math.round(costoTotal * (1 + margen/100));
+        const ganancia = precioVenta - costoTotal;
+        const puntoEquilibrio = Math.ceil(costoTotal / ganancia) || 1;
+        
+        this.estadoActual = 'completado';
+        
+        return `🎉 **¡ANÁLISIS COMPLETO!**
 
-        // Si todos los datos están completos, proceder con cálculos
-        if (resultado.todosCompletos) {
-            return this.procesarCalculos();
-        }
+📊 **RESULTADOS:**
+• **Costo total:** $${costoTotal.toLocaleString()}
+• **Precio sugerido:** $${precioVenta.toLocaleString()}
+• **Ganancia por unidad:** $${ganancia.toLocaleString()}
+• **Margen:** ${margen}%
+• **Punto de equilibrio:** ${puntoEquilibrio} unidades
 
-        // Continuar con la siguiente pregunta
-        const siguientePregunta = this.recopilador.generarPregunta();
-        return `${resultado.mensaje}\n\n${siguientePregunta}`;
+💡 **RECOMENDACIONES:**
+✅ Con estos números, necesitas vender ${puntoEquilibrio} unidades para cubrir costos
+✅ Cada unidad adicional te dará $${ganancia.toLocaleString()} de ganancia
+✅ Considera ajustar precios si el mercado lo permite
+
+🚀 **¡Tu negocio tiene potencial! Sigue estos números para crecer.**`;
     }
 
     procesarCalculos() {
