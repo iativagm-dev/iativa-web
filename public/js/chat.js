@@ -12,15 +12,25 @@ class IAtivaChatSystem {
     }
 
     init() {
+        console.log('🔧 Inicializando chat sistema...');
+        console.log('Demo mode:', this.isDemoMode);
+        console.log('Session ID:', this.sessionId);
+        
         this.chatMessages = document.getElementById('chat-messages');
         this.messageInput = document.getElementById('message-input');
         this.sendButton = document.getElementById('send-button');
 
+        console.log('Elementos encontrados:');
+        console.log('- chatMessages:', this.chatMessages);
+        console.log('- messageInput:', this.messageInput);
+        console.log('- sendButton:', this.sendButton);
+
         if (!this.chatMessages || !this.messageInput || !this.sendButton) {
-            console.error('Elementos del chat no encontrados');
+            console.error('❌ Elementos del chat no encontrados');
             return;
         }
 
+        console.log('✅ Todos los elementos encontrados, inicializando...');
         this.bindEvents();
         this.showWelcomeMessage();
     }

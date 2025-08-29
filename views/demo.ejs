@@ -81,7 +81,7 @@
         </div>
 
         <!-- Chat Container -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div id="chat-container" class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <!-- Chat Header -->
             <div class="bg-gradient-to-r from-iativa-blue to-iativa-green p-6 text-white">
                 <div class="flex items-center justify-between">
@@ -208,6 +208,17 @@
         // Configuración específica para demo
         window.DEMO_MODE = true;
         window.DEMO_SESSION_ID = '<%= tempUser.sessionId %>';
+        
+        // Debug: verificar que los elementos existen
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando chat demo...');
+            console.log('Chat container:', document.getElementById('chat-container'));
+            console.log('Chat messages:', document.getElementById('chat-messages'));
+            console.log('Message input:', document.getElementById('message-input'));
+            console.log('Send button:', document.getElementById('send-button'));
+            console.log('Demo mode:', window.DEMO_MODE);
+            console.log('Session ID:', window.DEMO_SESSION_ID);
+        });
     </script>
     <script src="/js/chat.js"></script>
     <script>
