@@ -19,73 +19,16 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Configuración de sesiones para producción
-const sessionConfig = {
+// Configuración de sesiones - SIMPLE Y ESTABLE
+app.use(session({
     secret: process.env.SESSION_SECRET || 'iativa-secret-key-2025',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true, // CAMBIO: true para crear sesiones
     cookie: { 
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000, // 24 horas
-        httpOnly: true,
-        sameSite: 'lax'
+        secure: false, // CAMBIO: false para que funcione en desarrollo
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
     }
-};
-
-// En producción O Railway, usar un store persistente simple con archivos
-if (process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT) {
-    const fs = require('fs');
-    const path = require('path');
-    
-    // Store simple en archivos JSON para Railway
-    class FileStore {
-        constructor() {
-            this.sessions = {};
-            this.filePath = path.join(__dirname, 'data', 'sessions.json');
-            this.load();
-        }
-        
-        load() {
-            try {
-                if (fs.existsSync(this.filePath)) {
-                    this.sessions = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
-                }
-            } catch (error) {
-                console.log('Creando nuevo archivo de sesiones');
-                this.sessions = {};
-            }
-        }
-        
-        save() {
-            try {
-                fs.writeFileSync(this.filePath, JSON.stringify(this.sessions, null, 2));
-            } catch (error) {
-                console.error('Error guardando sesiones:', error);
-            }
-        }
-        
-        get(sessionId, callback) {
-            callback(null, this.sessions[sessionId]);
-        }
-        
-        set(sessionId, session, callback) {
-            this.sessions[sessionId] = session;
-            this.save();
-            callback(null);
-        }
-        
-        destroy(sessionId, callback) {
-            delete this.sessions[sessionId];
-            this.save();
-            callback(null);
-        }
-    }
-    
-    sessionConfig.store = new FileStore();
-    console.log('✅ Usando FileStore para sesiones en producción');
-}
-
-app.use(session(sessionConfig));
+}));
 
 // Sistema de almacenamiento simple con archivos JSON
 const dataDir = path.join(__dirname, 'data');
