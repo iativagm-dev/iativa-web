@@ -332,13 +332,17 @@ app.post('/api/demo-chat', async (req, res) => {
             console.log('🆕 Creando nuevo agente para sesión');
             agente = new AgenteIAtiva();
             agente.iniciar(); // Solo inicializar la primera vez
+            // INICIALIZAR datos simples explícitamente
+            agente.datosSimples = {};
+            agente.indicePregunta = 0;
+            
             req.session.agentesActivos[sessionId] = {
                 estadoActual: agente.estadoActual,
                 activo: agente.activo,
                 ultimosResultados: agente.ultimosResultados,
                 // Inicializar datos simples
-                datosSimples: {},
-                indicePregunta: 0,
+                datosSimples: agente.datosSimples,
+                indicePregunta: agente.indicePregunta,
                 // Guardar estado completo del recopilador
                 recopiladorSesion: agente.recopilador.sesion,
                 recopiladorDatosRecopilados: agente.recopilador.datosRecopilados
@@ -361,16 +365,13 @@ app.post('/api/demo-chat', async (req, res) => {
             }
             
             // Restaurar datos simples del nuevo flujo
-            if (estadoGuardado.datosSimples) {
-                agente.datosSimples = estadoGuardado.datosSimples;
-            }
-            if (estadoGuardado.indicePregunta !== undefined) {
-                agente.indicePregunta = estadoGuardado.indicePregunta;
-            }
+            agente.datosSimples = estadoGuardado.datosSimples || {};
+            agente.indicePregunta = estadoGuardado.indicePregunta || 0;
             
             console.log('🔄 Estado restaurado - Estado agente:', agente.estadoActual);
             console.log('🔄 Estado restaurado - Activo:', agente.activo);
             console.log('🔄 Estado restaurado - Pregunta actual:', agente.indicePregunta);
+            console.log('🔄 Datos simples restaurados:', Object.keys(agente.datosSimples));
         }
         console.log('✅ Agente listo - Estado actual:', agente.estadoActual);
         
@@ -389,13 +390,15 @@ app.post('/api/demo-chat', async (req, res) => {
             activo: agente.activo,
             ultimosResultados: agente.ultimosResultados,
             // Datos simples para el nuevo flujo
-            datosSimples: agente.datosSimples,
-            indicePregunta: agente.indicePregunta,
+            datosSimples: agente.datosSimples || {},
+            indicePregunta: agente.indicePregunta || 0,
             // Estado del recopilador (por compatibilidad)
             recopiladorSesion: agente.recopilador.sesion,
             recopiladorDatosRecopilados: agente.recopilador.datosRecopilados
         };
         console.log('💾 Estado guardado - Nuevo estado:', agente.estadoActual);
+        console.log('💾 Datos simples guardados:', Object.keys(agente.datosSimples || {}));
+        console.log('💾 Índice guardado:', agente.indicePregunta);
         
         // Crear respuesta adaptada para web
         const response = {

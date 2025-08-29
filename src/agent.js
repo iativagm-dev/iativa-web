@@ -117,10 +117,17 @@ class AgenteIAtiva {
     }
 
     manejarBienvenida() {
-        // INICIALIZAR flujo simple
-        this.datosSimples = {};
-        this.indicePregunta = 0;
+        // INICIALIZAR flujo simple SOLO SI NO EXISTE
+        if (!this.datosSimples) {
+            this.datosSimples = {};
+        }
+        if (this.indicePregunta === undefined) {
+            this.indicePregunta = 0;
+        }
         this.estadoActual = 'recopilacion_datos';
+        
+        console.log('👋 manejarBienvenida - datosSimples:', this.datosSimples);
+        console.log('👋 manejarBienvenida - indicePregunta:', this.indicePregunta);
         
         return `🧠 **¡Bienvenido al análisis de costeo IAtiva!**
 
