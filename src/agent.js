@@ -117,14 +117,20 @@ class AgenteIAtiva {
     }
 
     manejarBienvenida() {
-        const bienvenida = this.recopilador.generarBienvenida();
-        
-        // SALTAR solicitud de nombre - ir directo a recopilación de datos
-        this.recopilador.sesion.nombreUsuario = "Emprendedor"; // Nombre por defecto
+        // INICIALIZAR flujo simple
+        this.datosSimples = {};
+        this.indicePregunta = 0;
         this.estadoActual = 'recopilacion_datos';
         
-        const siguientePregunta = this.recopilador.generarPregunta();
-        return `${bienvenida}\n\n¡Empecemos con el análisis de costos! 💪\n\n${siguientePregunta}`;
+        return `🧠 **¡Bienvenido al análisis de costeo IAtiva!**
+
+Te haré 9 preguntas rápidas para calcular el precio perfecto de tu producto.
+
+**Pregunta 1/9**
+
+¿Cuánto gastaste en materia prima/insumos?
+
+Ejemplo: 50000`;
     }
 
     manejarSolicitudNombre(entrada) {
@@ -136,8 +142,13 @@ class AgenteIAtiva {
     }
 
     manejarRecopilacionDatos(entrada) {
+        console.log('📝 manejarRecopilacionDatos - entrada:', entrada);
+        console.log('📊 Estado actual - indicePregunta:', this.indicePregunta);
+        console.log('📊 Estado actual - datosSimples:', this.datosSimples);
+        
         // FLUJO SUPER SIMPLE
         const numero = parseFloat(entrada.replace(/[^\d.-]/g, ''));
+        console.log('🔢 Número procesado:', numero);
         
         if (isNaN(numero) || numero < 0) {
             return "❌ Por favor ingresa solo números. Ejemplo: 50000";
@@ -156,8 +167,9 @@ class AgenteIAtiva {
             { nombre: 'margen_ganancia', pregunta: '¿Qué margen de ganancia deseas (%)?' }
         ];
 
-        // Inicializar datos si no existen
-        if (!this.datosSimples) {
+        // ASEGURAR inicialización
+        if (!this.datosSimples || this.indicePregunta === undefined) {
+            console.log('⚠️ Reinicializando datos...');
             this.datosSimples = {};
             this.indicePregunta = 0;
         }
@@ -166,16 +178,20 @@ class AgenteIAtiva {
         if (this.indicePregunta < preguntas.length) {
             const preguntaActual = preguntas[this.indicePregunta];
             this.datosSimples[preguntaActual.nombre] = numero;
+            console.log('✅ Guardado:', preguntaActual.nombre, '=', numero);
             this.indicePregunta++;
+            console.log('📈 Nuevo índice:', this.indicePregunta);
         }
 
         // ¿Hay más preguntas?
         if (this.indicePregunta < preguntas.length) {
             const siguientePregunta = preguntas[this.indicePregunta];
+            console.log('➡️ Siguiente pregunta:', siguientePregunta.nombre);
             return `✅ Guardado: $${numero.toLocaleString()}\n\n**Pregunta ${this.indicePregunta + 1}/9**\n\n${siguientePregunta.pregunta}\n\nEjemplo: ${siguientePregunta.nombre === 'margen_ganancia' ? '25' : '15000'}`;
         }
 
         // ¡ANÁLISIS COMPLETO!
+        console.log('🎉 Todas las preguntas completadas!');
         return this.calcularResultadosSimples();
     }
 
