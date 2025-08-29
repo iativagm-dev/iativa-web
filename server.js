@@ -346,7 +346,7 @@ app.post('/api/demo-chat', async (req, res) => {
             // Restaurar estado completo
             const estadoGuardado = req.session.agentesActivos[sessionId];
             agente.estadoActual = estadoGuardado.estadoActual;
-            agente.activo = estadoGuardado.activo;
+            agente.activo = true; // IMPORTANTE: Activar el agente restaurado
             agente.ultimosResultados = estadoGuardado.ultimosResultados;
             
             // Restaurar estado completo del recopilador
@@ -357,7 +357,8 @@ app.post('/api/demo-chat', async (req, res) => {
                 agente.recopilador.datosRecopilados = estadoGuardado.recopiladorDatosRecopilados;
             }
             
-            console.log('🔄 Estado restaurado - Recopilador paso:', agente.recopilador.sesion?.pasoActual);
+            console.log('🔄 Estado restaurado - Estado agente:', agente.estadoActual);
+            console.log('🔄 Estado restaurado - Activo:', agente.activo);
             console.log('🔄 Estado restaurado - Usuario:', agente.recopilador.sesion?.nombreUsuario);
         }
         console.log('✅ Agente listo - Estado actual:', agente.estadoActual);
@@ -365,9 +366,11 @@ app.post('/api/demo-chat', async (req, res) => {
         // Procesar mensaje
         console.log('📝 Procesando mensaje:', message);
         console.log('🔍 Estado ANTES de procesar:', agente.estadoActual);
+        console.log('🔍 Nombre usuario ANTES:', agente.recopilador.sesion?.nombreUsuario);
         const agenteResponse = agente.procesarEntrada(message);
         console.log('🔍 Estado DESPUÉS de procesar:', agente.estadoActual);
-        console.log('✅ Respuesta del agente:', agenteResponse ? agenteResponse.substring(0, 100) + '...' : 'NULL');
+        console.log('🔍 Nombre usuario DESPUÉS:', agente.recopilador.sesion?.nombreUsuario);
+        console.log('✅ Respuesta del agente:', agenteResponse ? agenteResponse.substring(0, 150) + '...' : 'NULL');
         
         // Guardar estado actualizado
         req.session.agentesActivos[sessionId] = {
