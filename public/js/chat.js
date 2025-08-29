@@ -200,7 +200,7 @@ Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**`;
                 <div class="flex justify-start mb-4">
                     <div class="flex items-start">
                         <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center mr-3 mt-1">
-                            <i class="fas fa-brain text-white text-sm"></i>
+                            <img src="/images/logo.png" alt="IAtiva" class="h-4 w-auto">
                         </div>
                         <div class="max-w-xs lg:max-w-md bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
                             <p class="text-sm text-gray-800">${this.formatMessage(message.content)}</p>
@@ -251,7 +251,7 @@ Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**`;
         indicator.innerHTML = `
             <div class="flex items-start">
                 <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center mr-3 mt-1">
-                    <i class="fas fa-brain text-white text-sm"></i>
+                    <img src="/images/logo.png" alt="IAtiva" class="h-4 w-auto">
                 </div>
                 <div class="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
                     <div class="flex space-x-1">
