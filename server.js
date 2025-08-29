@@ -320,16 +320,51 @@ app.post('/api/demo-chat', async (req, res) => {
             console.log('👤 Sesión temporal creada:', req.session.tempUser.id);
         }
 
-        // Inicializar agente
-        console.log('🤖 Inicializando AgenteIAtiva...');
-        const agente = new AgenteIAtiva();
-        agente.iniciar(); // Activar el agente
-        console.log('✅ AgenteIAtiva inicializado y activado correctamente');
+        // Obtener o crear agente persistente para esta sesión
+        console.log('🤖 Obteniendo AgenteIAtiva para sesión:', sessionId);
+        let agente;
+        
+        if (!req.session.agentesActivos) {
+            req.session.agentesActivos = {};
+        }
+        
+        if (!req.session.agentesActivos[sessionId]) {
+            console.log('🆕 Creando nuevo agente para sesión');
+            agente = new AgenteIAtiva();
+            agente.iniciar(); // Solo inicializar la primera vez
+            req.session.agentesActivos[sessionId] = {
+                estadoActual: agente.estadoActual,
+                activo: agente.activo,
+                ultimosResultados: agente.ultimosResultados,
+                datosRecopilados: agente.recopilador.datosRecopilados
+            };
+        } else {
+            console.log('♻️ Restaurando agente existente');
+            agente = new AgenteIAtiva();
+            // Restaurar estado
+            const estadoGuardado = req.session.agentesActivos[sessionId];
+            agente.estadoActual = estadoGuardado.estadoActual;
+            agente.activo = estadoGuardado.activo;
+            agente.ultimosResultados = estadoGuardado.ultimosResultados;
+            if (estadoGuardado.datosRecopilados) {
+                agente.recopilador.datosRecopilados = estadoGuardado.datosRecopilados;
+            }
+        }
+        console.log('✅ Agente listo - Estado actual:', agente.estadoActual);
         
         // Procesar mensaje
         console.log('📝 Procesando mensaje...');
         const agenteResponse = agente.procesarEntrada(message);
         console.log('✅ Respuesta del agente:', agenteResponse ? 'OK' : 'NULL');
+        
+        // Guardar estado actualizado
+        req.session.agentesActivos[sessionId] = {
+            estadoActual: agente.estadoActual,
+            activo: agente.activo,
+            ultimosResultados: agente.ultimosResultados,
+            datosRecopilados: agente.recopilador.datosRecopilados
+        };
+        console.log('💾 Estado guardado - Nuevo estado:', agente.estadoActual);
         
         // Crear respuesta adaptada para web
         const response = {
