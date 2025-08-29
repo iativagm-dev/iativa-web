@@ -221,6 +221,23 @@ Ejemplo: 50000`;
         const ganancia = precioVenta - costoTotal;
         const puntoEquilibrio = Math.ceil(costoTotal / ganancia) || 1;
         
+        // GUARDAR RESULTADOS para persistencia
+        this.ultimosResultados = {
+            datosOriginales: {
+                costos: datos,
+                nombreUsuario: "Emprendedor",
+                timestamp: new Date().toISOString()
+            },
+            calculos: {
+                exito: true,
+                costoUnitario: costoTotal,
+                precioVenta: precioVenta,
+                puntoEquilibrio: puntoEquilibrio,
+                margenGanancia: margen,
+                gananciaPorUnidad: ganancia
+            }
+        };
+        
         this.estadoActual = 'completado';
         
         return `🎉 **¡ANÁLISIS COMPLETO!**
