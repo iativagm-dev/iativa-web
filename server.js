@@ -336,33 +336,47 @@ app.post('/api/demo-chat', async (req, res) => {
                 estadoActual: agente.estadoActual,
                 activo: agente.activo,
                 ultimosResultados: agente.ultimosResultados,
-                datosRecopilados: agente.recopilador.datosRecopilados
+                // Guardar estado completo del recopilador
+                recopiladorSesion: agente.recopilador.sesion,
+                recopiladorDatosRecopilados: agente.recopilador.datosRecopilados
             };
         } else {
             console.log('♻️ Restaurando agente existente');
             agente = new AgenteIAtiva();
-            // Restaurar estado
+            // Restaurar estado completo
             const estadoGuardado = req.session.agentesActivos[sessionId];
             agente.estadoActual = estadoGuardado.estadoActual;
             agente.activo = estadoGuardado.activo;
             agente.ultimosResultados = estadoGuardado.ultimosResultados;
-            if (estadoGuardado.datosRecopilados) {
-                agente.recopilador.datosRecopilados = estadoGuardado.datosRecopilados;
+            
+            // Restaurar estado completo del recopilador
+            if (estadoGuardado.recopiladorSesion) {
+                agente.recopilador.sesion = estadoGuardado.recopiladorSesion;
             }
+            if (estadoGuardado.recopiladorDatosRecopilados) {
+                agente.recopilador.datosRecopilados = estadoGuardado.recopiladorDatosRecopilados;
+            }
+            
+            console.log('🔄 Estado restaurado - Recopilador paso:', agente.recopilador.sesion?.pasoActual);
+            console.log('🔄 Estado restaurado - Usuario:', agente.recopilador.sesion?.nombreUsuario);
         }
         console.log('✅ Agente listo - Estado actual:', agente.estadoActual);
         
         // Procesar mensaje
-        console.log('📝 Procesando mensaje...');
+        console.log('📝 Procesando mensaje:', message);
+        console.log('🔍 Estado ANTES de procesar:', agente.estadoActual);
         const agenteResponse = agente.procesarEntrada(message);
-        console.log('✅ Respuesta del agente:', agenteResponse ? 'OK' : 'NULL');
+        console.log('🔍 Estado DESPUÉS de procesar:', agente.estadoActual);
+        console.log('✅ Respuesta del agente:', agenteResponse ? agenteResponse.substring(0, 100) + '...' : 'NULL');
         
         // Guardar estado actualizado
         req.session.agentesActivos[sessionId] = {
             estadoActual: agente.estadoActual,
             activo: agente.activo,
             ultimosResultados: agente.ultimosResultados,
-            datosRecopilados: agente.recopilador.datosRecopilados
+            // Guardar estado completo del recopilador
+            recopiladorSesion: agente.recopilador.sesion,
+            recopiladorDatosRecopilados: agente.recopilador.datosRecopilados
         };
         console.log('💾 Estado guardado - Nuevo estado:', agente.estadoActual);
         
