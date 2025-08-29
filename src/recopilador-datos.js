@@ -138,7 +138,14 @@ class RecopiladorDatos {
 
     // Validar y procesar respuesta del usuario
     procesarRespuesta(respuesta) {
+        console.log('🔍 RECOPILADOR - Datos actuales:', Object.keys(this.sesion.datosRecopilados));
+        console.log('🔍 RECOPILADOR - Respuesta recibida:', respuesta);
+        
         const siguienteDato = this.obtenerSiguienteDato();
+        console.log('🔍 RECOPILADOR - Siguiente dato encontrado:', siguienteDato.encontrado);
+        if (siguienteDato.encontrado) {
+            console.log('🔍 RECOPILADOR - Campo actual:', siguienteDato.campo.nombre);
+        }
         
         if (!siguienteDato.encontrado) {
             return {
@@ -183,6 +190,8 @@ class RecopiladorDatos {
 
         // Guardar el dato
         this.sesion.datosRecopilados[campo.nombre] = valor;
+        console.log('🔍 RECOPILADOR - Dato guardado:', campo.nombre, '=', valor);
+        console.log('🔍 RECOPILADOR - Total datos guardados:', Object.keys(this.sesion.datosRecopilados).length);
         
         // Registrar en historial
         this.sesion.historial.push({
@@ -202,6 +211,10 @@ class RecopiladorDatos {
         
         // Verificar si hay más datos por recopilar
         const siguienteDatoProximo = this.obtenerSiguienteDato();
+        console.log('🔍 RECOPILADOR - ¿Siguiente dato disponible?:', siguienteDatoProximo.encontrado);
+        if (siguienteDatoProximo.encontrado) {
+            console.log('🔍 RECOPILADOR - Próximo campo:', siguienteDatoProximo.campo.nombre);
+        }
         if (siguienteDatoProximo.encontrado) {
             mensaje += `\n\n${transicion}`;
         } else {
