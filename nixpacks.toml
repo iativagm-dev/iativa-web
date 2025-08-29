@@ -1,0 +1,14 @@
+# Configuración Nixpacks para Railway
+# Asegura detección correcta de aplicación Node.js
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["npm run build --if-present"]
+
+[start]
+cmd = "npm start"
+
+[variables]
+NODE_ENV = "production"
