@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-blue': '#2563eb',
+                        'iativa-green': '#059669',
+                        'iativa-orange': '#ea580c'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <%- include('partials/header') %>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <nav class="mb-8">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li><a href="/dashboard" class="text-iativa-blue hover:text-blue-800">Dashboard</a></li>
+                <li class="text-gray-400">/</li>
+                <li class="text-gray-600">Análisis: <%= analysis.business_name %></li>
+            </ol>
+        </nav>
+
+        <!-- Título y acciones -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-chart-line text-iativa-blue mr-3"></i>
+                    <%= analysis.business_name %>
+                </h1>
+                <p class="text-gray-600">
+                    Análisis realizado el <%= analysis.created_at %>
+                </p>
+            </div>
+            
+            <div class="mt-4 md:mt-0 flex space-x-3">
+                <button onclick="window.print()" 
+                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-print mr-2"></i>Imprimir
+                </button>
+                <a href="/analisis/<%= analysis.id %>/reporte" 
+                   class="bg-iativa-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-download mr-2"></i>Descargar PDF
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Columna Principal -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Datos del Negocio -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">
+                        <i class="fas fa-building text-iativa-blue mr-2"></i>
+                        Información del Negocio
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Nombre del Negocio</label>
+                            <p class="mt-1 text-lg text-gray-900"><%= analysis.data.nombreNegocio || 'N/A' %></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Producto/Servicio</label>
+                            <p class="mt-1 text-lg text-gray-900"><%= analysis.data.producto || 'N/A' %></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Tipo de Negocio</label>
+                            <p class="mt-1 text-lg text-gray-900"><%= analysis.data.tipoNegocio || 'N/A' %></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Ubicación</label>
+                            <p class="mt-1 text-lg text-gray-900"><%= analysis.data.ubicacion || 'N/A' %></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis de Costos -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">
+                        <i class="fas fa-calculator text-iativa-green mr-2"></i>
+                        Análisis de Costos
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-3">Costos Variables</h3>
+                            <div class="space-y-2">
+                                <% if (analysis.results.costosVariables) { %>
+                                    <% for (const [key, value] of Object.entries(analysis.results.costosVariables)) { %>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600"><%= key %>:</span>
+                                            <span class="font-medium">$<%= typeof value === 'number' ? value.toLocaleString('es-CO') : value %></span>
+                                        </div>
+                                    <% } %>
+                                <% } else { %>
+                                    <p class="text-gray-500">No disponible</p>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-3">Costos Fijos</h3>
+                            <div class="space-y-2">
+                                <% if (analysis.results.costosFijos) { %>
+                                    <% for (const [key, value] of Object.entries(analysis.results.costosFijos)) { %>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600"><%= key %>:</span>
+                                            <span class="font-medium">$<%= typeof value === 'number' ? value.toLocaleString('es-CO') : value %></span>
+                                        </div>
+                                    <% } %>
+                                <% } else { %>
+                                    <p class="text-gray-500">No disponible</p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resultados Principales -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">
+                        <i class="fas fa-bullseye text-iativa-orange mr-2"></i>
+                        Resultados del Análisis
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center p-4 bg-blue-50 rounded-lg">
+                            <div class="text-3xl font-bold text-iativa-blue mb-2">
+                                $<%= analysis.results.costoUnitario ? analysis.results.costoUnitario.toLocaleString('es-CO') : 'N/A' %>
+                            </div>
+                            <p class="text-sm text-gray-600">Costo Unitario</p>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-green-50 rounded-lg">
+                            <div class="text-3xl font-bold text-iativa-green mb-2">
+                                $<%= analysis.results.precioVenta ? analysis.results.precioVenta.toLocaleString('es-CO') : 'N/A' %>
+                            </div>
+                            <p class="text-sm text-gray-600">Precio de Venta</p>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-orange-50 rounded-lg">
+                            <div class="text-3xl font-bold text-iativa-orange mb-2">
+                                <%= analysis.results.puntoEquilibrio || 'N/A' %>
+                            </div>
+                            <p class="text-sm text-gray-600">Punto de Equilibrio (unidades)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Lateral -->
+            <div class="space-y-6">
+                <!-- Resumen -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">
+                        <i class="fas fa-info-circle text-iativa-blue mr-2"></i>
+                        Resumen Ejecutivo
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-1">Margen de Ganancia</p>
+                            <p class="text-xl font-bold text-iativa-green">
+                                <%= analysis.results.margenGanancia ? analysis.results.margenGanancia + '%' : 'N/A' %>
+                            </p>
+                        </div>
+                        
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-1">Rentabilidad</p>
+                            <p class="text-xl font-bold text-iativa-blue">
+                                <%= analysis.results.rentabilidad || 'N/A' %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recomendaciones -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">
+                        <i class="fas fa-lightbulb text-iativa-orange mr-2"></i>
+                        Recomendaciones
+                    </h3>
+                    
+                    <% if (analysis.results.recomendaciones && analysis.results.recomendaciones.length > 0) { %>
+                        <ul class="space-y-3">
+                            <% analysis.results.recomendaciones.forEach(rec => { %>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-iativa-green mr-2 mt-1 text-sm"></i>
+                                    <span class="text-sm text-gray-700"><%= rec %></span>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } else { %>
+                        <p class="text-gray-500 text-sm">No hay recomendaciones disponibles para este análisis.</p>
+                    <% } %>
+                </div>
+
+                <!-- Información del Análisis -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">
+                        <i class="fas fa-clock text-gray-600 mr-2"></i>
+                        Información del Análisis
+                    </h3>
+                    
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">ID del Análisis:</span>
+                            <span class="font-medium">#<%= analysis.id %></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Fecha de Creación:</span>
+                            <span class="font-medium"><%= analysis.created_at %></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Estado:</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                <%= analysis.status === 'completed' ? 'Completado' : analysis.status %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+
+    <script>
+        // Función para imprimir con estilos
+        window.print = function() {
+            window.print();
+        };
+    </script>
+</body>
+</html>
