@@ -300,9 +300,13 @@ app.post('/api/chat', requireAuth, async (req, res) => {
 // Chat API para DEMO (usuarios temporales)
 app.post('/api/demo-chat', async (req, res) => {
     try {
+        console.log('🎯 API Demo Chat - Iniciando...');
         const { message, sessionId, context } = req.body;
+        console.log('📨 Mensaje recibido:', message);
+        console.log('🆔 Session ID:', sessionId);
         
         if (!sessionId) {
+            console.log('❌ Session ID faltante');
             return res.status(400).json({ error: 'Session ID requerido' });
         }
 
@@ -313,13 +317,18 @@ app.post('/api/demo-chat', async (req, res) => {
                 sessionId: sessionId,
                 startTime: new Date().toISOString()
             };
+            console.log('👤 Sesión temporal creada:', req.session.tempUser.id);
         }
 
         // Inicializar agente
+        console.log('🤖 Inicializando AgenteIAtiva...');
         const agente = new AgenteIAtiva();
+        console.log('✅ AgenteIAtiva inicializado correctamente');
         
         // Procesar mensaje
+        console.log('📝 Procesando mensaje...');
         const response = await agente.procesarMensaje(message, sessionId, context || {});
+        console.log('✅ Respuesta generada:', response ? 'OK' : 'NULL');
         
         // Si el análisis está completo, ofrecer guardado
         if (response.analisisCompleto) {
@@ -350,10 +359,16 @@ app.post('/api/demo-chat', async (req, res) => {
             messageLength: message.length 
         });
         
+        console.log('🚀 Enviando respuesta al cliente...');
         res.json(response);
     } catch (error) {
-        console.error('Demo Chat error:', error);
-        res.status(500).json({ error: 'Error del servidor' });
+        console.error('❌ ERROR COMPLETO:', error);
+        console.error('❌ Stack trace:', error.stack);
+        console.error('❌ Mensaje:', error.message);
+        res.status(500).json({ 
+            error: 'Error del servidor',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 
