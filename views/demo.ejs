@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-blue': '#2563eb',
+                        'iativa-green': '#059669',
+                        'iativa-orange': '#ea580c'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <!-- Header Simplificado -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center">
+                        <i class="fas fa-brain text-iativa-blue text-2xl mr-3"></i>
+                        <span class="text-2xl font-bold text-gray-900">IAtiva</span>
+                        <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-semibold">DEMO</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600">
+                        <i class="fas fa-clock mr-1"></i>
+                        Análisis gratuito • Sin registro
+                    </span>
+                    <a href="/register" class="text-iativa-blue hover:text-blue-700 text-sm font-medium">
+                        ¿Ya tienes cuenta?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Título y Estado -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-rocket text-iativa-blue mr-3"></i>
+                Análisis de Costeo Gratuito
+            </h1>
+            <p class="text-lg text-gray-600 mb-6">
+                Descubre el precio ideal para tu producto o servicio en minutos. 
+                <strong>Sin registro, sin complicaciones.</strong>
+            </p>
+            
+            <!-- Beneficios -->
+            <div class="flex flex-wrap justify-center gap-6 mb-8">
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    100% Gratuito
+                </div>
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm">
+                    <i class="fas fa-clock text-blue-500 mr-2"></i>
+                    5 minutos
+                </div>
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm">
+                    <i class="fas fa-shield-alt text-purple-500 mr-2"></i>
+                    Sin registro
+                </div>
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm">
+                    <i class="fas fa-chart-line text-orange-500 mr-2"></i>
+                    Resultados profesionales
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Chat Header -->
+            <div class="bg-gradient-to-r from-iativa-blue to-iativa-green p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-brain text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">Asistente IAtiva</h2>
+                            <p class="text-sm opacity-90">Tu asesor financiero virtual</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-right">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-xs opacity-75">En línea</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto bg-gray-50">
+                <!-- Los mensajes aparecerán aquí -->
+            </div>
+
+            <!-- Chat Input -->
+            <div class="p-6 bg-white border-t border-gray-200">
+                <div class="flex space-x-3">
+                    <input type="text" 
+                           id="message-input" 
+                           placeholder="Escribe tu mensaje... (ej: Mi negocio se llama...)" 
+                           class="flex-1 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-iativa-blue focus:border-transparent text-lg"
+                           maxlength="500">
+                    <button id="send-button" 
+                            class="px-8 py-4 bg-gradient-to-r from-iativa-blue to-iativa-green text-white rounded-xl hover:shadow-lg transition-all transform hover:scale-105 font-semibold">
+                        <i class="fas fa-paper-plane mr-2"></i>Enviar
+                    </button>
+                </div>
+                
+                <!-- Contador de caracteres -->
+                <div class="flex justify-between items-center mt-2 text-sm text-gray-500">
+                    <span>💡 Tip: Sé específico para obtener mejores resultados</span>
+                    <span id="char-counter">0/500</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="mt-8 text-center">
+            <p class="text-sm text-gray-600 mb-4">
+                Al completar tu análisis, podrás guardar los resultados proporcionando solo tu email.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 text-xs text-gray-500">
+                <span><i class="fas fa-lock mr-1"></i>Datos seguros</span>
+                <span><i class="fas fa-users mr-1"></i>+1,000 análisis realizados</span>
+                <span><i class="fas fa-star mr-1"></i>98% satisfacción</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Guardar Análisis -->
+    <div id="save-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">¡Análisis Completado!</h3>
+                <p class="text-gray-600">¿Quieres guardar estos resultados?</p>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="font-semibold text-gray-900 mb-3">Lo que obtienes:</h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Reporte completo por email
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Acceso permanente a tus análisis
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Dashboard personal gratuito
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Análisis ilimitados adicionales
+                    </li>
+                </ul>
+            </div>
+
+            <form id="save-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                    <input type="email" id="save-email" required
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iativa-blue focus:border-transparent"
+                           placeholder="tu@email.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre (opcional)</label>
+                    <input type="text" id="save-name"
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iativa-blue focus:border-transparent"
+                           placeholder="Tu nombre">
+                </div>
+                
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" id="skip-save" 
+                            class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        Omitir por ahora
+                    </button>
+                    <button type="submit" id="save-submit"
+                            class="flex-1 px-4 py-3 bg-gradient-to-r from-iativa-blue to-iativa-green text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                        <i class="fas fa-save mr-2"></i>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Configuración específica para demo
+        window.DEMO_MODE = true;
+        window.DEMO_SESSION_ID = '<%= tempUser.sessionId %>';
+    </script>
+    <script src="/js/chat.js"></script>
+    <script>
+        // Sobrescribir algunas funciones para modo demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Contador de caracteres
+            const messageInput = document.getElementById('message-input');
+            const charCounter = document.getElementById('char-counter');
+            
+            if (messageInput && charCounter) {
+                messageInput.addEventListener('input', function() {
+                    const count = this.value.length;
+                    charCounter.textContent = `${count}/500`;
+                    
+                    if (count > 450) {
+                        charCounter.classList.add('text-red-500');
+                    } else {
+                        charCounter.classList.remove('text-red-500');
+                    }
+                });
+            }
+
+            // Modal de guardado
+            const saveModal = document.getElementById('save-modal');
+            const skipSave = document.getElementById('skip-save');
+            const saveForm = document.getElementById('save-form');
+
+            if (skipSave) {
+                skipSave.addEventListener('click', function() {
+                    saveModal.classList.add('hidden');
+                    saveModal.classList.remove('flex');
+                });
+            }
+
+            if (saveForm) {
+                saveForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('save-email').value;
+                    const name = document.getElementById('save-name').value;
+                    
+                    try {
+                        const response = await fetch('/api/save-demo-analysis', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, name })
+                        });
+
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            alert('¡Análisis guardado exitosamente! Revisa tu email.');
+                            window.location.href = '/analisis/' + data.analysisId;
+                        } else {
+                            alert('Error al guardar: ' + data.error);
+                        }
+                    } catch (error) {
+                        alert('Error de conexión. Intenta de nuevo.');
+                    }
+                });
+            }
+
+            // Función global para mostrar modal de guardado
+            window.showSaveModal = function() {
+                if (saveModal) {
+                    saveModal.classList.remove('hidden');
+                    saveModal.classList.add('flex');
+                }
+            };
+        });
+    </script>
+</body>
+</html>

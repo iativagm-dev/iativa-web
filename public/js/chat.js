@@ -1,7 +1,11 @@
 // Chat.js - Sistema de chat para IAtiva
 class IAtivaChatSystem {
     constructor() {
-        this.sessionId = this.generateSessionId();
+        // Detectar modo demo
+        this.isDemoMode = window.DEMO_MODE || false;
+        this.sessionId = this.isDemoMode && window.DEMO_SESSION_ID ? 
+                        window.DEMO_SESSION_ID : 
+                        this.generateSessionId();
         this.context = {};
         this.isProcessing = false;
         this.init();
@@ -43,13 +47,25 @@ class IAtivaChatSystem {
     }
 
     showWelcomeMessage() {
-        const welcomeMessage = {
-            type: 'bot',
-            content: `¡Hola! Soy tu asesor virtual de IAtiva. 🧠
+        const welcomeContent = this.isDemoMode ? 
+            `¡Hola! Soy tu asesor virtual de IAtiva. 🧠
+
+🚀 **¡Bienvenido al análisis GRATUITO!**
+
+Te ayudo a calcular el precio perfecto para tu producto o servicio en solo 5 minutos. 
+
+**Sin registro, sin complicaciones, solo resultados profesionales.**
+
+Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**` :
+            `¡Hola! Soy tu asesor virtual de IAtiva. 🧠
             
 Te ayudo a realizar un análisis completo de costeo para tu negocio.
 
-Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**`,
+Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**`;
+
+        const welcomeMessage = {
+            type: 'bot',
+            content: welcomeContent,
             timestamp: new Date()
         };
 
@@ -75,7 +91,10 @@ Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**`,
         this.setProcessing(true);
 
         try {
-            const response = await fetch('/api/chat', {
+            // Usar API correcta según el modo
+            const apiUrl = this.isDemoMode ? '/api/demo-chat' : '/api/chat';
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +126,15 @@ Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**`,
 
             // Si el análisis está completo, mostrar resultados
             if (data.analisisCompleto) {
-                this.showAnalysisComplete(data);
+                if (data.isDemo) {
+                    // Modo demo: mostrar modal de guardado
+                    setTimeout(() => {
+                        this.showDemoComplete(data);
+                    }, 2000);
+                } else {
+                    // Modo normal: mostrar análisis completo
+                    this.showAnalysisComplete(data);
+                }
             }
 
         } catch (error) {
@@ -260,6 +287,32 @@ Tu análisis de costeo ha sido guardado y está disponible en tu dashboard.
         setTimeout(() => {
             this.addMessage(completeMessage);
         }, 1000);
+    }
+
+    showDemoComplete(data) {
+        const completeMessage = {
+            type: 'bot',
+            content: `🎉 **¡Tu análisis está COMPLETADO!**
+
+**Resultados principales:**
+• Costo unitario: $${data.resultados?.costoUnitario?.toLocaleString('es-CO') || 'N/A'}
+• Precio de venta sugerido: $${data.resultados?.precioVenta?.toLocaleString('es-CO') || 'N/A'}
+• Punto de equilibrio: ${data.resultados?.puntoEquilibrio || 'N/A'} unidades
+
+✨ **¿Quieres guardar estos resultados y recibir el reporte completo por email?**
+
+Solo necesitamos tu email - ¡es gratis y sin compromisos!`,
+            timestamp: new Date()
+        };
+
+        this.addMessage(completeMessage);
+
+        // Mostrar modal de guardado
+        if (window.showSaveModal) {
+            setTimeout(() => {
+                window.showSaveModal();
+            }, 1500);
+        }
     }
 }
 

@@ -255,7 +255,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
     }
 });
 
-// Chat API para análisis
+// Chat API para análisis (usuarios registrados)
 app.post('/api/chat', requireAuth, async (req, res) => {
     try {
         const { message, sessionId, context } = req.body;
@@ -295,6 +295,156 @@ app.post('/api/chat', requireAuth, async (req, res) => {
         console.error('Chat error:', error);
         res.status(500).json({ error: 'Error del servidor' });
     }
+});
+
+// Chat API para DEMO (usuarios temporales)
+app.post('/api/demo-chat', async (req, res) => {
+    try {
+        const { message, sessionId, context } = req.body;
+        
+        if (!sessionId) {
+            return res.status(400).json({ error: 'Session ID requerido' });
+        }
+
+        // Verificar o crear sesión temporal
+        if (!req.session.tempUser) {
+            req.session.tempUser = {
+                id: 'temp_' + Date.now(),
+                sessionId: sessionId,
+                startTime: new Date().toISOString()
+            };
+        }
+
+        // Inicializar agente
+        const agente = new AgenteIAtiva();
+        
+        // Procesar mensaje
+        const response = await agente.procesarMensaje(message, sessionId, context || {});
+        
+        // Si el análisis está completo, ofrecer guardado
+        if (response.analisisCompleto) {
+            // Agregar información especial para usuarios demo
+            response.isDemo = true;
+            response.savePrompt = {
+                message: "¡Tu análisis está completo! 🎉\n\n¿Quieres guardar estos resultados? Solo necesitamos tu email para enviarte el reporte completo.",
+                benefits: [
+                    "📧 Recibe el reporte completo por email",
+                    "💾 Guarda tu análisis para siempre", 
+                    "🔄 Crea análisis ilimitados",
+                    "📊 Accede a tu dashboard personal"
+                ]
+            };
+            
+            // Guardarlo temporalmente (opcional)
+            req.session.lastAnalysis = {
+                sessionId: sessionId,
+                data: response.datosRecopilados,
+                results: response.resultados,
+                timestamp: new Date().toISOString()
+            };
+        }
+        
+        logAnalytics('demo_chat_interaction', req, { 
+            tempUserId: req.session.tempUser.id, 
+            sessionId, 
+            messageLength: message.length 
+        });
+        
+        res.json(response);
+    } catch (error) {
+        console.error('Demo Chat error:', error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// Guardar análisis de demo con email
+app.post('/api/save-demo-analysis', async (req, res) => {
+    try {
+        const { email, name } = req.body;
+        
+        if (!email || !req.session.lastAnalysis) {
+            return res.status(400).json({ error: 'Email y análisis requeridos' });
+        }
+
+        // Crear usuario rápido o encontrar existente
+        const users = getUsers();
+        let user = users.find(u => u.email === email);
+        
+        if (!user) {
+            // Crear usuario automáticamente
+            user = {
+                id: users.length + 1,
+                username: email.split('@')[0],
+                email: email,
+                password: '', // Sin contraseña por ahora
+                full_name: name || 'Usuario Demo',
+                company: '',
+                phone: '',
+                created_at: new Date().toISOString(),
+                is_admin: false,
+                from_demo: true
+            };
+            users.push(user);
+            saveUsers(users);
+        }
+
+        // Guardar el análisis
+        const analyses = getAnalyses();
+        const newAnalysis = {
+            id: analyses.length + 1,
+            user_id: user.id,
+            session_id: req.session.lastAnalysis.sessionId,
+            business_name: req.session.lastAnalysis.data.nombreNegocio || 'Análisis Demo',
+            analysis_data: JSON.stringify(req.session.lastAnalysis.data),
+            results: JSON.stringify(req.session.lastAnalysis.results),
+            status: 'completed',
+            created_at: new Date().toISOString(),
+            from_demo: true
+        };
+        
+        analyses.push(newAnalysis);
+        saveAnalyses(analyses);
+
+        // Limpiar sesión temporal
+        delete req.session.lastAnalysis;
+
+        logAnalytics('demo_analysis_saved', req, { 
+            userId: user.id, 
+            email: email,
+            analysisId: newAnalysis.id 
+        });
+
+        res.json({ 
+            success: true, 
+            message: 'Análisis guardado exitosamente',
+            analysisId: newAnalysis.id,
+            user: { id: user.id, name: user.full_name }
+        });
+        
+    } catch (error) {
+        console.error('Save demo analysis error:', error);
+        res.status(500).json({ error: 'Error al guardar análisis' });
+    }
+});
+
+// DEMO - Acceso directo sin registro
+app.get('/demo', (req, res) => {
+    // Crear sesión temporal si no existe
+    if (!req.session.tempUser) {
+        req.session.tempUser = {
+            id: 'temp_' + Date.now(),
+            sessionId: 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            startTime: new Date().toISOString()
+        };
+    }
+    
+    logAnalytics('demo_started', req, { tempUserId: req.session.tempUser.id });
+    
+    res.render('demo', {
+        title: 'Análisis Gratuito - IAtiva',
+        tempUser: req.session.tempUser,
+        user: null // Importante: no mostrar como usuario registrado
+    });
 });
 
 // Nuevo análisis
