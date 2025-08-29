@@ -323,17 +323,49 @@ app.post('/api/demo-chat', async (req, res) => {
         // Inicializar agente
         console.log('🤖 Inicializando AgenteIAtiva...');
         const agente = new AgenteIAtiva();
-        console.log('✅ AgenteIAtiva inicializado correctamente');
+        agente.iniciar(); // Activar el agente
+        console.log('✅ AgenteIAtiva inicializado y activado correctamente');
         
         // Procesar mensaje
         console.log('📝 Procesando mensaje...');
-        const response = await agente.procesarMensaje(message, sessionId, context || {});
-        console.log('✅ Respuesta generada:', response ? 'OK' : 'NULL');
+        const agenteResponse = agente.procesarEntrada(message);
+        console.log('✅ Respuesta del agente:', agenteResponse ? 'OK' : 'NULL');
         
-        // Si el análisis está completo, ofrecer guardado
-        if (response.analisisCompleto) {
-            // Agregar información especial para usuarios demo
+        // Crear respuesta adaptada para web
+        const response = {
+            respuesta: agenteResponse,
+            context: {}, // El agente maneja su estado internamente
+            analisisCompleto: false
+        };
+        
+        // Verificar si el análisis está completo
+        // (cuando el agente muestra recomendaciones o opciones finales)
+        if (agenteResponse && (
+            agenteResponse.includes('¿Qué quieres hacer ahora?') || 
+            agenteResponse.includes('plan de acción') ||
+            agenteResponse.includes('reporte') ||
+            agente.ultimosResultados
+        )) {
+            console.log('🎉 Análisis detectado como completo');
+            response.analisisCompleto = true;
             response.isDemo = true;
+            
+            // Extraer datos si están disponibles
+            if (agente.ultimosResultados) {
+                response.datosRecopilados = agente.ultimosResultados.datosOriginales || {};
+                response.resultados = agente.ultimosResultados.calculos || {};
+                
+                // Guardarlo temporalmente
+                req.session.lastAnalysis = {
+                    sessionId: sessionId,
+                    data: response.datosRecopilados,
+                    results: response.resultados,
+                    timestamp: new Date().toISOString()
+                };
+                
+                console.log('💾 Análisis guardado en sesión temporal');
+            }
+            
             response.savePrompt = {
                 message: "¡Tu análisis está completo! 🎉\n\n¿Quieres guardar estos resultados? Solo necesitamos tu email para enviarte el reporte completo.",
                 benefits: [
@@ -342,14 +374,6 @@ app.post('/api/demo-chat', async (req, res) => {
                     "🔄 Crea análisis ilimitados",
                     "📊 Accede a tu dashboard personal"
                 ]
-            };
-            
-            // Guardarlo temporalmente (opcional)
-            req.session.lastAnalysis = {
-                sessionId: sessionId,
-                data: response.datosRecopilados,
-                results: response.resultados,
-                timestamp: new Date().toISOString()
             };
         }
         
