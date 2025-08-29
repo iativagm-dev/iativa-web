@@ -138,96 +138,58 @@ class RecopiladorDatos {
 
     // Validar y procesar respuesta del usuario
     procesarRespuesta(respuesta) {
-        console.log('🔍 RECOPILADOR - Datos actuales:', Object.keys(this.sesion.datosRecopilados));
-        console.log('🔍 RECOPILADOR - Respuesta recibida:', respuesta);
-        
-        const siguienteDato = this.obtenerSiguienteDato();
-        console.log('🔍 RECOPILADOR - Siguiente dato encontrado:', siguienteDato.encontrado);
-        if (siguienteDato.encontrado) {
-            console.log('🔍 RECOPILADOR - Campo actual:', siguienteDato.campo.nombre);
-        }
-        
-        if (!siguienteDato.encontrado) {
-            return {
-                exito: false,
-                mensaje: "Ya se han recopilado todos los datos necesarios."
-            };
-        }
-
-        const { campo } = siguienteDato;
-        const respuestaLimpia = respuesta.trim().toLowerCase();
-
-        // Verificar si quiere saltar campo opcional
-        if (!campo.requerido && (respuestaLimpia === 'siguiente' || respuestaLimpia === 'continuar' || respuestaLimpia === 'skip')) {
-            this.sesion.datosRecopilados[campo.nombre] = 0;
+        try {
+            const siguienteDato = this.obtenerSiguienteDato();
             
-            const transiciones = this.config.respuestas.transiciones;
-            const transicion = transiciones[Math.floor(Math.random() * transiciones.length)];
+            if (!siguienteDato.encontrado) {
+                return {
+                    exito: false,
+                    mensaje: "Ya se han recopilado todos los datos necesarios."
+                };
+            }
+
+            const { campo } = siguienteDato;
             
+            // Procesar valor numérico simple
+            let valor = parseFloat(respuesta.replace(/[^\d.-]/g, ''));
+            
+            if (isNaN(valor) || valor < 0) {
+                return {
+                    exito: false,
+                    mensaje: `❌ Por favor, ingresa un número válido. Ejemplo: 15000`
+                };
+            }
+
+            // Guardar el dato
+            this.sesion.datosRecopilados[campo.nombre] = valor;
+            
+            // Verificar si hay más datos por recopilar - RECALCULAR después de guardar
+            const siguienteDatoProximo = this.obtenerSiguienteDato();
+            const hayMas = siguienteDatoProximo.encontrado;
+            
+            let mensaje = `✅ Registrado: $${valor.toLocaleString()}`;
+            
+            if (hayMas) {
+                mensaje += `\n\n¡Perfecto! Siguiente pregunta...`;
+            } else {
+                mensaje += `\n\n🎉 ¡Datos completos! Procesando análisis...`;
+            }
+
             return {
                 exito: true,
-                mensaje: `✅ Campo omitido. ${transicion}`,
+                mensaje: mensaje,
                 campoCompletado: campo.nombre,
-                valor: 0
+                valor: valor,
+                todosCompletos: !hayMas
             };
-        }
-
-        // Procesar valor numérico
-        let valor;
-        if (campo.tipo === 'porcentaje') {
-            valor = this.procesarPorcentaje(respuesta, campo.min, campo.max);
-        } else {
-            valor = this.procesarValorNumerico(respuesta);
-        }
-
-        if (valor === null) {
+            
+        } catch (error) {
+            console.error('Error en procesarRespuesta:', error);
             return {
                 exito: false,
-                mensaje: `❌ Por favor, ingresa un valor válido para ${campo.pregunta.toLowerCase()}\n\n` +
-                        `Ejemplo: ${campo.tipo === 'porcentaje' ? '25' : '15000'}`
+                mensaje: "Error interno. Intenta de nuevo."
             };
         }
-
-        // Guardar el dato
-        this.sesion.datosRecopilados[campo.nombre] = valor;
-        console.log('🔍 RECOPILADOR - Dato guardado:', campo.nombre, '=', valor);
-        console.log('🔍 RECOPILADOR - Total datos guardados:', Object.keys(this.sesion.datosRecopilados).length);
-        
-        // Registrar en historial
-        this.sesion.historial.push({
-            campo: campo.nombre,
-            pregunta: campo.pregunta,
-            valor: valor,
-            timestamp: new Date().toISOString()
-        });
-
-        // Generar mensaje de confirmación
-        const valorFormateado = campo.tipo === 'porcentaje' ? `${valor}%` : this.formatearMoneda(valor);
-        
-        const transiciones = this.config.respuestas.transiciones;
-        const transicion = transiciones[Math.floor(Math.random() * transiciones.length)];
-        
-        let mensaje = `✅ Registrado: ${valorFormateado}`;
-        
-        // Verificar si hay más datos por recopilar
-        const siguienteDatoProximo = this.obtenerSiguienteDato();
-        console.log('🔍 RECOPILADOR - ¿Siguiente dato disponible?:', siguienteDatoProximo.encontrado);
-        if (siguienteDatoProximo.encontrado) {
-            console.log('🔍 RECOPILADOR - Próximo campo:', siguienteDatoProximo.campo.nombre);
-        }
-        if (siguienteDatoProximo.encontrado) {
-            mensaje += `\n\n${transicion}`;
-        } else {
-            mensaje += `\n\n🎉 ¡Excelente! Ya tenemos todos los datos necesarios. Voy a procesar tus números...`;
-        }
-
-        return {
-            exito: true,
-            mensaje: mensaje,
-            campoCompletado: campo.nombre,
-            valor: valor,
-            todosCompletos: !siguienteDatoProximo.encontrado
-        };
     }
 
     // Procesar valor numérico
