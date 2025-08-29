@@ -2,11 +2,12 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
-const fs = require('fs');
+const Database = require('better-sqlite3');
 const cors = require('cors');
 
 // Importar módulos de IAtiva
 const AgenteIAtiva = require('./src/agent');
+const GeneradorReportes = require('./src/generador-reportes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,96 +26,93 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        secure: false, // Cambiado para desarrollo
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000 // 24 horas
     }
 }));
 
-// Sistema de almacenamiento simple con archivos JSON
-const dataDir = path.join(__dirname, 'data');
-if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+// Inicializar base de datos SQLite
+const db = new Database('./data/iativa.db');
+
+// Crear tablas
+db.exec(`CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    full_name TEXT,
+    company TEXT,
+    phone TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_login DATETIME,
+    is_admin BOOLEAN DEFAULT 0
+)`);
+
+db.exec(`CREATE TABLE IF NOT EXISTS analyses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    session_id TEXT NOT NULL,
+    business_name TEXT,
+    analysis_data TEXT NOT NULL,
+    results TEXT NOT NULL,
+    recommendations TEXT,
+    status TEXT DEFAULT 'completed',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+)`);
+
+db.exec(`CREATE TABLE IF NOT EXISTS analytics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_type TEXT NOT NULL,
+    user_id INTEGER,
+    session_id TEXT,
+    data TEXT,
+    ip_address TEXT,
+    user_agent TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)`);
+
+// Preparar statements
+const getUserByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
+const getUserById = db.prepare('SELECT * FROM users WHERE id = ?');
+const updateUserLogin = db.prepare('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?');
+const insertUser = db.prepare(`INSERT INTO users (username, email, password, full_name, company, phone) 
+                               VALUES (?, ?, ?, ?, ?, ?)`);
+const insertAnalysis = db.prepare(`INSERT INTO analyses (user_id, session_id, business_name, analysis_data, results, status) 
+                                   VALUES (?, ?, ?, ?, ?, ?)`);
+const getAnalysisByUser = db.prepare(`SELECT id, business_name, status, created_at 
+                                      FROM analyses WHERE user_id = ? 
+                                      ORDER BY created_at DESC LIMIT 10`);
+const getAnalysisById = db.prepare('SELECT * FROM analyses WHERE id = ? AND user_id = ?');
+const insertAnalytics = db.prepare(`INSERT INTO analytics (event_type, user_id, session_id, data, ip_address, user_agent) 
+                                    VALUES (?, ?, ?, ?, ?, ?)`);
+const getAllUsers = db.prepare('SELECT id, username, email, full_name, company, created_at, last_login FROM users ORDER BY created_at DESC');
+const getAllAnalyses = db.prepare('SELECT a.*, u.username FROM analyses a JOIN users u ON a.user_id = u.id ORDER BY a.created_at DESC');
+
+// Crear usuario admin por defecto
+const adminPassword = bcrypt.hashSync('admin123', 10);
+try {
+    insertUser.run('admin', 'admin@iativa.com', adminPassword, 'Administrador IAtiva', 'IAtiva', '');
+} catch (err) {
+    // Usuario admin ya existe
 }
 
-const usersFile = path.join(dataDir, 'users.json');
-const analysesFile = path.join(dataDir, 'analyses.json');
-const analyticsFile = path.join(dataDir, 'analytics.json');
-
-// Inicializar archivos si no existen
-function initializeData() {
-    if (!fs.existsSync(usersFile)) {
-        const adminPassword = bcrypt.hashSync('admin123', 10);
-        const defaultUsers = [
-            {
-                id: 1,
-                username: 'admin',
-                email: 'admin@iativa.com',
-                password: adminPassword,
-                full_name: 'Administrador IAtiva',
-                company: 'IAtiva',
-                phone: '',
-                created_at: new Date().toISOString(),
-                is_admin: true
-            }
-        ];
-        fs.writeFileSync(usersFile, JSON.stringify(defaultUsers, null, 2));
-    }
-    
-    if (!fs.existsSync(analysesFile)) {
-        fs.writeFileSync(analysesFile, JSON.stringify([], null, 2));
-    }
-    
-    if (!fs.existsSync(analyticsFile)) {
-        fs.writeFileSync(analyticsFile, JSON.stringify([], null, 2));
-    }
-}
-
-// Funciones de base de datos simple
-function getUsers() {
-    try {
-        return JSON.parse(fs.readFileSync(usersFile, 'utf8'));
-    } catch {
-        return [];
-    }
-}
-
-function saveUsers(users) {
-    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
-}
-
-function getAnalyses() {
-    try {
-        return JSON.parse(fs.readFileSync(analysesFile, 'utf8'));
-    } catch {
-        return [];
-    }
-}
-
-function saveAnalyses(analyses) {
-    fs.writeFileSync(analysesFile, JSON.stringify(analyses, null, 2));
-}
-
+// Función para registrar analytics
 function logAnalytics(eventType, req, data = {}) {
     try {
-        const analytics = JSON.parse(fs.readFileSync(analyticsFile, 'utf8'));
-        analytics.push({
-            id: analytics.length + 1,
-            event_type: eventType,
-            user_id: req.session.userId || null,
-            session_id: req.sessionID,
-            data: JSON.stringify(data),
-            ip_address: req.ip,
-            user_agent: req.get('User-Agent'),
-            created_at: new Date().toISOString()
-        });
-        fs.writeFileSync(analyticsFile, JSON.stringify(analytics, null, 2));
+        insertAnalytics.run(
+            eventType,
+            req.session.userId || null,
+            req.sessionID,
+            JSON.stringify(data),
+            req.ip,
+            req.get('User-Agent')
+        );
     } catch (err) {
         console.error('Error logging analytics:', err);
     }
 }
-
-// Inicializar datos
-initializeData();
 
 // Middleware de autenticación
 function requireAuth(req, res, next) {
@@ -143,18 +141,14 @@ app.post('/login', (req, res) => {
     const { email, password } = req.body;
     
     try {
-        const users = getUsers();
-        const user = users.find(u => u.email === email);
+        const user = getUserByEmail.get(email);
         
         if (user && bcrypt.compareSync(password, user.password)) {
             req.session.userId = user.id;
             req.session.userName = user.full_name || user.username;
-            req.session.isAdmin = user.is_admin === true;
+            req.session.isAdmin = user.is_admin === 1;
             
-            // Actualizar último login
-            user.last_login = new Date().toISOString();
-            saveUsers(users);
-            
+            updateUserLogin.run(user.id);
             logAnalytics('login_success', req, { userId: user.id });
             
             res.redirect('/dashboard');
@@ -183,33 +177,10 @@ app.post('/register', (req, res) => {
     const { username, email, password, fullName, company, phone } = req.body;
     
     try {
-        const users = getUsers();
-        
-        // Verificar si el usuario ya existe
-        if (users.find(u => u.email === email || u.username === username)) {
-            return res.render('register', { 
-                title: 'Registro - IAtiva',
-                error: 'El email o nombre de usuario ya están en uso.' 
-            });
-        }
-        
         const hashedPassword = bcrypt.hashSync(password, 10);
-        const newUser = {
-            id: users.length + 1,
-            username,
-            email,
-            password: hashedPassword,
-            full_name: fullName,
-            company,
-            phone,
-            created_at: new Date().toISOString(),
-            is_admin: false
-        };
+        const result = insertUser.run(username, email, hashedPassword, fullName, company, phone);
         
-        users.push(newUser);
-        saveUsers(users);
-        
-        logAnalytics('user_registered', req, { userId: newUser.id });
+        logAnalytics('user_registered', req, { userId: result.lastInsertRowid });
         
         res.render('register', { 
             title: 'Registro - IAtiva',
@@ -219,7 +190,7 @@ app.post('/register', (req, res) => {
         console.error('Register error:', error);
         res.render('register', { 
             title: 'Registro - IAtiva',
-            error: 'Error en el registro. Intenta de nuevo.' 
+            error: 'Error en el registro. El email o usuario puede estar en uso.' 
         });
     }
 });
@@ -227,21 +198,17 @@ app.post('/register', (req, res) => {
 // Dashboard
 app.get('/dashboard', requireAuth, (req, res) => {
     try {
-        const analyses = getAnalyses();
-        const userAnalyses = analyses
-            .filter(a => a.user_id === req.session.userId)
-            .slice(0, 10)
-            .map(a => ({
-                ...a,
-                created_at: new Date(a.created_at).toLocaleDateString('es-CO')
-            }));
+        const analyses = getAnalysisByUser.all(req.session.userId);
         
         logAnalytics('dashboard_view', req);
         
         res.render('dashboard', {
             title: 'Dashboard - IAtiva',
             user: { id: req.session.userId, name: req.session.userName },
-            analyses: userAnalyses
+            analyses: analyses.map(a => ({
+                ...a,
+                created_at: new Date(a.created_at).toLocaleDateString('es-CO')
+            }))
         });
     } catch (error) {
         console.error('Dashboard error:', error);
@@ -270,20 +237,17 @@ app.post('/api/chat', requireAuth, async (req, res) => {
         
         // Si el análisis está completo, guardarlo
         if (response.analisisCompleto) {
-            const analyses = getAnalyses();
-            const newAnalysis = {
-                id: analyses.length + 1,
-                user_id: req.session.userId,
-                session_id: sessionId,
-                business_name: response.datosRecopilados.nombreNegocio || 'Análisis Sin Nombre',
-                analysis_data: JSON.stringify(response.datosRecopilados),
-                results: JSON.stringify(response.resultados),
-                status: 'completed',
-                created_at: new Date().toISOString()
-            };
+            const analysisData = JSON.stringify(response.datosRecopilados);
+            const results = JSON.stringify(response.resultados);
             
-            analyses.push(newAnalysis);
-            saveAnalyses(analyses);
+            insertAnalysis.run(
+                req.session.userId,
+                sessionId,
+                response.datosRecopilados.nombreNegocio || 'Análisis Sin Nombre',
+                analysisData,
+                results,
+                'completed'
+            );
         }
         
         logAnalytics('chat_interaction', req, { sessionId, messageLength: message.length });
@@ -324,10 +288,7 @@ app.get('/analisis/nuevo', requireAuth, (req, res) => {
 // Ver análisis
 app.get('/analisis/:id', requireAuth, (req, res) => {
     try {
-        const analyses = getAnalyses();
-        const analysis = analyses.find(a => 
-            a.id === parseInt(req.params.id) && a.user_id === req.session.userId
-        );
+        const analysis = getAnalysisById.get(req.params.id, req.session.userId);
         
         if (!analysis) {
             return res.status(404).render('error', {
@@ -369,21 +330,11 @@ app.post('/logout', (req, res) => {
     res.redirect('/');
 });
 
-// Error 404
-app.use((req, res) => {
-    res.status(404).render('error', {
-        title: 'Página No Encontrada',
-        message: 'La página que buscas no existe.',
-        backUrl: '/'
-    });
-});
-
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 IAtiva Web Server funcionando en puerto ${PORT}`);
     console.log(`📱 Aplicación disponible en: http://localhost:${PORT}`);
     console.log(`👨‍💼 Admin login: admin@iativa.com / admin123`);
-    console.log(`💾 Datos almacenados en: ${dataDir}`);
 });
 
 // Manejo de errores

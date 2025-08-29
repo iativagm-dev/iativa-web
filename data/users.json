@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@iativa.com",
+    "password": "$2a$10$HrTpOHQZa9KGFa1Qfvte7eyhXjOmr.bj/gyazmqumGc.v3QSUSS16",
+    "full_name": "Administrador IAtiva",
+    "company": "IAtiva",
+    "phone": "",
+    "created_at": "2025-08-29T02:26:16.379Z",
+    "is_admin": true
+  }
+]
