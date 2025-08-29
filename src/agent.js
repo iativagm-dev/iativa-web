@@ -118,21 +118,21 @@ class AgenteIAtiva {
 
     manejarBienvenida() {
         const bienvenida = this.recopilador.generarBienvenida();
-        this.estadoActual = 'solicitar_nombre';
         
-        return `${bienvenida}\n\n${this.recopilador.solicitarNombre()}`;
+        // SALTAR solicitud de nombre - ir directo a recopilación de datos
+        this.recopilador.sesion.nombreUsuario = "Emprendedor"; // Nombre por defecto
+        this.estadoActual = 'recopilacion_datos';
+        
+        const siguientePregunta = this.recopilador.generarPregunta();
+        return `${bienvenida}\n\n¡Empecemos con el análisis de costos! 💪\n\n${siguientePregunta}`;
     }
 
     manejarSolicitudNombre(entrada) {
-        const resultado = this.recopilador.procesarNombre(entrada);
-        
-        if (resultado.exito) {
-            this.estadoActual = 'recopilacion_datos';
-            const siguientePregunta = this.recopilador.generarPregunta();
-            return `${resultado.mensaje}\n\n${siguientePregunta}`;
-        } else {
-            return resultado.mensaje;
-        }
+        // MODO DEMO: Saltar solicitud de nombre, ir directo a recopilación
+        this.recopilador.sesion.nombreUsuario = "Emprendedor";
+        this.estadoActual = 'recopilacion_datos';
+        const siguientePregunta = this.recopilador.generarPregunta();
+        return `¡Perfecto! Empecemos con el análisis de costos 💪\n\n${siguientePregunta}`;
     }
 
     manejarRecopilacionDatos(entrada) {
