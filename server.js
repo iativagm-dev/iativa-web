@@ -7,6 +7,7 @@ const cors = require('cors');
 
 // Importar módulos de IAtiva
 const AgenteIAtiva = require('./src/agent');
+const CalculadoraCostosTiempo = require("./src/calculadoraCostosTiempo");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -533,6 +534,46 @@ app.post('/api/save-demo-analysis', async (req, res) => {
     }
 });
 
+// API para calcular costos por tiempo
+app.post('/api/calcular-costos-tiempo', (req, res) => {
+    try {
+        console.log('📊 API Calcular Costos - Datos recibidos:', req.body);
+        
+        const { servicios } = req.body;
+        
+        if (!servicios || typeof servicios !== 'object') {
+            return res.status(400).json({
+                success: false,
+                error: 'Datos de servicios requeridos'
+            });
+        }
+
+        // Instanciar la calculadora
+        const calculadora = new CalculadoraCostosTiempo();
+        
+        // Realizar el cálculo
+        const resultado = calculadora.calcularMultiplesServicios(servicios);
+        
+        console.log('✅ Cálculo completado:', {
+            servicios: Object.keys(resultado.resultados).length,
+            errores: Object.keys(resultado.errores).length,
+            total: resultado.totales ? resultado.totales.valorMensual : 0
+        });
+
+        res.json({
+            success: true,
+            calculo: resultado
+        });
+        
+    } catch (error) {
+        console.error('❌ Error en cálculo de costos:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
+    }
+});
+
 // DEMO - Acceso directo sin registro
 app.get('/demo', (req, res) => {
     // Crear sesión temporal si no existe
@@ -550,6 +591,14 @@ app.get('/demo', (req, res) => {
         title: 'Análisis Gratuito - IAtiva',
         tempUser: req.session.tempUser,
         user: null // Importante: no mostrar como usuario registrado
+    });
+});
+
+// Calculadora de Costos por Tiempo
+app.get('/calculadora-costos', (req, res) => {
+    res.render('calculadora-costos', {
+        title: 'Calculadora de Costos por Tiempo - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null
     });
 });
 
