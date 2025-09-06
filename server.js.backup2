@@ -8,13 +8,9 @@ const cors = require('cors');
 // Importar módulos de IAtiva
 const AgenteIAtiva = require('./src/agent');
 const CalculadoraCostosTiempo = require("./src/calculadoraCostosTiempo");
-const EmailService = require('./src/emailService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Inicializar EmailService
-const emailService = new EmailService();
 
 // Configuración de middleware
 app.use(cors());
@@ -44,7 +40,6 @@ if (!fs.existsSync(dataDir)) {
 const usersFile = path.join(dataDir, 'users.json');
 const analysesFile = path.join(dataDir, 'analyses.json');
 const analyticsFile = path.join(dataDir, 'analytics.json');
-const demoLimitsFile = path.join(dataDir, 'demo-limits.json');
 
 // Inicializar archivos si no existen
 function initializeData() {
@@ -72,10 +67,6 @@ function initializeData() {
     
     if (!fs.existsSync(analyticsFile)) {
         fs.writeFileSync(analyticsFile, JSON.stringify([], null, 2));
-    }
-    
-    if (!fs.existsSync(demoLimitsFile)) {
-        fs.writeFileSync(demoLimitsFile, JSON.stringify({}, null, 2));
     }
 }
 
@@ -121,50 +112,6 @@ function logAnalytics(eventType, req, data = {}) {
     } catch (err) {
         console.error('Error logging analytics:', err);
     }
-}
-
-// Funciones para límites de demo por IP
-function getDemoLimits() {
-    try {
-        return JSON.parse(fs.readFileSync(demoLimitsFile, 'utf8'));
-    } catch {
-        return {};
-    }
-}
-
-function saveDemoLimits(limits) {
-    fs.writeFileSync(demoLimitsFile, JSON.stringify(limits, null, 2));
-}
-
-function checkDemoLimit(ipAddress) {
-    const limits = getDemoLimits();
-    const today = new Date().toDateString();
-    
-    if (!limits[ipAddress]) {
-        limits[ipAddress] = {};
-    }
-    
-    if (!limits[ipAddress][today]) {
-        limits[ipAddress][today] = 0;
-    }
-    
-    return limits[ipAddress][today] < 2; // Permitir 2 análisis por IP por día
-}
-
-function incrementDemoLimit(ipAddress) {
-    const limits = getDemoLimits();
-    const today = new Date().toDateString();
-    
-    if (!limits[ipAddress]) {
-        limits[ipAddress] = {};
-    }
-    
-    if (!limits[ipAddress][today]) {
-        limits[ipAddress][today] = 0;
-    }
-    
-    limits[ipAddress][today]++;
-    saveDemoLimits(limits);
 }
 
 // Inicializar datos
@@ -360,17 +307,6 @@ app.post('/api/demo-chat', async (req, res) => {
         if (!sessionId) {
             console.log('❌ Session ID faltante');
             return res.status(400).json({ error: 'Session ID requerido' });
-        }
-
-        // Verificar límites de demo por IP
-        const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
-        if (!checkDemoLimit(clientIp)) {
-            console.log('🚫 Límite de demo alcanzado para IP:', clientIp);
-            return res.status(429).json({ 
-                error: 'Límite de análisis demo alcanzado',
-                message: 'Has alcanzado el límite de 2 análisis demo por día. Regístrate gratis para análisis ilimitados.',
-                limitReached: true
-            });
         }
 
         // Verificar o crear sesión temporal
@@ -576,20 +512,6 @@ app.post('/api/save-demo-analysis', async (req, res) => {
         analyses.push(newAnalysis);
         saveAnalyses(analyses);
 
-        // Enviar email automático con el reporte
-        if (newAnalysis) {
-            const emailResult = await emailService.enviarReporteCompleto(
-                email,
-                user.full_name,
-                JSON.parse(newAnalysis.analysis_data)
-            );
-            console.log('📧 Email result:', emailResult.message);
-        }
-
-        // Incrementar contador de demo para esta IP
-        const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
-        incrementDemoLimit(clientIp);
-
         // Limpiar sesión temporal
         delete req.session.lastAnalysis;
 
@@ -612,46 +534,6 @@ app.post('/api/save-demo-analysis', async (req, res) => {
     }
 });
 
-// API para calcular costos por tiempo
-app.post('/api/calcular-costos-tiempo', (req, res) => {
-    try {
-        console.log('📊 API Calcular Costos - Datos recibidos:', req.body);
-        
-        const { servicios } = req.body;
-        
-        if (!servicios || typeof servicios !== 'object') {
-            return res.status(400).json({
-                success: false,
-                error: 'Datos de servicios requeridos'
-            });
-        }
-
-        // Instanciar la calculadora
-        const calculadora = new CalculadoraCostosTiempo();
-        
-        // Realizar el cálculo
-        const resultado = calculadora.calcularMultiplesServicios(servicios);
-        
-        console.log('✅ Cálculo completado:', {
-            servicios: Object.keys(resultado.resultados).length,
-            errores: Object.keys(resultado.errores).length,
-            total: resultado.totales ? resultado.totales.valorMensual : 0
-        });
-
-        res.json({
-            success: true,
-            calculo: resultado
-        });
-        
-    } catch (error) {
-        console.error('❌ Error en cálculo de costos:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Error interno del servidor'
-        });
-    }
-});
-
 // DEMO - Acceso directo sin registro
 app.get('/demo', (req, res) => {
     // Crear sesión temporal si no existe
@@ -669,14 +551,6 @@ app.get('/demo', (req, res) => {
         title: 'Análisis Gratuito - IAtiva',
         tempUser: req.session.tempUser,
         user: null // Importante: no mostrar como usuario registrado
-    });
-});
-
-// Calculadora de Costos por Tiempo
-app.get('/calculadora-costos', (req, res) => {
-    res.render('calculadora-costos', {
-        title: 'Calculadora de Costos por Tiempo - IAtiva',
-        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null
     });
 });
 

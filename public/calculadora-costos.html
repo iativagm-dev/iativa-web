@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Costos por Tiempo - IAtiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #C9A961 0%, #1E88E5 50%, #4CAF50 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg shadow-lg">
+        <div class="mx-auto max-w-7xl px-4 py-4">
+            <a href="/" class="text-white text-xl font-bold">🏠 IAtiva - Calculadora de Costos</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Título -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                📊 Calculadora de Costos por Tiempo
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Descubre cuánto te cuestan tus servicios por minuto, hora, día y mes. 
+                Ingresa los valores mensuales de tus servicios y obtén un análisis detallado.
+            </p>
+        </div>
+
+        <!-- Formulario de entrada -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Arriendo -->
+                <div>
+                    <label class="block mb-2 font-semibold text-lg">🏠 Arriendo ($)</label>
+                    <input type="text" id="arriendo" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="800000">
+                </div>
+
+                <!-- Internet -->
+                <div>
+                    <label class="block mb-2 font-semibold text-lg">🌐 Internet ($)</label>
+                    <input type="text" id="internet" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="65000">
+                </div>
+
+                <!-- Gas -->
+                <div>
+                    <label class="block mb-2 font-semibold text-lg">🔥 Gas ($)</label>
+                    <input type="text" id="gas" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="45000">
+                </div>
+
+                <!-- Agua -->
+                <div>
+                    <label class="block mb-2 font-semibold text-lg">💧 Agua ($)</label>
+                    <input type="text" id="agua" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="35000">
+                </div>
+
+                <!-- Electricidad -->
+                <div>
+                    <label class="block mb-2 font-semibold text-lg">⚡ Electricidad ($)</label>
+                    <input type="text" id="electricidad" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="120000">
+                </div>
+
+                <!-- Otro -->
+                <div>
+                    <label class="block mb-2 font-semibold text-lg">📊 Otro Servicio ($)</label>
+                    <input type="text" id="otro" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="50000">
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="mt-8 text-center space-x-4">
+                <button onclick="calcular()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg">
+                    Calcular
+                </button>
+                <button onclick="ejemplo()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg">
+                    Llenar Ejemplo
+                </button>
+                <button onclick="limpiar()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg">
+                    Limpiar Todo
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div id="resultados" class="hidden">
+            <!-- Total General -->
+            <div class="bg-gradient-to-r from-yellow-400 to-blue-600 rounded-xl shadow-lg p-8 mb-8 text-white">
+                <h3 class="text-2xl font-bold mb-6 text-center">
+                    💰 Total de todos los servicios
+                </h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Mensual</div>
+                        <div id="total-mensual" class="text-2xl font-bold">$0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Diario</div>
+                        <div id="total-diario" class="text-2xl font-bold">$0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Por hora</div>
+                        <div id="total-hora" class="text-2xl font-bold">$0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Por minuto</div>
+                        <div id="total-minuto" class="text-2xl font-bold">$0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Por segundo</div>
+                        <div id="total-segundo" class="text-2xl font-bold">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalles por servicio -->
+            <div id="detalles" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Servicios se insertarán aquí dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Mensaje inicial -->
+        <div id="mensaje-inicial" class="text-center py-12">
+            <div class="text-6xl mb-4">📊</div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Ingresa los valores de tus servicios!</h3>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Completa los campos de arriba con los valores mensuales de tus servicios para ver el análisis detallado de costos por tiempo.
+            </p>
+        </div>
+    </div>
+
+    <!-- JavaScript externo -->
+    <script src="calc.js"></script>
+</body>
+</html>
