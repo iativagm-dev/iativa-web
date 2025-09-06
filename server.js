@@ -559,15 +559,63 @@ app.post('/api/save-demo-analysis', async (req, res) => {
             saveUsers(users);
         }
 
+        // Mapear y enriquecer los datos del análisis para el dashboard
+        const rawData = req.session.lastAnalysis.data || {};
+        const rawResults = req.session.lastAnalysis.results || {};
+        
+        // Crear datos estructurados para el dashboard
+        const mappedData = {
+            // Información del negocio (inferir o usar valores por defecto)
+            nombreNegocio: name ? `Negocio de ${name}` : 'Negocio Demo',
+            producto: 'Producto/Servicio',
+            tipoNegocio: 'Empresa',
+            ubicacion: 'No especificado',
+            
+            // Datos originales del agente
+            ...rawData
+        };
+        
+        // Mapear resultados a la estructura esperada por el dashboard
+        const mappedResults = {
+            // Resultados originales
+            ...rawResults,
+            
+            // Clasificación de costos
+            costosVariables: {
+                'Materia Prima': rawData.materia_prima || 0,
+                'Mano de Obra': rawData.mano_obra || 0,
+                'Empaque': rawData.empaque || 0,
+                'Transporte': rawData.transporte || 0,
+                'Marketing': rawData.marketing || 0
+            },
+            
+            costosFijos: {
+                'Servicios': rawData.servicios || 0,
+                'Arriendo/Sueldos': rawData.arriendo_sueldos || 0,
+                'Otros Costos': rawData.otros_costos || 0
+            },
+            
+            // Información adicional
+            rentabilidad: rawResults.margenGanancia ? 
+                `${rawResults.margenGanancia}% de margen` : 
+                'No calculado',
+                
+            recomendaciones: [
+                'Revisar costos variables para optimización',
+                'Considerar estrategias de reducción de costos fijos',
+                'Evaluar precios de venta competitivos'
+            ]
+        };
+        
         // Guardar el análisis
         const analyses = getAnalyses();
         const newAnalysis = {
             id: analyses.length + 1,
             user_id: user.id,
             session_id: req.session.lastAnalysis.sessionId,
-            business_name: req.session.lastAnalysis.data.nombreNegocio || 'Análisis Demo',
-            analysis_data: JSON.stringify(req.session.lastAnalysis.data),
-            results: JSON.stringify(req.session.lastAnalysis.results),
+            business_name: mappedData.nombreNegocio,
+            analysis_data: JSON.stringify(mappedData),
+            results: JSON.stringify(mappedResults),
             status: 'completed',
             created_at: new Date().toISOString(),
             from_demo: true
