@@ -590,6 +590,11 @@ app.post('/api/save-demo-analysis', async (req, res) => {
         const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
         incrementDemoLimit(clientIp);
 
+        // Crear sesión para el usuario
+        req.session.userId = user.id;
+        req.session.userName = user.full_name;
+        req.session.userEmail = user.email;
+
         // Limpiar sesión temporal
         delete req.session.lastAnalysis;
 
@@ -601,9 +606,10 @@ app.post('/api/save-demo-analysis', async (req, res) => {
 
         res.json({ 
             success: true, 
-            message: 'Análisis guardado exitosamente',
+            message: 'Análisis guardado exitosamente. Redirigiendo al dashboard...',
             analysisId: newAnalysis.id,
-            user: { id: user.id, name: user.full_name }
+            user: { id: user.id, name: user.full_name },
+            redirectUrl: '/dashboard'
         });
         
     } catch (error) {

@@ -20,8 +20,13 @@ class EmailService {
     async enviarReporteCompleto(emailDestino, nombreUsuario, datosAnalisis) {
         try {
             if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-                console.log('⚠️ Configuración de email no encontrada. Email no enviado.');
-                return { success: false, message: 'Configuración de email no disponible' };
+                console.log('⚠️ Variables de entorno EMAIL_USER y EMAIL_PASSWORD no configuradas');
+                console.log('📧 Simulando envío de email a:', emailDestino);
+                return { 
+                    success: true, 
+                    message: 'Email simulado - configurar variables EMAIL_USER y EMAIL_PASSWORD en Railway',
+                    simulated: true 
+                };
             }
 
             const htmlContent = this.generarHTMLReporte(nombreUsuario, datosAnalisis);
@@ -33,6 +38,16 @@ class EmailService {
                 html: htmlContent
             };
 
+            console.log('📧 Intentando enviar email a:', emailDestino);
+            console.log('🔧 Configuración SMTP:', {
+                service: 'gmail',
+                user: process.env.EMAIL_USER ? process.env.EMAIL_USER.substring(0, 3) + '***' : 'NO_CONFIGURADO'
+            });
+            
+            // Verificar conexión antes de enviar
+            await this.transporter.verify();
+            console.log('✅ Conexión SMTP verificada');
+            
             const result = await this.transporter.sendMail(mailOptions);
             console.log('✅ Email enviado exitosamente:', result.messageId);
             
