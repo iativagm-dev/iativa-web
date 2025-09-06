@@ -563,6 +563,15 @@ app.post('/api/save-demo-analysis', async (req, res) => {
         const rawData = req.session.lastAnalysis.data || {};
         const rawResults = req.session.lastAnalysis.results || {};
         
+        // DEBUG: Log para ver qué datos llegan realmente
+        console.log('🔍 DEBUG - Raw data from agent:', rawData);
+        console.log('🔍 DEBUG - Raw results from agent:', rawResults);
+        console.log('🔍 DEBUG - Session lastAnalysis:', req.session.lastAnalysis);
+        
+        // Extraer los costos correctamente - están en rawData.costos
+        const costData = rawData.costos || rawData || {};
+        console.log('🔍 DEBUG - Cost data extracted:', costData);
+        
         // Crear datos estructurados para el dashboard
         const mappedData = {
             // Información del negocio (inferir o usar valores por defecto)
@@ -572,7 +581,8 @@ app.post('/api/save-demo-analysis', async (req, res) => {
             ubicacion: 'No especificado',
             
             // Datos originales del agente
-            ...rawData
+            ...rawData,
+            ...costData
         };
         
         // Mapear resultados a la estructura esperada por el dashboard
@@ -580,19 +590,19 @@ app.post('/api/save-demo-analysis', async (req, res) => {
             // Resultados originales
             ...rawResults,
             
-            // Clasificación de costos
+            // Clasificación de costos usando los valores correctos
             costosVariables: {
-                'Materia Prima': rawData.materia_prima || 0,
-                'Mano de Obra': rawData.mano_obra || 0,
-                'Empaque': rawData.empaque || 0,
-                'Transporte': rawData.transporte || 0,
-                'Marketing': rawData.marketing || 0
+                'Materia Prima': costData.materia_prima || 0,
+                'Mano de Obra': costData.mano_obra || 0,
+                'Empaque': costData.empaque || 0,
+                'Transporte': costData.transporte || 0,
+                'Marketing': costData.marketing || 0
             },
             
             costosFijos: {
-                'Servicios': rawData.servicios || 0,
-                'Arriendo/Sueldos': rawData.arriendo_sueldos || 0,
-                'Otros Costos': rawData.otros_costos || 0
+                'Servicios': costData.servicios || 0,
+                'Arriendo/Sueldos': costData.arriendo_sueldos || 0,
+                'Otros Costos': costData.otros_costos || 0
             },
             
             // Información adicional
