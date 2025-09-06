@@ -113,7 +113,7 @@
             </div>
             
             <div class="mt-4 md:mt-0 flex space-x-3 no-print">
-                <button onclick="window.print()" 
+                <button onclick="imprimirAnalisis()" 
                         class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
                     <i class="fas fa-print mr-2"></i>Imprimir
                 </button>
@@ -309,10 +309,17 @@
     </div>
 
     <script>
-        // Función para imprimir con estilos
-        window.print = function() {
-            window.print();
-        };
+        // Función para imprimir mejorada
+        function imprimirAnalisis() {
+            // Aplicar estilos temporales para impresión
+            document.body.classList.add('printing');
+            
+            // Imprimir después de un breve delay para que se apliquen los estilos
+            setTimeout(() => {
+                window.print();
+                document.body.classList.remove('printing');
+            }, 100);
+        }
     </script>
 </body>
 </html>
