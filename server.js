@@ -811,6 +811,107 @@ app.get('/analisis/:id', requireAuth, (req, res) => {
     }
 });
 
+// Generar reporte PDF de análisis
+app.get('/analisis/:id/reporte', requireAuth, (req, res) => {
+    try {
+        const analyses = getAnalyses();
+        const analysis = analyses.find(a => 
+            a.id === parseInt(req.params.id) && a.user_id === req.session.userId
+        );
+        
+        if (!analysis) {
+            return res.status(404).json({ error: 'Análisis no encontrado' });
+        }
+
+        const analysisData = JSON.parse(analysis.analysis_data);
+        const results = JSON.parse(analysis.results);
+        
+        // Generar HTML para PDF (versión simplificada)
+        const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Reporte - ${analysis.business_name}</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .header { text-align: center; margin-bottom: 30px; }
+                .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; }
+                .cost-item { display: flex; justify-content: space-between; margin: 5px 0; }
+                .total { font-weight: bold; font-size: 18px; }
+                table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>📊 Reporte de Análisis de Costos</h1>
+                <h2>${analysis.business_name}</h2>
+                <p>Generado el: ${new Date().toLocaleDateString('es-CO')}</p>
+            </div>
+            
+            <div class="section">
+                <h3>Información del Negocio</h3>
+                <p><strong>Nombre:</strong> ${analysisData.nombreNegocio || 'N/A'}</p>
+                <p><strong>Tipo:</strong> ${analysisData.tipoNegocio || 'N/A'}</p>
+                <p><strong>Ubicación:</strong> ${analysisData.ubicacion || 'N/A'}</p>
+            </div>
+            
+            <div class="section">
+                <h3>Costos Variables</h3>
+                <table>
+                    <tr><th>Concepto</th><th>Valor</th></tr>
+                    ${Object.entries(results.costosVariables || {}).map(([key, value]) => 
+                        `<tr><td>${key}</td><td>$${typeof value === 'number' ? value.toLocaleString('es-CO') : value}</td></tr>`
+                    ).join('')}
+                </table>
+            </div>
+            
+            <div class="section">
+                <h3>Costos Fijos</h3>
+                <table>
+                    <tr><th>Concepto</th><th>Valor</th></tr>
+                    ${Object.entries(results.costosFijos || {}).map(([key, value]) => 
+                        `<tr><td>${key}</td><td>$${typeof value === 'number' ? value.toLocaleString('es-CO') : value}</td></tr>`
+                    ).join('')}
+                </table>
+            </div>
+            
+            <div class="section">
+                <h3>Resultados del Análisis</h3>
+                <p><strong>Costo Unitario:</strong> $${results.costoUnitario ? results.costoUnitario.toLocaleString('es-CO') : 'N/A'}</p>
+                <p><strong>Precio de Venta:</strong> $${results.precioVenta ? results.precioVenta.toLocaleString('es-CO') : 'N/A'}</p>
+                <p><strong>Punto de Equilibrio:</strong> ${results.puntoEquilibrio || 'N/A'} unidades</p>
+                <p><strong>Rentabilidad:</strong> ${results.rentabilidad || 'N/A'}</p>
+            </div>
+            
+            <div class="section">
+                <h3>Recomendaciones</h3>
+                <ul>
+                    ${(results.recomendaciones || []).map(rec => `<li>${rec}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <p style="text-align: center; margin-top: 40px; color: #666;">
+                <small>Generado por IAtiva - Tu Aliado en Crecimiento Financiero</small>
+            </p>
+        </body>
+        </html>`;
+        
+        // Enviar HTML con headers para descargar como archivo
+        res.setHeader('Content-Type', 'text/html');
+        res.setHeader('Content-Disposition', `attachment; filename="Reporte-${analysis.business_name}-${analysis.id}.html"`);
+        res.send(htmlContent);
+        
+        logAnalytics('report_downloaded', req, { analysisId: req.params.id });
+        
+    } catch (error) {
+        console.error('Report generation error:', error);
+        res.status(500).json({ error: 'Error generando reporte' });
+    }
+});
+
 // Logout
 app.post('/logout', (req, res) => {
     logAnalytics('logout', req, { userId: req.session.userId });
