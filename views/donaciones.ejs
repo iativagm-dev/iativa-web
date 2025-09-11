@@ -1,0 +1,221 @@
+<%- include('partials/header') %>
+
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                ❤️ Apoya el Desarrollo de IAtiva
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Tu donación nos ayuda a seguir desarrollando herramientas financieras gratuitas y de calidad para emprendedores como tú.
+            </p>
+        </div>
+
+        <!-- Beneficios de Donar -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4 text-center">
+                🚀 ¿Por qué donar a IAtiva?
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="bg-iativa-blue bg-opacity-10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-code text-iativa-blue text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Desarrollo Continuo</h3>
+                    <p class="text-sm text-gray-600">Nuevas funcionalidades y mejoras constantes</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-iativa-green bg-opacity-10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-server text-iativa-green text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Infraestructura</h3>
+                    <p class="text-sm text-gray-600">Servidores y servicios para mantener la app funcionando</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-iativa-gold bg-opacity-10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-graduation-cap text-iativa-gold text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Educación</h3>
+                    <p class="text-sm text-gray-600">Contenido educativo y recursos gratuitos</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-iativa-purple bg-opacity-10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-heart text-iativa-purple text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Comunidad</h3>
+                    <p class="text-sm text-gray-600">Apoyo y crecimiento de la comunidad emprendedora</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Opciones de Donación -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <% donaciones.forEach((donacion, index) => { %>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow duration-200">
+                <div class="text-3xl mb-3">
+                    <% if (index === 0) { %>☕
+                    <% } else if (index === 1) { %>🍽️
+                    <% } else if (index === 2) { %>🚀
+                    <% } else { %>👑<% } %>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2"><%= donacion.nombre %></h3>
+                <p class="text-gray-600 text-sm mb-4"><%= donacion.descripcion %></p>
+                <div class="text-2xl font-bold text-iativa-blue mb-4">
+                    $<%= donacion.precio.toLocaleString('es-CO') %> COP
+                </div>
+                <button onclick="donate('<%= Object.keys(donaciones)[index] %>')" 
+                        class="w-full bg-iativa-blue text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                    Donar Ahora
+                </button>
+            </div>
+            <% }); %>
+        </div>
+
+        <!-- Donación Personalizada -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">
+                💝 Donación Personalizada
+            </h2>
+            <div class="max-w-md mx-auto">
+                <form id="customDonationForm">
+                    <div class="mb-4">
+                        <label for="customAmount" class="block text-sm font-medium text-gray-700 mb-2">
+                            Monto (COP)
+                        </label>
+                        <input type="number" 
+                               id="customAmount" 
+                               name="customAmount"
+                               min="1000" 
+                               step="1000"
+                               placeholder="ej: 25000"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-transparent">
+                    </div>
+                    <div class="mb-4">
+                        <label for="donorName" class="block text-sm font-medium text-gray-700 mb-2">
+                            Tu Nombre (opcional)
+                        </label>
+                        <input type="text" 
+                               id="donorName" 
+                               name="donorName"
+                               placeholder="ej: Juan Pérez"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-transparent">
+                    </div>
+                    <div class="mb-6">
+                        <label for="donorEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                            Tu Email *
+                        </label>
+                        <input type="email" 
+                               id="donorEmail" 
+                               name="donorEmail"
+                               placeholder="tu@email.com"
+                               required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-iativa-blue focus:border-transparent">
+                    </div>
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-iativa-gold to-iativa-blue text-white py-3 px-4 rounded-lg hover:opacity-90 transition-opacity duration-200 font-semibold">
+                        💖 Realizar Donación Personalizada
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Transparencia -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                🔍 Transparencia Total
+            </h2>
+            <p class="text-gray-600 mb-4">
+                Todas las donaciones se destinan directamente al desarrollo y mantenimiento de IAtiva. 
+                Publicamos informes de transparencia regularmente en nuestro blog.
+            </p>
+            <div class="text-sm text-gray-500">
+                Donaciones procesadas de forma segura por MercadoPago 🔒
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Carga -->
+<div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-sm mx-auto text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-iativa-blue mx-auto mb-4"></div>
+        <p class="text-gray-700">Procesando tu donación...</p>
+        <p class="text-sm text-gray-500 mt-2">Serás redirigido a MercadoPago</p>
+    </div>
+</div>
+
+<script>
+// Función para donar con opciones predefinidas
+async function donate(tipo) {
+    const email = prompt('Por favor, ingresa tu email para procesar la donación:');
+    if (!email || !email.includes('@')) {
+        alert('Por favor, ingresa un email válido');
+        return;
+    }
+    
+    const nombre = prompt('Tu nombre (opcional):') || '';
+    
+    await processDonation(tipo, null, email, nombre);
+}
+
+// Función para donación personalizada
+document.getElementById('customDonationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const amount = parseInt(document.getElementById('customAmount').value);
+    const name = document.getElementById('donorName').value;
+    const email = document.getElementById('donorEmail').value;
+    
+    if (!amount || amount < 1000) {
+        alert('El monto mínimo de donación es $1,000 COP');
+        return;
+    }
+    
+    if (!email) {
+        alert('El email es requerido');
+        return;
+    }
+    
+    await processDonation('personalizada', amount, email, name);
+});
+
+// Procesar donación
+async function processDonation(tipo, monto, email, nombre) {
+    const loadingModal = document.getElementById('loadingModal');
+    loadingModal.classList.remove('hidden');
+    loadingModal.classList.add('flex');
+    
+    try {
+        const response = await fetch('/api/create-donation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tipo: tipo,
+                monto_personalizado: monto,
+                email: email,
+                nombre: nombre
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Redirigir a MercadoPago
+            window.location.href = data.payment_url;
+        } else {
+            throw new Error(data.error || 'Error procesando la donación');
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error procesando la donación: ' + error.message);
+        loadingModal.classList.add('hidden');
+        loadingModal.classList.remove('flex');
+    }
+}
+</script>
+
+<%- include('partials/footer') %>

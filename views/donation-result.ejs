@@ -1,0 +1,120 @@
+<%- include('partials/header') %>
+
+<div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+            <% if (success) { %>
+                <!-- Éxito -->
+                <div class="mx-auto h-20 w-20 rounded-full bg-green-100 flex items-center justify-center mb-6">
+                    <i class="fas fa-heart text-green-500 text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">
+                    ¡Gracias por tu Apoyo! 💖
+                </h1>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                    <p class="text-green-800"><%= message %></p>
+                </div>
+                <div class="space-y-3 text-sm text-gray-600">
+                    <p>✅ Tu donación ha sido procesada exitosamente</p>
+                    <p>📧 Recibirás un email de confirmación</p>
+                    <p>🚀 Esto nos ayuda a seguir mejorando IAtiva</p>
+                    <p>🏆 ¡Eres oficialmente parte de nuestra comunidad de supporters!</p>
+                </div>
+            <% } else { %>
+                <!-- Error o Cancelación -->
+                <div class="mx-auto h-20 w-20 rounded-full bg-orange-100 flex items-center justify-center mb-6">
+                    <i class="fas fa-exclamation-triangle text-orange-500 text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">
+                    Donación No Completada
+                </h1>
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                    <p class="text-orange-800"><%= message %></p>
+                </div>
+                <div class="space-y-3 text-sm text-gray-600">
+                    <p>💳 No se realizó ningún cargo a tu cuenta</p>
+                    <p>🔄 Puedes intentar nuevamente cuando quieras</p>
+                    <p>💌 Agradecemos igual tu intención de apoyar</p>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Acciones -->
+        <div class="space-y-3">
+            <% if (success) { %>
+                <a href="/dashboard" 
+                   class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-iativa-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-iativa-blue transition-colors duration-200">
+                    <i class="fas fa-tachometer-alt mr-2"></i>
+                    Ir al Dashboard
+                </a>
+                <a href="/demo" 
+                   class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-iativa-blue transition-colors duration-200">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Hacer un Análisis Gratuito
+                </a>
+            <% } else { %>
+                <a href="/donaciones" 
+                   class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-iativa-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-iativa-blue transition-colors duration-200">
+                    <i class="fas fa-heart mr-2"></i>
+                    Intentar Donación Nuevamente
+                </a>
+                <a href="/" 
+                   class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-iativa-blue transition-colors duration-200">
+                    <i class="fas fa-home mr-2"></i>
+                    Volver al Inicio
+                </a>
+            <% } %>
+        </div>
+
+        <!-- Compartir (solo si éxito) -->
+        <% if (success) { %>
+            <div class="border-t border-gray-200 pt-6">
+                <h3 class="text-center text-sm font-medium text-gray-900 mb-4">
+                    ¿Te gusta IAtiva? ¡Compártelo! 🤗
+                </h3>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="shareOnTwitter()" 
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded text-white bg-blue-400 hover:bg-blue-500 transition-colors duration-200">
+                        <i class="fab fa-twitter mr-1"></i>
+                        Twitter
+                    </button>
+                    <button onclick="shareOnWhatsApp()" 
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded text-white bg-green-500 hover:bg-green-600 transition-colors duration-200">
+                        <i class="fab fa-whatsapp mr-1"></i>
+                        WhatsApp
+                    </button>
+                    <button onclick="copyLink()" 
+                            class="inline-flex items-center px-3 py-2 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                        <i class="fas fa-link mr-1"></i>
+                        Copiar Link
+                    </button>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<% if (success) { %>
+<script>
+function shareOnTwitter() {
+    const text = encodeURIComponent('Acabo de apoyar a @IAtiva_co 💖 ¡Una herramienta increíble para análisis financieros! 🚀 #emprendimiento #finanzas');
+    const url = encodeURIComponent('https://iativa.com');
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+}
+
+function shareOnWhatsApp() {
+    const text = encodeURIComponent('¡Acabo de descubrir IAtiva! 🚀 Una herramienta genial para análisis financieros. Te la recomiendo: https://iativa.com');
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+function copyLink() {
+    navigator.clipboard.writeText('https://iativa.com').then(() => {
+        alert('¡Link copiado al portapapeles! 📋');
+    }).catch(() => {
+        prompt('Copia este link:', 'https://iativa.com');
+    });
+}
+</script>
+<% } %>
+
+<%- include('partials/footer') %>

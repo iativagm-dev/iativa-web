@@ -1,0 +1,26 @@
+{
+  "127.0.0.1": {
+    "reason": "Desarrollador - Demostraciones EXPOSENA 2025",
+    "unlimited_debt_demo": true,
+    "unlimited_analysis": true,
+    "added_date": "2025-09-11T03:00:00.000Z",
+    "added_by": "system",
+    "notes": "IP del desarrollador para demostraciones en exposiciones y bancos"
+  },
+  "::1": {
+    "reason": "Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)",
+    "unlimited_debt_demo": true,
+    "unlimited_analysis": true,
+    "added_date": "2025-09-11T03:00:00.000Z",
+    "added_by": "system",
+    "notes": "IP del desarrollador para demostraciones en exposiciones y bancos (IPv6)"
+  },
+  "::ffff:127.0.0.1": {
+    "reason": "Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)",
+    "unlimited_debt_demo": true,
+    "unlimited_analysis": true,
+    "added_date": "2025-09-11T03:00:00.000Z",
+    "added_by": "system",
+    "notes": "IP del desarrollador para demostraciones en exposiciones y bancos (IPv4-mapped)"
+  }
+}

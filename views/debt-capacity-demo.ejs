@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Gratuito: Capacidad de Endeudamiento - IAtiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-gold': '#C9A961',
+                        'iativa-blue': '#1E88E5',
+                        'iativa-green': '#4CAF50',
+                        'iativa-dark': '#1A365D',
+                        'iativa-orange': '#ea580c'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white shadow-lg">
+        <%- include('partials/header') %>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-6">
+                <i class="fas fa-university text-3xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                🎁 Demo Gratuito: Capacidad de Endeudamiento
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+                Descubre cuánto puede endeudarse tu negocio de forma segura con nuestro sistema bancario profesional.
+                <strong class="text-purple-600">¡Completamente gratis, una vez por dispositivo!</strong>
+            </p>
+            
+            <div class="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-6 max-w-2xl mx-auto">
+                <div class="flex items-center justify-center space-x-8 text-sm">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span>Algoritmos bancarios reales</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span>4 tipos de crédito</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span>Análisis completo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <% if (hasUsedDemo) { %>
+            <!-- Ya usó el demo -->
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-info-circle text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-yellow-800 mb-4">Demo Ya Utilizado</h3>
+                    <p class="text-yellow-700 mb-6">
+                        Ya has utilizado tu demo gratuito de capacidad de endeudamiento desde este dispositivo.
+                        Para acceso ilimitado y análisis detallados, suscríbete a nuestro plan premium.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                            <a href="/dashboard" 
+                               class="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Ir al Dashboard
+                            </a>
+                            <a href="/demo" 
+                               class="inline-block bg-gray-100 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-200 transition-all">
+                                <i class="fas fa-calculator mr-2"></i>Hacer Otro Análisis
+                            </a>
+                            <a href="/planes" 
+                               class="inline-block bg-yellow-100 text-yellow-800 px-8 py-3 rounded-lg hover:bg-yellow-200 transition-all">
+                                <i class="fas fa-crown mr-2"></i>Ver Planes Premium
+                            </a>
+                        </div>
+                        
+                        <div class="text-sm text-yellow-600">
+                            <i class="fas fa-lightbulb mr-1"></i>
+                            <strong>Tip:</strong> Los usuarios premium tienen acceso ilimitado desde cualquier dispositivo
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } else { %>
+            <!-- Formulario Demo -->
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Ingresa los Datos de tu Negocio</h2>
+                        <p class="text-gray-600">Completa la información para calcular tu capacidad de endeudamiento</p>
+                    </div>
+
+                    <form id="debtCapacityForm" class="space-y-6">
+                        <!-- Información Básica -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-building text-iativa-blue mr-1"></i>
+                                    Nombre del Negocio
+                                </label>
+                                <input type="text" id="businessName" required
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                       placeholder="Ej: Mi Empresa SAS">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-chart-line text-iativa-green mr-1"></i>
+                                    Sector de la Empresa
+                                </label>
+                                <select id="businessSector" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Selecciona el sector</option>
+                                    <option value="comercio">Comercio</option>
+                                    <option value="servicios">Servicios</option>
+                                    <option value="manufactura">Manufactura</option>
+                                    <option value="tecnologia">Tecnología</option>
+                                    <option value="construccion">Construcción</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Información Financiera -->
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-calculator text-purple-600 mr-2"></i>
+                                Información Financiera Mensual
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Ingresos Mensuales (COP)
+                                    </label>
+                                    <input type="number" id="monthlyIncome" required min="0"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="5000000">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Gastos Mensuales (COP)
+                                    </label>
+                                    <input type="number" id="monthlyExpenses" required min="0"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="3000000">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Deudas Actuales (COP)
+                                    </label>
+                                    <input type="number" id="existingDebt" min="0"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="1000000">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Crecimiento Proyectado (%)
+                                    </label>
+                                    <input type="number" id="projectedGrowth" min="0" max="100"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="20">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botón de Análisis -->
+                        <div class="text-center">
+                            <button type="submit" id="analyzeBtn"
+                                    class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Calcular Capacidad de Endeudamiento
+                            </button>
+                            
+                            <p class="text-sm text-gray-500 mt-3">
+                                <i class="fas fa-shield-alt text-green-500 mr-1"></i>
+                                100% seguro y confidencial. No almacenamos tu información financiera.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Resultados -->
+                <div id="results" class="hidden mt-8">
+                    <!-- Los resultados se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+
+    <script>
+        document.getElementById('debtCapacityForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const originalText = analyzeBtn.innerHTML;
+            
+            // Mostrar loading
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analizando...';
+            analyzeBtn.disabled = true;
+            
+            try {
+                const formData = {
+                    business_data: {
+                        business_name: document.getElementById('businessName').value,
+                        sector: document.getElementById('businessSector').value,
+                        monthly_income: parseInt(document.getElementById('monthlyIncome').value),
+                        monthly_expenses: parseInt(document.getElementById('monthlyExpenses').value),
+                        existing_debt: parseInt(document.getElementById('existingDebt').value || 0)
+                    },
+                    financial_projections: {
+                        projected_monthly_income: parseInt(document.getElementById('monthlyIncome').value) * (1 + (parseInt(document.getElementById('projectedGrowth').value || 0) / 100)),
+                        projected_growth: parseInt(document.getElementById('projectedGrowth').value || 0)
+                    }
+                };
+                
+                const response = await fetch('/api/debt-capacity-demo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResults(result.analysis);
+                    
+                    // Scroll to results
+                    document.getElementById('results').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                    
+                    // Mostrar modal de upgrade después de 10 segundos
+                    setTimeout(() => {
+                        showUpgradeModal();
+                    }, 10000);
+                } else {
+                    alert('Error: ' + result.message);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar la solicitud. Intenta de nuevo.');
+            } finally {
+                // Restaurar botón
+                analyzeBtn.innerHTML = originalText;
+                analyzeBtn.disabled = false;
+            }
+        });
+        
+        function showResults(analysis) {
+            const resultsDiv = document.getElementById('results');
+            const formatter = new Intl.NumberFormat('es-CO');
+            
+            resultsDiv.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                            <i class="fas fa-check-circle text-green-600 text-3xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">¡Análisis Completado!</h2>
+                        <p class="text-gray-600">Aquí están los resultados de tu capacidad de endeudamiento</p>
+                    </div>
+                    
+                    <!-- Métricas Principales -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-green-600 mb-2">
+                                $${formatter.format(analysis.debt_capacity)}
+                            </div>
+                            <p class="text-green-800 font-medium">Capacidad Total de Endeudamiento</p>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-blue-600 mb-2">
+                                $${formatter.format(analysis.max_monthly_payment)}
+                            </div>
+                            <p class="text-blue-800 font-medium">Pago Mensual Máximo</p>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-purple-600 mb-2">
+                                ${analysis.risk_score}/100
+                            </div>
+                            <p class="text-purple-800 font-medium">Score de Riesgo</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones de Crédito -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">
+                            <i class="fas fa-university text-purple-600 mr-2"></i>
+                            Opciones de Financiación Disponibles
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            ${analysis.credit_options.slice(0, 2).map(option => `
+                                <div class="border border-gray-200 rounded-lg p-6">
+                                    <h4 class="font-semibold text-gray-900 mb-2">${option.description}</h4>
+                                    <div class="text-2xl font-bold text-gray-800 mb-2">
+                                        $${formatter.format(option.max_amount)}
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-3">
+                                        Tasa: ${(option.interest_rate * 100).toFixed(1)}% anual
+                                    </p>
+                                    <div class="text-sm">
+                                        <div class="flex justify-between">
+                                            <span>12 meses:</span>
+                                            <span class="font-medium">$${formatter.format(option.terms[0].monthly_payment)}/mes</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>24 meses:</span>
+                                            <span class="font-medium">$${formatter.format(option.terms[1].monthly_payment)}/mes</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Call to Action -->
+                    <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-8 text-center text-white">
+                        <h3 class="text-2xl font-bold mb-4">¿Te gustó este análisis?</h3>
+                        <p class="text-purple-100 mb-6">
+                            Obtén análisis ilimitados, reportes detallados, y acceso a todas las funciones premium de IAtiva.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="/dashboard" 
+                               class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Ir al Dashboard
+                            </a>
+                            <a href="/demo" 
+                               class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                                <i class="fas fa-calculator mr-2"></i>Hacer Otro Análisis
+                            </a>
+                            <a href="/planes" 
+                               class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                                <i class="fas fa-crown mr-2"></i>Ver Planes Premium
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.classList.remove('hidden');
+        }
+        
+        function showUpgradeModal() {
+            // Crear modal de upgrade
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg max-w-md w-full p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-crown text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Análisis Demo Completado!</h3>
+                    <p class="text-gray-600 mb-6">
+                        Has utilizado tu demostración gratuita. Para análisis ilimitados y funciones avanzadas, únete a IAtiva Premium.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <a href="/dashboard" 
+                           class="block bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Ir al Dashboard
+                        </a>
+                        <a href="/demo" 
+                           class="block bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-all">
+                            <i class="fas fa-calculator mr-2"></i>Hacer Otro Análisis
+                        </a>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                class="block w-full text-gray-500 py-2 hover:text-gray-700">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+    </script>
+</body>
+</html>

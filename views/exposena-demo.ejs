@@ -1,0 +1,233 @@
+<%- include('partials/header') %>
+
+<div class="min-h-screen bg-gradient-to-br from-iativa-blue to-iativa-purple">
+    <!-- Header Especial EXPOSENA -->
+    <div class="bg-black bg-opacity-20 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white bg-opacity-20 rounded-full p-3">
+                        <i class="fas fa-trophy text-iativa-gold text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-white text-2xl font-bold">EXPOSENA 2025</h1>
+                        <p class="text-gray-200 text-sm">Panel de Demostración Especial - IAtiva</p>
+                    </div>
+                </div>
+                <div class="bg-iativa-gold bg-opacity-20 rounded-lg px-4 py-2">
+                    <span class="text-white text-sm font-semibold">
+                        <i class="fas fa-crown mr-2"></i>ACCESO VIP
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Mensaje de Bienvenida VIP -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 mb-8 text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">
+                    🎯 Bienvenido al Demo Especial EXPOSENA 2025
+                </h2>
+                <p class="text-gray-200 text-lg mb-6">
+                    Esta es una versión especial de IAtiva configurada exclusivamente para demostraciones
+                    a bancos y entidades financieras durante EXPOSENA 2025.
+                </p>
+                <div class="bg-iativa-gold bg-opacity-20 rounded-lg p-4 inline-block">
+                    <p class="text-white font-semibold">
+                        <i class="fas fa-infinity mr-2"></i>
+                        Acceso Ilimitado a Todas las Funcionalidades
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stats en Tiempo Real -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8" id="statsGrid">
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">📊</div>
+                    <div class="text-2xl font-bold text-white" id="totalAnalyses">...</div>
+                    <div class="text-gray-200 text-sm">Análisis Totales</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">🎮</div>
+                    <div class="text-2xl font-bold text-white" id="demoSessions">...</div>
+                    <div class="text-gray-200 text-sm">Sesiones Demo</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">💰</div>
+                    <div class="text-2xl font-bold text-white" id="debtDemos">...</div>
+                    <div class="text-gray-200 text-sm">Análisis de Deuda</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">👥</div>
+                    <div class="text-2xl font-bold text-white" id="usersRegistered">...</div>
+                    <div class="text-gray-200 text-sm">Usuarios Registrados</div>
+                </div>
+            </div>
+
+            <!-- Funcionalidades Destacadas -->
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <!-- Análisis de Costos -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6">
+                    <div class="text-center mb-6">
+                        <div class="bg-iativa-blue bg-opacity-30 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-calculator text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Análisis de Costos</h3>
+                        <p class="text-gray-200 text-sm">Calculadora inteligente para análisis completo de costos empresariales</p>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-200">
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Costos variables y fijos</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Punto de equilibrio</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Márgenes de ganancia</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Recomendaciones IA</div>
+                    </div>
+                    <a href="/demo" class="block w-full bg-iativa-blue text-white text-center py-3 rounded-lg mt-6 hover:bg-blue-600 transition-colors duration-200">
+                        <i class="fas fa-play mr-2"></i>Iniciar Demo
+                    </a>
+                </div>
+
+                <!-- Capacidad de Endeudamiento -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6">
+                    <div class="text-center mb-6">
+                        <div class="bg-iativa-green bg-opacity-30 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Capacidad de Endeudamiento</h3>
+                        <p class="text-gray-200 text-sm">Evaluación completa de la capacidad crediticia empresarial</p>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-200">
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Análisis de flujo de caja</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Ratios financieros</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Capacidad de pago</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Score crediticio</div>
+                    </div>
+                    <a href="/debt-capacity-demo" class="block w-full bg-iativa-green text-white text-center py-3 rounded-lg mt-6 hover:bg-green-600 transition-colors duration-200">
+                        <i class="fas fa-play mr-2"></i>Probar Ahora
+                    </a>
+                </div>
+
+                <!-- Calculadora de Tiempo -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6">
+                    <div class="text-center mb-6">
+                        <div class="bg-iativa-gold bg-opacity-30 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-clock text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Costos por Tiempo</h3>
+                        <p class="text-gray-200 text-sm">Calculadora avanzada de costos de servicios por tiempo</p>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-200">
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Múltiples servicios</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Costos operacionales</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Optimización de precios</div>
+                        <div class="flex items-center"><i class="fas fa-check text-iativa-green mr-2"></i>Análisis comparativo</div>
+                    </div>
+                    <a href="/calculadora-costos" class="block w-full bg-iativa-gold text-white text-center py-3 rounded-lg mt-6 hover:opacity-90 transition-opacity duration-200">
+                        <i class="fas fa-play mr-2"></i>Explorar
+                    </a>
+                </div>
+            </div>
+
+            <!-- Información Técnica -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8">
+                <h3 class="text-2xl font-bold text-white mb-6 text-center">
+                    <i class="fas fa-cogs mr-2"></i>Características Técnicas
+                </h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-4">🚀 Tecnología</h4>
+                        <ul class="space-y-2 text-gray-200">
+                            <li><i class="fas fa-check-circle text-iativa-green mr-2"></i>Node.js + Express backend</li>
+                            <li><i class="fas fa-check-circle text-iativa-green mr-2"></i>Inteligencia Artificial integrada</li>
+                            <li><i class="fas fa-check-circle text-iativa-green mr-2"></i>Base de datos JSON optimizada</li>
+                            <li><i class="fas fa-check-circle text-iativa-green mr-2"></i>Interfaz responsive</li>
+                            <li><i class="fas fa-check-circle text-iativa-green mr-2"></i>APIs RESTful</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-4">🛡️ Seguridad</h4>
+                        <ul class="space-y-2 text-gray-200">
+                            <li><i class="fas fa-shield-alt text-iativa-gold mr-2"></i>Encriptación de datos</li>
+                            <li><i class="fas fa-shield-alt text-iativa-gold mr-2"></i>Autenticación segura</li>
+                            <li><i class="fas fa-shield-alt text-iativa-gold mr-2"></i>Validación de entrada</li>
+                            <li><i class="fas fa-shield-alt text-iativa-gold mr-2"></i>Logs de auditoría</li>
+                            <li><i class="fas fa-shield-alt text-iativa-gold mr-2"></i>HTTPS obligatorio</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Especial -->
+            <div class="text-center mt-12">
+                <div class="bg-black bg-opacity-30 rounded-xl p-6 inline-block">
+                    <p class="text-white font-semibold mb-2">
+                        <i class="fas fa-star text-iativa-gold mr-2"></i>
+                        EXPOSENA 2025 - Demostración Especial
+                    </p>
+                    <p class="text-gray-300 text-sm">
+                        Configuración VIP: <%= vipStatus.reason %>
+                    </p>
+                    <p class="text-gray-400 text-xs mt-2">
+                        Última actualización: <span id="lastUpdate">...</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para stats en tiempo real -->
+<script>
+let statsInterval;
+
+async function loadStats() {
+    try {
+        const response = await fetch('/api/demo-stats');
+        if (response.ok) {
+            const stats = await response.json();
+            
+            document.getElementById('totalAnalyses').textContent = stats.total_analyses.toLocaleString();
+            document.getElementById('demoSessions').textContent = stats.demo_sessions.toLocaleString();
+            document.getElementById('debtDemos').textContent = stats.debt_demos.toLocaleString();
+            document.getElementById('usersRegistered').textContent = stats.users_registered.toLocaleString();
+            
+            document.getElementById('lastUpdate').textContent = new Date(stats.last_updated).toLocaleString('es-CO');
+        }
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
+
+// Cargar stats iniciales
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    
+    // Actualizar cada 30 segundos
+    statsInterval = setInterval(loadStats, 30000);
+});
+
+// Limpiar interval al salir de la página
+window.addEventListener('beforeunload', function() {
+    if (statsInterval) {
+        clearInterval(statsInterval);
+    }
+});
+
+// Efectos visuales adicionales
+document.addEventListener('DOMContentLoaded', function() {
+    // Animación de entrada para las tarjetas
+    const cards = document.querySelectorAll('.bg-white.bg-opacity-10');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease-out';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+
+<%- include('partials/footer') %>

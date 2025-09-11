@@ -9,12 +9,18 @@ const cors = require('cors');
 const AgenteIAtiva = require('./src/agent');
 const CalculadoraCostosTiempo = require("./src/calculadoraCostosTiempo");
 const EmailService = require('./src/emailService');
+const PaymentService = require('./src/paymentService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Inicializar EmailService
+// Inicializar servicios
 const emailService = new EmailService();
+const paymentService = new PaymentService();
+const DebtCapacityCalculator = require('./src/debtCapacityCalculator');
+
+// Inicializar calculadora de deuda
+const debtCalculator = new DebtCapacityCalculator();
 
 // Configuración de middleware
 app.use(cors());
@@ -45,6 +51,8 @@ const usersFile = path.join(dataDir, 'users.json');
 const analysesFile = path.join(dataDir, 'analyses.json');
 const analyticsFile = path.join(dataDir, 'analytics.json');
 const demoLimitsFile = path.join(dataDir, 'demo-limits.json');
+const debtDemoLimitsFile = path.join(dataDir, 'debt-demo-limits.json');
+const vipIpsFile = path.join(dataDir, 'vip-ips.json');
 
 // Inicializar archivos si no existen
 function initializeData() {
@@ -76,6 +84,10 @@ function initializeData() {
     
     if (!fs.existsSync(demoLimitsFile)) {
         fs.writeFileSync(demoLimitsFile, JSON.stringify({}, null, 2));
+    }
+    
+    if (!fs.existsSync(debtDemoLimitsFile)) {
+        fs.writeFileSync(debtDemoLimitsFile, JSON.stringify({}, null, 2));
     }
 }
 
@@ -167,6 +179,62 @@ function incrementDemoLimit(ipAddress) {
     saveDemoLimits(limits);
 }
 
+// Funciones para límites de demo de capacidad de endeudamiento (1 vez por IP)
+function getDebtDemoLimits() {
+    try {
+        return JSON.parse(fs.readFileSync(debtDemoLimitsFile, 'utf8'));
+    } catch {
+        return {};
+    }
+}
+
+function saveDebtDemoLimits(limits) {
+    fs.writeFileSync(debtDemoLimitsFile, JSON.stringify(limits, null, 2));
+}
+
+function checkDebtDemoLimit(ipAddress) {
+    const limits = getDebtDemoLimits();
+    return !limits[ipAddress]; // Solo una vez por IP, sin límite de tiempo
+}
+
+function markDebtDemoUsed(ipAddress) {
+    const limits = getDebtDemoLimits();
+    limits[ipAddress] = {
+        used: true,
+        timestamp: new Date().toISOString()
+    };
+    saveDebtDemoLimits(limits);
+}
+
+// Funciones para IPs VIP (acceso ilimitado para demostraciones)
+function getVipIps() {
+    try {
+        return JSON.parse(fs.readFileSync(vipIpsFile, 'utf8'));
+    } catch {
+        return {};
+    }
+}
+
+function isVipIp(ipAddress) {
+    const vipIps = getVipIps();
+    return !!vipIps[ipAddress];
+}
+
+function getVipStatus(ipAddress) {
+    const vipIps = getVipIps();
+    return vipIps[ipAddress] || null;
+}
+
+// Función mejorada para límites de demo que considera VIPs
+function checkDebtDemoLimitWithVip(ipAddress) {
+    // Si es IP VIP, siempre permitir
+    if (isVipIp(ipAddress)) {
+        return true;
+    }
+    // Si no es VIP, aplicar límites normales
+    return checkDebtDemoLimit(ipAddress);
+}
+
 // Inicializar datos
 initializeData();
 
@@ -181,10 +249,19 @@ function requireAuth(req, res, next) {
 
 // Rutas principales
 app.get('/', (req, res) => {
-    logAnalytics('page_view', req, { page: 'home' });
+    const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    const vipStatus = getVipStatus(clientIp);
+    
+    logAnalytics('page_view', req, { 
+        page: 'home',
+        isVip: !!vipStatus,
+        vipReason: vipStatus?.reason || null
+    });
+    
     res.render('index', { 
         title: 'IAtiva - Tu Aliado en Crecimiento Financiero',
-        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        vipStatus: vipStatus
     });
 });
 
@@ -204,6 +281,13 @@ app.post('/login', (req, res) => {
             req.session.userId = user.id;
             req.session.userName = user.full_name || user.username;
             req.session.isAdmin = user.is_admin === true;
+            req.session.user = {
+                id: user.id,
+                name: user.full_name || user.username,
+                email: user.email,
+                plan: user.plan || 'demo',
+                is_admin: user.is_admin === true
+            };
             
             // Actualizar último login
             user.last_login = new Date().toISOString();
@@ -362,15 +446,24 @@ app.post('/api/demo-chat', async (req, res) => {
             return res.status(400).json({ error: 'Session ID requerido' });
         }
 
-        // Verificar límites de demo por IP
+        // Verificar límites de demo por IP (excepto VIPs)
         const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
-        if (!checkDemoLimit(clientIp)) {
-            console.log('🚫 Límite de demo alcanzado para IP:', clientIp);
-            return res.status(429).json({ 
-                error: 'Límite de análisis demo alcanzado',
-                message: 'Has alcanzado el límite de 2 análisis demo por día. Regístrate gratis para análisis ilimitados.',
-                limitReached: true
-            });
+        console.log('🔍 IP detectada:', clientIp);
+        const vipStatus = getVipStatus(clientIp);
+        console.log('🔍 Estado VIP:', vipStatus);
+        
+        if (vipStatus) {
+            console.log('👑 Acceso VIP detectado:', vipStatus.reason);
+        } else {
+            // Solo verificar límites para no-VIPs
+            if (!checkDemoLimit(clientIp)) {
+                console.log('🚫 Límite de demo alcanzado para IP:', clientIp);
+                return res.status(429).json({ 
+                    error: 'Límite de análisis demo alcanzado',
+                    message: 'Has alcanzado el límite de 2 análisis demo por día. Regístrate gratis para análisis ilimitados.',
+                    limitReached: true
+                });
+            }
         }
 
         // Verificar o crear sesión temporal
@@ -644,9 +737,11 @@ app.post('/api/save-demo-analysis', async (req, res) => {
             console.log('📧 Email result:', emailResult.message);
         }
 
-        // Incrementar contador de demo para esta IP
+        // Incrementar contador de demo para esta IP (excepto VIPs)
         const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
-        incrementDemoLimit(clientIp);
+        if (!isVipIp(clientIp)) {
+            incrementDemoLimit(clientIp);
+        }
 
         // Crear sesión para el usuario
         req.session.userId = user.id;
@@ -902,6 +997,357 @@ app.post('/logout', (req, res) => {
     res.redirect('/');
 });
 
+// ==================== RUTAS DE PAGOS Y SUSCRIPCIONES ====================
+
+// Página de planes
+app.get('/planes', (req, res) => {
+    res.render('planes', {
+        title: 'Planes de Suscripción - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null
+    });
+});
+
+// ==================== PANEL ESPECIAL EXPOSENA 2025 ====================
+
+// Panel especial para demostraciones EXPOSENA 2025
+app.get('/exposena-demo', (req, res) => {
+    const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    const vipStatus = getVipStatus(clientIp);
+    
+    // Solo accesible para IPs VIP configuradas para EXPOSENA
+    if (!vipStatus || !vipStatus.reason.includes('EXPOSENA')) {
+        return res.redirect('/');
+    }
+    
+    logAnalytics('exposena_demo_access', req, { 
+        vipReason: vipStatus.reason,
+        clientIp: clientIp.substring(0, 10) + '...'
+    });
+    
+    res.render('exposena-demo', {
+        title: 'Demo Especial EXPOSENA 2025 - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        vipStatus: vipStatus
+    });
+});
+
+// API especial para stats de demostración
+app.get('/api/demo-stats', (req, res) => {
+    const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    const vipStatus = getVipStatus(clientIp);
+    
+    if (!vipStatus) {
+        return res.status(403).json({ error: 'Acceso no autorizado' });
+    }
+    
+    try {
+        const analyses = getAnalyses();
+        const analytics = JSON.parse(fs.readFileSync(analyticsFile, 'utf8'));
+        
+        const stats = {
+            total_analyses: analyses.length,
+            demo_sessions: analytics.filter(a => a.event_type === 'demo_started').length,
+            debt_demos: analytics.filter(a => a.event_type === 'debt_demo_used').length,
+            users_registered: getUsers().length,
+            vip_access: true,
+            last_updated: new Date().toISOString()
+        };
+        
+        res.json(stats);
+    } catch (error) {
+        console.error('Error getting demo stats:', error);
+        res.status(500).json({ error: 'Error interno' });
+    }
+});
+
+// ==================== SISTEMA DE DONACIONES ====================
+
+// Página de donaciones
+app.get('/donaciones', (req, res) => {
+    const donaciones = paymentService.obtenerDonaciones();
+    res.render('donaciones', {
+        title: 'Apoya el Proyecto - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        donaciones: donaciones
+    });
+});
+
+// API para crear donación
+app.post('/api/create-donation', async (req, res) => {
+    try {
+        const { tipo, monto_personalizado, email, nombre } = req.body;
+        
+        if (!email) {
+            return res.status(400).json({ error: 'Email es requerido' });
+        }
+        
+        let donacion;
+        if (tipo === 'personalizada' && monto_personalizado) {
+            donacion = await paymentService.crearDonacion(parseInt(monto_personalizado), email, nombre);
+        } else if (tipo) {
+            donacion = await paymentService.crearDonacion(tipo, email, nombre);
+        } else {
+            return res.status(400).json({ error: 'Tipo de donación o monto es requerido' });
+        }
+        
+        logAnalytics('donation_created', req, { 
+            tipo, 
+            monto: monto_personalizado || 'predefinido',
+            email: email
+        });
+        
+        res.json({
+            success: true,
+            payment_url: donacion.init_point,
+            preference_id: donacion.id
+        });
+        
+    } catch (error) {
+        console.error('Error creando donación:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// Páginas de resultado de donación
+app.get('/donation/success', (req, res) => {
+    logAnalytics('donation_success', req);
+    res.render('donation-result', {
+        title: '¡Gracias por tu Donación! - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        success: true,
+        message: '¡Muchas gracias por tu donación! Tu apoyo nos ayuda a seguir mejorando IAtiva.'
+    });
+});
+
+app.get('/donation/failure', (req, res) => {
+    logAnalytics('donation_failure', req);
+    res.render('donation-result', {
+        title: 'Donación Cancelada - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        success: false,
+        message: 'La donación no pudo procesarse. No te preocupes, puedes intentar nuevamente.'
+    });
+});
+
+app.get('/donation/pending', (req, res) => {
+    logAnalytics('donation_pending', req);
+    res.render('donation-result', {
+        title: 'Donación Pendiente - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        success: true,
+        message: 'Tu donación está siendo procesada. Te notificaremos cuando se complete.'
+    });
+});
+
+// Webhook para notificaciones de donación
+app.post('/webhooks/mercadopago-donation', async (req, res) => {
+    try {
+        const webhook = await paymentService.procesarWebhook(req.body);
+        
+        if (webhook && webhook.status === 'approved') {
+            logAnalytics('donation_webhook_approved', req, {
+                payment_id: webhook.payment_id,
+                amount: webhook.amount,
+                email: webhook.email
+            });
+            
+            // Enviar email de agradecimiento
+            try {
+                await emailService.enviarEmailDonacion(
+                    webhook.email, 
+                    webhook.amount
+                );
+            } catch (emailError) {
+                console.error('Error enviando email de donación:', emailError);
+            }
+        }
+        
+        res.status(200).send('OK');
+    } catch (error) {
+        console.error('Error procesando webhook de donación:', error);
+        res.status(500).send('Error');
+    }
+});
+
+// ==================== DEMO DE CAPACIDAD DE ENDEUDAMIENTO ====================
+
+// Página demo de capacidad de endeudamiento (gratuito 1 vez por IP + VIP ilimitado)
+app.get('/debt-capacity-demo', (req, res) => {
+    const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    const hasUsedDemo = !checkDebtDemoLimitWithVip(clientIp);
+    const vipStatus = getVipStatus(clientIp);
+    
+    logAnalytics('debt_demo_page_view', req, { 
+        hasUsedDemo,
+        isVip: !!vipStatus,
+        clientIp: clientIp.substring(0, 10) + '...' // Log parcial por privacidad
+    });
+    
+    res.render('debt-capacity-demo', {
+        title: 'Demo Gratuito: Capacidad de Endeudamiento - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        hasUsedDemo: hasUsedDemo,
+        isVip: !!vipStatus,
+        vipReason: vipStatus?.reason || null
+    });
+});
+
+// API para demo de capacidad de endeudamiento (gratuito 1 vez por IP + VIP ilimitado)
+app.post('/api/debt-capacity-demo', async (req, res) => {
+    try {
+        const clientIp = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+        const vipStatus = getVipStatus(clientIp);
+        
+        // Verificar si ya usó el demo (salvo que sea VIP)
+        if (!checkDebtDemoLimitWithVip(clientIp)) {
+            return res.json({
+                success: false,
+                message: 'Ya has utilizado tu demo gratuito de capacidad de endeudamiento. Suscríbete para acceso ilimitado.',
+                demo_exhausted: true
+            });
+        }
+        
+        const { business_data, financial_projections } = req.body;
+        
+        // Validar datos requeridos
+        if (!business_data.monthly_income || !business_data.monthly_expenses) {
+            return res.json({
+                success: false,
+                message: 'Ingresos y gastos mensuales son requeridos'
+            });
+        }
+        
+        // Calcular capacidad de endeudamiento
+        const analysis = debtCalculator.calculateDebtCapacity(business_data, financial_projections);
+        
+        // Marcar demo como usado para esta IP (excepto VIPs)
+        if (!isVipIp(clientIp)) {
+            markDebtDemoUsed(clientIp);
+        }
+        
+        logAnalytics('debt_demo_used', req, { 
+            clientIp: clientIp.substring(0, 10) + '...',
+            businessName: business_data.business_name || 'N/A',
+            debtCapacity: analysis.debt_capacity
+        });
+        
+        res.json({
+            success: true,
+            analysis: analysis,
+            demo: true,
+            upgrade_message: 'Demo completado. Suscríbete para análisis ilimitados y funciones avanzadas.'
+        });
+        
+    } catch (error) {
+        console.error('Error en demo de capacidad de endeudamiento:', error);
+        res.json({
+            success: false,
+            message: 'Error interno del servidor'
+        });
+    }
+});
+
+// Página premium de capacidad de endeudamiento (solo usuarios con plan premium)
+app.get('/debt-capacity', requireAuth, (req, res) => {
+    // Verificar que el usuario tenga plan premium
+    if (!req.session.user || req.session.user.plan === 'demo') {
+        return res.redirect('/debt-capacity-demo');
+    }
+    
+    res.render('debt-capacity', {
+        title: 'Calculadora de Capacidad de Endeudamiento - IAtiva',
+        user: req.session.user
+    });
+});
+
+// ==================== CALCULADORA DE CAPACIDAD DE ENDEUDAMIENTO ====================
+
+// API para calcular capacidad de endeudamiento (PREMIUM)
+app.post('/api/calculate-debt-capacity', (req, res) => {
+    try {
+        // Verificar si el usuario tiene acceso premium
+        if (!req.session.user || req.session.user.plan === 'demo') {
+            return res.json({
+                success: false,
+                message: 'Esta funcionalidad requiere suscripción premium',
+                upgrade_required: true
+            });
+        }
+        
+        const { business_data, financial_projections } = req.body;
+        
+        // Validar datos requeridos
+        if (!business_data.monthly_income || !business_data.monthly_expenses) {
+            return res.json({
+                success: false,
+                message: 'Ingresos y gastos mensuales son requeridos'
+            });
+        }
+        
+        // Calcular capacidad de endeudamiento
+        const analysis = debtCalculator.calculateDebtCapacity(business_data, financial_projections);
+        
+        // Guardar análisis en historial del usuario
+        const analyses = getAnalyses();
+        const debtAnalysis = {
+            id: Date.now().toString(),
+            user_id: req.session.user.id,
+            type: 'debt_capacity',
+            business_name: business_data.business_name || 'Mi Negocio',
+            created_at: new Date().toISOString(),
+            data: {
+                business_data,
+                financial_projections
+            },
+            results: analysis,
+            status: 'completed'
+        };
+        
+        analyses.push(debtAnalysis);
+        saveAnalyses(analyses);
+        
+        res.json({
+            success: true,
+            analysis: analysis,
+            analysis_id: debtAnalysis.id
+        });
+        
+    } catch (error) {
+        console.error('Error calculando capacidad de endeudamiento:', error);
+        res.json({
+            success: false,
+            message: 'Error interno del servidor'
+        });
+    }
+});
+
+// Ver análisis de capacidad de endeudamiento
+app.get('/analisis/debt/:id', (req, res) => {
+    try {
+        const analyses = getAnalyses();
+        const analysis = analyses.find(a => a.id === req.params.id && a.type === 'debt_capacity');
+        
+        if (!analysis) {
+            return res.status(404).send('Análisis no encontrado');
+        }
+        
+        // Verificar que el usuario tiene acceso
+        if (req.session.user?.id !== analysis.user_id) {
+            return res.status(403).send('Acceso denegado');
+        }
+        
+        res.render('debt-analysis', {
+            title: 'Análisis de Capacidad de Endeudamiento - ' + analysis.business_name,
+            analysis: analysis,
+            user: req.session.user
+        });
+        
+    } catch (error) {
+        console.error('Error cargando análisis:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+});
+
 // Error 404
 app.use((req, res) => {
     res.status(404).render('error', {
@@ -912,6 +1358,7 @@ app.use((req, res) => {
 });
 
 // Iniciar servidor
+
 app.listen(PORT, () => {
     console.log(`🚀 IAtiva Web Server funcionando en puerto ${PORT}`);
     console.log(`📱 Aplicación disponible en: http://localhost:${PORT}`);
