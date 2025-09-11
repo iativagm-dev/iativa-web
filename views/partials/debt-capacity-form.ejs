@@ -1,0 +1,340 @@
+<!-- Formulario de Capacidad de Endeudamiento - SOLO PREMIUM -->
+<div id="debtCapacitySection" class="premium-feature" style="display: none;">
+    <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 text-white mb-8">
+        <div class="flex items-center mb-4">
+            <i class="fas fa-university text-3xl mr-4"></i>
+            <div>
+                <h3 class="text-2xl font-bold">Calculadora de Capacidad de Endeudamiento</h3>
+                <p class="text-purple-100">Descubre cuánto puedes pedir prestado de forma segura</p>
+            </div>
+        </div>
+        
+        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div>
+                    <div class="text-2xl font-bold">📊</div>
+                    <div class="text-sm">Análisis Bancario Profesional</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold">🏦</div>
+                    <div class="text-sm">Tasas Reales del Mercado</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold">💰</div>
+                    <div class="text-sm">Recomendaciones Personalizadas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <form id="debtCapacityForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Información Financiera Actual -->
+                <div>
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">💼 Situación Financiera Actual</h4>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Ingresos Mensuales Actuales
+                        </label>
+                        <input type="number" id="currentMonthlyIncome" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: 5000000">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Gastos Mensuales Totales
+                        </label>
+                        <input type="number" id="currentMonthlyExpenses" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: 3500000">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Deudas Existentes (Total)
+                        </label>
+                        <input type="number" id="existingDebt" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: 15000000">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Reservas en Efectivo
+                        </label>
+                        <input type="number" id="cashReserves" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: 8000000">
+                    </div>
+                </div>
+
+                <!-- Proyecciones y Tipo de Negocio -->
+                <div>
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">📈 Proyecciones y Contexto</h4>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Ingresos Proyectados (Mensual)
+                        </label>
+                        <input type="number" id="projectedMonthlyIncome" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: 7000000">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Tipo de Negocio
+                        </label>
+                        <select id="businessType" 
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="retail">Comercio al por menor</option>
+                            <option value="manufacturing">Manufactura/Producción</option>
+                            <option value="services">Servicios profesionales</option>
+                            <option value="technology">Tecnología</option>
+                            <option value="food">Alimentos y bebidas</option>
+                            <option value="construction">Construcción</option>
+                            <option value="other">Otros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Tiempo en el Negocio (meses)
+                        </label>
+                        <input type="number" id="timeInBusiness" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: 24" min="1" max="600">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            ¿Para qué necesitas el crédito?
+                        </label>
+                        <select id="creditPurpose" 
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="working_capital">Capital de trabajo</option>
+                            <option value="equipment">Compra de equipos</option>
+                            <option value="expansion">Expansión del negocio</option>
+                            <option value="real_estate">Inmobiliario comercial</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button type="button" onclick="calculateDebtCapacity()" 
+                        class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Calcular Mi Capacidad de Endeudamiento
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Resultados del Análisis -->
+    <div id="debtCapacityResults" class="hidden mt-8">
+        <!-- Los resultados se cargarán aquí dinámicamente -->
+    </div>
+</div>
+
+<!-- JavaScript para la calculadora -->
+<script>
+async function calculateDebtCapacity() {
+    const formData = {
+        monthly_income: parseFloat(document.getElementById('currentMonthlyIncome').value) || 0,
+        monthly_expenses: parseFloat(document.getElementById('currentMonthlyExpenses').value) || 0,
+        existing_debt: parseFloat(document.getElementById('existingDebt').value) || 0,
+        cash_reserves: parseFloat(document.getElementById('cashReserves').value) || 0,
+        business_type: document.getElementById('businessType').value,
+        time_in_business: parseInt(document.getElementById('timeInBusiness').value) || 12
+    };
+
+    const projections = {
+        projected_monthly_income: parseFloat(document.getElementById('projectedMonthlyIncome').value) || formData.monthly_income
+    };
+
+    // Validaciones básicas
+    if (formData.monthly_income < 1000000) {
+        alert('Los ingresos mensuales deben ser al menos $1,000,000 COP');
+        return;
+    }
+
+    if (formData.monthly_expenses >= formData.monthly_income) {
+        alert('Los gastos no pueden ser iguales o mayores a los ingresos');
+        return;
+    }
+
+    try {
+        // Mostrar loading
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Calculando...';
+        button.disabled = true;
+
+        // Llamar a la API
+        const response = await fetch('/api/calculate-debt-capacity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                business_data: formData,
+                financial_projections: projections
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            displayDebtCapacityResults(result.analysis);
+            
+            // Scroll a los resultados
+            document.getElementById('debtCapacityResults').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        } else {
+            alert('Error calculando capacidad de endeudamiento: ' + result.message);
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error procesando el cálculo. Intenta nuevamente.');
+    } finally {
+        // Restaurar botón
+        button.innerHTML = originalText;
+        button.disabled = false;
+    }
+}
+
+function displayDebtCapacityResults(analysis) {
+    const resultsDiv = document.getElementById('debtCapacityResults');
+    
+    const riskColor = analysis.risk_score >= 80 ? '#4CAF50' : 
+                     analysis.risk_score >= 60 ? '#FF9800' : '#F44336';
+    
+    const riskLevel = analysis.risk_score >= 80 ? 'Bajo' : 
+                     analysis.risk_score >= 60 ? 'Medio' : 'Alto';
+
+    resultsDiv.innerHTML = `
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                🏦 Tu Análisis de Capacidad de Endeudamiento
+            </h3>
+            
+            <!-- Métricas Principales -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="text-center p-6 bg-blue-50 rounded-xl border-2 border-blue-200">
+                    <div class="text-3xl font-bold text-blue-600 mb-2">
+                        $${analysis.debt_capacity.toLocaleString('es-CO')}
+                    </div>
+                    <div class="text-gray-600">Capacidad Total de Endeudamiento</div>
+                </div>
+                
+                <div class="text-center p-6 bg-green-50 rounded-xl border-2 border-green-200">
+                    <div class="text-3xl font-bold text-green-600 mb-2">
+                        $${analysis.max_monthly_payment.toLocaleString('es-CO')}
+                    </div>
+                    <div class="text-gray-600">Cuota Máxima Mensual Segura</div>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-xl border-2" style="border-color: ${riskColor}">
+                    <div class="text-3xl font-bold mb-2" style="color: ${riskColor}">
+                        ${analysis.risk_score}/100
+                    </div>
+                    <div class="text-gray-600">Score Crediticio (Riesgo ${riskLevel})</div>
+                </div>
+            </div>
+            
+            <!-- Opciones de Crédito -->
+            <div class="mb-8">
+                <h4 class="text-xl font-bold text-gray-800 mb-4">💳 Opciones de Crédito Disponibles</h4>
+                <div class="space-y-4">
+                    ${analysis.credit_options.map(option => `
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h5 class="font-bold text-gray-800">${option.description}</h5>
+                                    <p class="text-gray-600 text-sm">Tasa: ${(option.interest_rate * 100).toFixed(1)}% anual</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-lg font-bold text-blue-600">
+                                        $${option.max_amount.toLocaleString('es-CO')}
+                                    </div>
+                                    <div class="text-sm text-gray-500">Monto máximo</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Ejemplo de cuotas -->
+                            <div class="grid grid-cols-3 gap-2 mt-3 text-sm">
+                                ${option.terms.slice(0, 3).map(term => `
+                                    <div class="text-center p-2 bg-gray-50 rounded">
+                                        <div class="font-bold">${term.months} meses</div>
+                                        <div class="text-gray-600">$${term.monthly_payment.toLocaleString('es-CO')}/mes</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <!-- Recomendaciones -->
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-lightbulb text-blue-400 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h4 class="text-lg font-bold text-blue-800">💡 Recomendación IAtiva</h4>
+                        <p class="text-blue-700">
+                            ${analysis.risk_score >= 80 ? 
+                                'Excelente capacidad crediticia. Puedes acceder a financiamiento en condiciones muy favorables. Considera aprovechar las tasas bajas actuales.' :
+                                analysis.risk_score >= 60 ?
+                                'Buena capacidad crediticia. Recomendamos aumentar tus reservas de efectivo antes de endeudarte para mejorar tu perfil crediticio.' :
+                                'Capacidad limitada actualmente. Enfócate en aumentar ingresos y reducir gastos durante 6 meses antes de buscar financiamiento.'
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Acciones siguientes -->
+            <div class="mt-6 text-center">
+                <button onclick="downloadDebtReport()" 
+                        class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold mr-4 hover:bg-purple-700 transition-colors">
+                    <i class="fas fa-download mr-2"></i>Descargar Reporte Completo
+                </button>
+                <button onclick="shareDebtAnalysis()" 
+                        class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-share mr-2"></i>Compartir Análisis
+                </button>
+            </div>
+        </div>
+    `;
+    
+    resultsDiv.classList.remove('hidden');
+}
+
+function downloadDebtReport() {
+    // Implementar descarga del reporte
+    window.print();
+}
+
+function shareDebtAnalysis() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Mi Análisis de Capacidad de Endeudamiento - IAtiva',
+            text: 'Calculé mi capacidad de endeudamiento con IAtiva. ¡Descubre la tuya!',
+            url: window.location.href
+        });
+    } else {
+        // Fallback para navegadores que no soportan Web Share API
+        const url = window.location.href;
+        navigator.clipboard.writeText(url);
+        alert('Link copiado al portapapeles');
+    }
+}
+</script>

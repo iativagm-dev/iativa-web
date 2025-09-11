@@ -1,1 +1,273 @@
-[]
+[
+  {
+    "id": "1757556938366",
+    "user_id": 1,
+    "type": "debt_capacity",
+    "business_name": "Empresa Test",
+    "created_at": "2025-09-11T02:15:38.366Z",
+    "data": {
+      "business_data": {
+        "monthly_income": 5000000,
+        "monthly_expenses": 3000000,
+        "existing_debt": 1000000,
+        "business_name": "Empresa Test"
+      },
+      "financial_projections": {
+        "projected_monthly_income": 6000000,
+        "projected_growth": 20
+      }
+    },
+    "results": {
+      "debt_capacity": 13708799,
+      "max_monthly_payment": 765000,
+      "risk_score": 68,
+      "recommendations": [
+        {
+          "type": "working_capital",
+          "amount": 4112639,
+          "purpose": "Capital de trabajo e inventarios",
+          "priority": "high"
+        }
+      ],
+      "analysis_details": {
+        "net_cash_flow": 2550000,
+        "max_debt_by_income": 43200000,
+        "max_debt_by_coverage": 24480000,
+        "risk_adjustment": 0.5599999999999999,
+        "debt_to_income_ratio": 0.19039999999999999
+      },
+      "credit_options": [
+        {
+          "credit_type": "real_estate",
+          "max_amount": 13708799,
+          "interest_rate": 0.14,
+          "terms": [
+            {
+              "months": 12,
+              "monthly_payment": 1230873,
+              "total_interest": 1061683,
+              "total_amount": 14770482
+            },
+            {
+              "months": 24,
+              "monthly_payment": 658198,
+              "total_interest": 2087976,
+              "total_amount": 15796775
+            },
+            {
+              "months": 36,
+              "monthly_payment": 468534,
+              "total_interest": 3158434,
+              "total_amount": 16867233
+            },
+            {
+              "months": 48,
+              "monthly_payment": 374613,
+              "total_interest": 4272633,
+              "total_amount": 17981432
+            },
+            {
+              "months": 60,
+              "monthly_payment": 318979,
+              "total_interest": 5429987,
+              "total_amount": 19138786
+            }
+          ],
+          "description": "Financiación inmobiliaria comercial"
+        },
+        {
+          "credit_type": "expansion",
+          "max_amount": 10967040,
+          "interest_rate": 0.2,
+          "terms": [
+            {
+              "months": 12,
+              "monthly_payment": 1015926,
+              "total_interest": 1224075,
+              "total_amount": 12191115
+            },
+            {
+              "months": 24,
+              "monthly_payment": 558176,
+              "total_interest": 2429191,
+              "total_amount": 13396231
+            },
+            {
+              "months": 36,
+              "monthly_payment": 407574,
+              "total_interest": 3705642,
+              "total_amount": 14672682
+            },
+            {
+              "months": 48,
+              "monthly_payment": 333731,
+              "total_interest": 5052048,
+              "total_amount": 16019088
+            },
+            {
+              "months": 60,
+              "monthly_payment": 290559,
+              "total_interest": 6466528,
+              "total_amount": 17433568
+            }
+          ],
+          "description": "Crédito para expansión y crecimiento"
+        },
+        {
+          "credit_type": "equipment",
+          "max_amount": 8225279,
+          "interest_rate": 0.16,
+          "terms": [
+            {
+              "months": 12,
+              "monthly_payment": 746286,
+              "total_interest": 730160,
+              "total_amount": 8955439
+            },
+            {
+              "months": 24,
+              "monthly_payment": 402735,
+              "total_interest": 1440366,
+              "total_amount": 9665645
+            },
+            {
+              "months": 36,
+              "monthly_payment": 289176,
+              "total_interest": 2185071,
+              "total_amount": 10410350
+            },
+            {
+              "months": 48,
+              "monthly_payment": 233106,
+              "total_interest": 2963843,
+              "total_amount": 11189122
+            },
+            {
+              "months": 60,
+              "monthly_payment": 200022,
+              "total_interest": 3776089,
+              "total_amount": 12001368
+            }
+          ],
+          "description": "Financiación de equipos y maquinaria"
+        },
+        {
+          "credit_type": "working_capital",
+          "max_amount": 5483520,
+          "interest_rate": 0.18,
+          "terms": [
+            {
+              "months": 12,
+              "monthly_payment": 502729,
+              "total_interest": 549228,
+              "total_amount": 6032748
+            },
+            {
+              "months": 24,
+              "monthly_payment": 273759,
+              "total_interest": 1086715,
+              "total_amount": 6570235
+            },
+            {
+              "months": 36,
+              "monthly_payment": 198242,
+              "total_interest": 1653205,
+              "total_amount": 7136725
+            },
+            {
+              "months": 48,
+              "monthly_payment": 161078,
+              "total_interest": 2248243,
+              "total_amount": 7731763
+            },
+            {
+              "months": 60,
+              "monthly_payment": 139245,
+              "total_interest": 2871202,
+              "total_amount": 8354722
+            }
+          ],
+          "description": "Capital de trabajo para operaciones diarias"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  {
+    "id": 2,
+    "user_id": 2,
+    "session_id": "demo_1757557096574_b3slo2u08",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":12000,\"mano_obra\":7000,\"empaque\":120,\"servicios\":3500,\"transporte\":1200,\"marketing\":5000,\"arriendo_sueldos\":4500,\"otros_costos\":0,\"margen_ganancia\":20},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T02:19:26.478Z\",\"materia_prima\":12000,\"mano_obra\":7000,\"empaque\":120,\"servicios\":3500,\"transporte\":1200,\"marketing\":5000,\"arriendo_sueldos\":4500,\"otros_costos\":0,\"margen_ganancia\":20}",
+    "results": "{\"exito\":true,\"costoUnitario\":33320,\"precioVenta\":39984,\"puntoEquilibrio\":5,\"margenGanancia\":20,\"gananciaPorUnidad\":6664,\"costosVariables\":{\"Materia Prima\":12000,\"Mano de Obra\":7000,\"Empaque\":120,\"Transporte\":1200,\"Marketing\":5000},\"costosFijos\":{\"Servicios\":3500,\"Arriendo/Sueldos\":4500,\"Otros Costos\":0},\"rentabilidad\":\"20% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-11T02:19:51.307Z",
+    "from_demo": true
+  },
+  {
+    "id": 3,
+    "user_id": 2,
+    "session_id": "demo_1757559666752_9i27rzuw8",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":234,\"mano_obra\":435,\"empaque\":546,\"servicios\":657,\"transporte\":435,\"marketing\":564,\"arriendo_sueldos\":432,\"otros_costos\":657,\"margen_ganancia\":654},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T03:01:29.438Z\",\"materia_prima\":234,\"mano_obra\":435,\"empaque\":546,\"servicios\":657,\"transporte\":435,\"marketing\":564,\"arriendo_sueldos\":432,\"otros_costos\":657,\"margen_ganancia\":654}",
+    "results": "{\"exito\":true,\"costoUnitario\":3960,\"precioVenta\":29858,\"puntoEquilibrio\":1,\"margenGanancia\":654,\"gananciaPorUnidad\":25898,\"costosVariables\":{\"Materia Prima\":234,\"Mano de Obra\":435,\"Empaque\":546,\"Transporte\":435,\"Marketing\":564},\"costosFijos\":{\"Servicios\":657,\"Arriendo/Sueldos\":432,\"Otros Costos\":657},\"rentabilidad\":\"654% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-11T03:01:39.912Z",
+    "from_demo": true
+  },
+  {
+    "id": 4,
+    "user_id": 2,
+    "session_id": "demo_1757602681730_yz15xbmu4",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T14:58:29.665Z\",\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231}",
+    "results": "{\"exito\":true,\"costoUnitario\":10727,\"precioVenta\":35506,\"puntoEquilibrio\":1,\"margenGanancia\":231,\"gananciaPorUnidad\":24779,\"costosVariables\":{\"Materia Prima\":324,\"Mano de Obra\":3245,\"Empaque\":2312,\"Transporte\":3212,\"Marketing\":456},\"costosFijos\":{\"Servicios\":314,\"Arriendo/Sueldos\":543,\"Otros Costos\":321},\"rentabilidad\":\"231% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-11T14:58:39.184Z",
+    "from_demo": true
+  },
+  {
+    "id": 5,
+    "user_id": 2,
+    "session_id": "demo_1757602681730_yz15xbmu4",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T16:24:26.637Z\",\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231}",
+    "results": "{\"exito\":true,\"costoUnitario\":10727,\"precioVenta\":35506,\"puntoEquilibrio\":1,\"margenGanancia\":231,\"gananciaPorUnidad\":24779,\"costosVariables\":{\"Materia Prima\":324,\"Mano de Obra\":3245,\"Empaque\":2312,\"Transporte\":3212,\"Marketing\":456},\"costosFijos\":{\"Servicios\":314,\"Arriendo/Sueldos\":543,\"Otros Costos\":321},\"rentabilidad\":\"231% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-11T16:24:37.127Z",
+    "from_demo": true
+  },
+  {
+    "id": 6,
+    "user_id": 3,
+    "session_id": "demo_1757602681730_yz15xbmu4",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T16:24:26.637Z\",\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231}",
+    "results": "{\"exito\":true,\"costoUnitario\":10727,\"precioVenta\":35506,\"puntoEquilibrio\":1,\"margenGanancia\":231,\"gananciaPorUnidad\":24779,\"costosVariables\":{\"Materia Prima\":324,\"Mano de Obra\":3245,\"Empaque\":2312,\"Transporte\":3212,\"Marketing\":456},\"costosFijos\":{\"Servicios\":314,\"Arriendo/Sueldos\":543,\"Otros Costos\":321},\"rentabilidad\":\"231% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-11T16:30:07.588Z",
+    "from_demo": true
+  },
+  {
+    "id": 7,
+    "user_id": 3,
+    "session_id": "demo_1757602681730_yz15xbmu4",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T16:24:26.637Z\",\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231}",
+    "results": "{\"exito\":true,\"costoUnitario\":10727,\"precioVenta\":35506,\"puntoEquilibrio\":1,\"margenGanancia\":231,\"gananciaPorUnidad\":24779,\"costosVariables\":{\"Materia Prima\":324,\"Mano de Obra\":3245,\"Empaque\":2312,\"Transporte\":3212,\"Marketing\":456},\"costosFijos\":{\"Servicios\":314,\"Arriendo/Sueldos\":543,\"Otros Costos\":321},\"rentabilidad\":\"231% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-11T18:10:58.831Z",
+    "from_demo": true
+  },
+  {
+    "id": 8,
+    "user_id": 2,
+    "session_id": "demo_1757602681730_yz15xbmu4",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T16:24:26.637Z\",\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231}",
+    "results": "{\"exito\":true,\"costoUnitario\":10727,\"precioVenta\":35506,\"puntoEquilibrio\":1,\"margenGanancia\":231,\"gananciaPorUnidad\":24779,\"costosVariables\":{\"Materia Prima\":324,\"Mano de Obra\":3245,\"Empaque\":2312,\"Transporte\":3212,\"Marketing\":456},\"costosFijos\":{\"Servicios\":314,\"Arriendo/Sueldos\":543,\"Otros Costos\":321},\"rentabilidad\":\"231% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-11T21:36:54.753Z",
+    "from_demo": true
+  }
+]

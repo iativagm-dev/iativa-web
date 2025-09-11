@@ -1,0 +1,91 @@
+<% layout('layout') -%>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 no-print">
+        <ol class="flex items-center space-x-2 text-sm">
+            <li><a href="/dashboard" class="text-iativa-blue hover:text-blue-800">Dashboard</a></li>
+            <li class="text-gray-400">/</li>
+            <li class="text-gray-600">Capacidad de Endeudamiento: <%= analysis.business_name %></li>
+        </ol>
+    </nav>
+
+    <!-- Título y acciones -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                <i class="fas fa-university text-purple-600 mr-3"></i>
+                Capacidad de Endeudamiento - <%= analysis.business_name %>
+            </h1>
+            <p class="text-gray-600">
+                Análisis realizado el <%= new Date(analysis.created_at).toLocaleDateString('es-CO') %>
+            </p>
+        </div>
+        
+        <div class="mt-4 md:mt-0 flex space-x-3 no-print">
+            <button onclick="window.print()" 
+                    class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                <i class="fas fa-print mr-2"></i>Imprimir
+            </button>
+            <button onclick="shareAnalysis()" 
+                    class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                <i class="fas fa-share mr-2"></i>Compartir
+            </button>
+        </div>
+    </div>
+
+    <!-- Resultados Principales -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <div class="text-4xl font-bold text-purple-600 mb-2">
+                $<%= analysis.results.debt_capacity.toLocaleString('es-CO') %>
+            </div>
+            <p class="text-gray-600">Capacidad Total de Endeudamiento</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <div class="text-4xl font-bold text-green-600 mb-2">
+                $<%= analysis.results.max_monthly_payment.toLocaleString('es-CO') %>
+            </div>
+            <p class="text-gray-600">Cuota Máxima Mensual</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <div class="text-4xl font-bold text-<%= analysis.results.risk_score >= 80 ? 'green' : analysis.results.risk_score >= 60 ? 'yellow' : 'red' %>-600 mb-2">
+                <%= analysis.results.risk_score %>/100
+            </div>
+            <p class="text-gray-600">Score Crediticio</p>
+        </div>
+    </div>
+
+    <!-- Recomendaciones -->
+    <div class="bg-purple-50 border-l-4 border-purple-400 p-6 rounded-r-lg">
+        <h3 class="text-lg font-bold text-purple-800 mb-2">
+            <i class="fas fa-lightbulb mr-2"></i>Recomendación IAtiva
+        </h3>
+        <p class="text-purple-700">
+            <% if (analysis.results.risk_score >= 80) { %>
+                Excelente capacidad crediticia. Puedes acceder a financiamiento en condiciones muy favorables.
+            <% } else if (analysis.results.risk_score >= 60) { %>
+                Buena capacidad crediticia. Recomendamos aumentar reservas antes de endeudarte.
+            <% } else { %>
+                Capacidad limitada. Enfócate en aumentar ingresos y reducir gastos antes de buscar financiamiento.
+            <% } %>
+        </p>
+    </div>
+</div>
+
+<script>
+function shareAnalysis() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Mi Análisis de Capacidad de Endeudamiento - IAtiva',
+            text: 'Calculé mi capacidad de endeudamiento con IAtiva',
+            url: window.location.href
+        });
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copiado al portapapeles');
+    }
+}
+</script>

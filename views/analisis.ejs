@@ -121,6 +121,18 @@
                    class="bg-iativa-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                     <i class="fas fa-download mr-2"></i>Descargar PDF
                 </a>
+                
+                <% if (locals.user && user.plan !== 'demo') { %>
+                    <a href="/debt-capacity" id="debt-capacity-button"
+                       class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        <i class="fas fa-university mr-2"></i>Capacidad de Endeudamiento
+                    </a>
+                <% } else { %>
+                    <a href="/debt-capacity-demo" 
+                       class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105">
+                        <i class="fas fa-university mr-2"></i>🎁 Demo Gratuito: Capacidad de Endeudamiento
+                    </a>
+                <% } %>
             </div>
         </div>
 

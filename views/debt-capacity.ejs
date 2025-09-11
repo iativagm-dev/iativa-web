@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Premium de Capacidad de Endeudamiento - IAtiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-gold': '#C9A961',
+                        'iativa-blue': '#1E88E5',
+                        'iativa-green': '#4CAF50',
+                        'iativa-dark': '#1A365D',
+                        'iativa-orange': '#ea580c'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white shadow-lg">
+        <%- include('partials/header') %>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Premium Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-6">
+                <i class="fas fa-crown text-4xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                🏆 Calculadora Premium de Capacidad de Endeudamiento
+            </h1>
+            <p class="text-xl text-gray-600 max-w-4xl mx-auto mb-6">
+                Herramienta profesional para análisis avanzado de capacidad crediticia con múltiples escenarios, 
+                comparación de opciones y recomendaciones personalizadas basadas en algoritmos bancarios.
+            </p>
+            
+            <div class="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-6 max-w-4xl mx-auto">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-infinity text-purple-600 mr-2"></i>
+                        <span>Análisis ilimitados</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-chart-line text-blue-600 mr-2"></i>
+                        <span>Múltiples escenarios</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-file-pdf text-green-600 mr-2"></i>
+                        <span>Reportes PDF</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-save text-orange-600 mr-2"></i>
+                        <span>Historial guardado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <!-- Formulario Principal (2/3 del ancho) -->
+            <div class="xl:col-span-2">
+                <div class="bg-white rounded-lg shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Análisis Avanzado de Capacidad</h2>
+                        <p class="text-gray-600">Ingresa los datos financieros para obtener un análisis completo</p>
+                    </div>
+
+                    <form id="premiumDebtForm" class="space-y-8">
+                        <!-- Información Básica -->
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-building text-purple-600 mr-2"></i>
+                                Información del Negocio
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Nombre del Negocio
+                                    </label>
+                                    <input type="text" id="businessName" required
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="Ej: Mi Empresa SAS">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Sector de la Empresa
+                                    </label>
+                                    <select id="businessSector" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">Selecciona el sector</option>
+                                        <option value="comercio">Comercio</option>
+                                        <option value="servicios">Servicios</option>
+                                        <option value="manufactura">Manufactura</option>
+                                        <option value="tecnologia">Tecnología</option>
+                                        <option value="construccion">Construcción</option>
+                                        <option value="alimentos">Alimentos y Bebidas</option>
+                                        <option value="textil">Textil</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Años en el Mercado
+                                    </label>
+                                    <input type="number" id="yearsInBusiness" min="0" max="100"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="5">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Número de Empleados
+                                    </label>
+                                    <select id="employeeCount"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">Selecciona el rango</option>
+                                        <option value="1-5">1-5 empleados</option>
+                                        <option value="6-20">6-20 empleados</option>
+                                        <option value="21-50">21-50 empleados</option>
+                                        <option value="51-100">51-100 empleados</option>
+                                        <option value="100+">Más de 100 empleados</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Financiera Actual -->
+                        <div class="bg-blue-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-calculator text-blue-600 mr-2"></i>
+                                Situación Financiera Actual (Mensual)
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Ingresos Mensuales (COP)
+                                    </label>
+                                    <input type="number" id="monthlyIncome" required min="0"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="10000000">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Gastos Operacionales (COP)
+                                    </label>
+                                    <input type="number" id="monthlyExpenses" required min="0"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="6000000">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Deudas Actuales Total (COP)
+                                    </label>
+                                    <input type="number" id="existingDebt" min="0"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="2000000">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Activos Totales (COP)
+                                    </label>
+                                    <input type="number" id="totalAssets" min="0"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="20000000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proyecciones y Objetivos -->
+                        <div class="bg-green-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-trending-up text-green-600 mr-2"></i>
+                                Proyecciones y Objetivos
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Crecimiento Proyectado Anual (%)
+                                    </label>
+                                    <input type="number" id="projectedGrowth" min="0" max="100" step="0.1"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                           placeholder="25">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Finalidad del Crédito
+                                    </label>
+                                    <select id="creditPurpose"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">Selecciona la finalidad</option>
+                                        <option value="expansion">Expansión del negocio</option>
+                                        <option value="equipment">Compra de equipos</option>
+                                        <option value="inventory">Capital de trabajo/inventario</option>
+                                        <option value="real_estate">Compra de inmuebles</option>
+                                        <option value="refinancing">Refinanciación de deudas</option>
+                                        <option value="other">Otro</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Plazo Preferido (meses)
+                                    </label>
+                                    <select id="preferredTerm"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">Selecciona el plazo</option>
+                                        <option value="12">12 meses</option>
+                                        <option value="24">24 meses</option>
+                                        <option value="36">36 meses</option>
+                                        <option value="48">48 meses</option>
+                                        <option value="60">60 meses</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Tolerancia al Riesgo
+                                    </label>
+                                    <select id="riskTolerance"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">Selecciona tu tolerancia</option>
+                                        <option value="conservative">Conservador</option>
+                                        <option value="moderate">Moderado</option>
+                                        <option value="aggressive">Agresivo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="text-center space-y-4">
+                            <button type="submit" id="analyzePremiumBtn"
+                                    class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Analizar Capacidad de Endeudamiento
+                            </button>
+                            
+                            <div class="flex justify-center space-x-4">
+                                <button type="button" onclick="saveAsTemplate()"
+                                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                                    <i class="fas fa-save mr-2"></i>Guardar Plantilla
+                                </button>
+                                
+                                <button type="button" onclick="loadTemplate()"
+                                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                                    <i class="fas fa-folder-open mr-2"></i>Cargar Plantilla
+                                </button>
+                            </div>
+                            
+                            <p class="text-sm text-gray-500">
+                                <i class="fas fa-shield-alt text-green-500 mr-1"></i>
+                                Análisis profesional con algoritmos bancarios certificados
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Panel Lateral Premium (1/3 del ancho) -->
+            <div class="xl:col-span-1">
+                <div class="space-y-6">
+                    <!-- Beneficios Premium -->
+                    <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-6 text-white">
+                        <h3 class="text-lg font-bold mb-4">
+                            <i class="fas fa-crown mr-2"></i>
+                            Ventajas Premium
+                        </h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center">
+                                <i class="fas fa-check mr-2"></i>
+                                Análisis ilimitados
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check mr-2"></i>
+                                Múltiples escenarios financieros
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check mr-2"></i>
+                                Comparación de productos crediticios
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check mr-2"></i>
+                                Reportes PDF profesionales
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check mr-2"></i>
+                                Historial y seguimiento
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check mr-2"></i>
+                                Soporte prioritario
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Historial Reciente -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">
+                            <i class="fas fa-history text-gray-600 mr-2"></i>
+                            Análisis Recientes
+                        </h3>
+                        <div id="recentAnalysis" class="space-y-3">
+                            <p class="text-gray-500 text-sm">No hay análisis recientes</p>
+                        </div>
+                    </div>
+
+                    <!-- Tips Premium -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-yellow-800 mb-4">
+                            <i class="fas fa-lightbulb text-yellow-600 mr-2"></i>
+                            Consejos Profesionales
+                        </h3>
+                        <div class="space-y-3 text-sm text-yellow-700">
+                            <p>💡 <strong>Diversifica tus fuentes de financiamiento</strong> para reducir riesgos</p>
+                            <p>📊 <strong>Mantén un ratio deuda/patrimonio</strong> saludable (máximo 60%)</p>
+                            <p>🎯 <strong>Planifica el flujo de caja</strong> antes de comprometerte con pagos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resultados -->
+        <div id="premiumResults" class="hidden mt-8">
+            <!-- Los resultados se cargarán aquí dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+
+    <script>
+        document.getElementById('premiumDebtForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const analyzeBtn = document.getElementById('analyzePremiumBtn');
+            const originalText = analyzeBtn.innerHTML;
+            
+            // Mostrar loading
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analizando...';
+            analyzeBtn.disabled = true;
+            
+            try {
+                const formData = {
+                    business_data: {
+                        business_name: document.getElementById('businessName').value,
+                        sector: document.getElementById('businessSector').value,
+                        years_in_business: parseInt(document.getElementById('yearsInBusiness').value || 0),
+                        employee_count: document.getElementById('employeeCount').value,
+                        monthly_income: parseInt(document.getElementById('monthlyIncome').value),
+                        monthly_expenses: parseInt(document.getElementById('monthlyExpenses').value),
+                        existing_debt: parseInt(document.getElementById('existingDebt').value || 0),
+                        total_assets: parseInt(document.getElementById('totalAssets').value || 0)
+                    },
+                    financial_projections: {
+                        projected_monthly_income: parseInt(document.getElementById('monthlyIncome').value) * (1 + (parseInt(document.getElementById('projectedGrowth').value || 0) / 100)),
+                        projected_growth: parseInt(document.getElementById('projectedGrowth').value || 0),
+                        credit_purpose: document.getElementById('creditPurpose').value,
+                        preferred_term: parseInt(document.getElementById('preferredTerm').value || 24),
+                        risk_tolerance: document.getElementById('riskTolerance').value
+                    }
+                };
+                
+                const response = await fetch('/api/calculate-debt-capacity', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showPremiumResults(result.analysis);
+                    
+                    // Scroll to results
+                    document.getElementById('premiumResults').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                    
+                    // Agregar al historial
+                    addToHistory(formData.business_data.business_name, result.analysis);
+                } else {
+                    alert('Error: ' + result.message);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar la solicitud. Intenta de nuevo.');
+            } finally {
+                // Restaurar botón
+                analyzeBtn.innerHTML = originalText;
+                analyzeBtn.disabled = false;
+            }
+        });
+        
+        function showPremiumResults(analysis) {
+            const resultsDiv = document.getElementById('premiumResults');
+            const formatter = new Intl.NumberFormat('es-CO');
+            
+            resultsDiv.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                            <i class="fas fa-trophy text-green-600 text-3xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Análisis Premium Completado</h2>
+                        <p class="text-gray-600">Resultados detallados de tu capacidad de endeudamiento</p>
+                    </div>
+                    
+                    <!-- Métricas Principales Mejoradas -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-green-600 mb-2">
+                                $${formatter.format(analysis.debt_capacity)}
+                            </div>
+                            <p class="text-green-800 font-medium">Capacidad Total</p>
+                            <p class="text-xs text-green-600 mt-1">Máximo recomendado</p>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-blue-600 mb-2">
+                                $${formatter.format(analysis.max_monthly_payment)}
+                            </div>
+                            <p class="text-blue-800 font-medium">Pago Mensual Máximo</p>
+                            <p class="text-xs text-blue-600 mt-1">Sin comprometer flujo</p>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-purple-600 mb-2">
+                                ${analysis.risk_score}/100
+                            </div>
+                            <p class="text-purple-800 font-medium">Score de Riesgo</p>
+                            <p class="text-xs text-purple-600 mt-1">${analysis.risk_score >= 80 ? 'Excelente' : analysis.risk_score >= 60 ? 'Bueno' : 'Regular'}</p>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-orange-600 mb-2">
+                                ${Math.round((analysis.analysis_details.net_cash_flow / analysis.analysis_details.max_debt_by_income * 100))}%
+                            </div>
+                            <p class="text-orange-800 font-medium">Utilización</p>
+                            <p class="text-xs text-orange-600 mt-1">Capacidad vs. Ingresos</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Análisis Detallado -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <!-- Análisis de Ratios -->
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">
+                                <i class="fas fa-percentage text-purple-600 mr-2"></i>
+                                Análisis de Ratios Financieros
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600">Ratio Deuda/Ingresos:</span>
+                                    <span class="font-bold ${analysis.analysis_details.debt_to_income_ratio < 0.3 ? 'text-green-600' : analysis.analysis_details.debt_to_income_ratio < 0.5 ? 'text-yellow-600' : 'text-red-600'}">
+                                        ${(analysis.analysis_details.debt_to_income_ratio * 100).toFixed(1)}%
+                                    </span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600">Flujo de Caja Neto:</span>
+                                    <span class="font-bold text-blue-600">$${formatter.format(analysis.analysis_details.net_cash_flow)}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600">Ajuste por Riesgo:</span>
+                                    <span class="font-bold text-purple-600">${(analysis.analysis_details.risk_adjustment * 100).toFixed(1)}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recomendaciones Premium -->
+                        <div class="bg-blue-50 rounded-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">
+                                <i class="fas fa-lightbulb text-blue-600 mr-2"></i>
+                                Recomendaciones Estratégicas
+                            </h3>
+                            <div class="space-y-3">
+                                ${analysis.recommendations.map(rec => `
+                                    <div class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1 text-sm"></i>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-800">${rec.purpose}</p>
+                                            <p class="text-xs text-gray-600">Monto sugerido: $${formatter.format(rec.amount)}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones de Crédito Detalladas -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">
+                            <i class="fas fa-university text-purple-600 mr-2"></i>
+                            Productos Crediticios Disponibles
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            ${analysis.credit_options.map(option => `
+                                <div class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h4 class="font-semibold text-gray-900">${option.description}</h4>
+                                        <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-medium">
+                                            ${(option.interest_rate * 100).toFixed(1)}% EA
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="text-2xl font-bold text-gray-800 mb-3">
+                                        $${formatter.format(option.max_amount)}
+                                    </div>
+                                    
+                                    <div class="space-y-2 text-sm">
+                                        ${option.terms.slice(0, 3).map(term => `
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-600">${term.months} meses:</span>
+                                                <span class="font-medium">$${formatter.format(term.monthly_payment)}/mes</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    
+                                    <button onclick="selectCreditOption('${option.credit_type}')" 
+                                            class="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                                        Simular Este Producto
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Acciones Premium -->
+                    <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-8 text-center text-white">
+                        <h3 class="text-2xl font-bold mb-4">Próximos Pasos</h3>
+                        <p class="text-purple-100 mb-6">
+                            Tu análisis está completo. Aprovecha estas herramientas premium para tomar decisiones informadas.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button onclick="generatePDF()" 
+                                    class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-file-pdf mr-2"></i>Generar Reporte PDF
+                            </button>
+                            <button onclick="saveAnalysis()" 
+                                    class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                                <i class="fas fa-save mr-2"></i>Guardar Análisis
+                            </button>
+                            <button onclick="compareScenarios()" 
+                                    class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                                <i class="fas fa-balance-scale mr-2"></i>Comparar Escenarios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.classList.remove('hidden');
+        }
+        
+        function addToHistory(businessName, analysis) {
+            const historyDiv = document.getElementById('recentAnalysis');
+            const date = new Date().toLocaleDateString('es-CO');
+            const formatter = new Intl.NumberFormat('es-CO');
+            
+            historyDiv.innerHTML = `
+                <div class="border-l-4 border-purple-500 pl-3">
+                    <p class="font-medium text-gray-900">${businessName}</p>
+                    <p class="text-sm text-gray-600">${date}</p>
+                    <p class="text-xs text-green-600">Capacidad: $${formatter.format(analysis.debt_capacity)}</p>
+                </div>
+            ` + historyDiv.innerHTML;
+        }
+        
+        function selectCreditOption(creditType) {
+            alert('Función de simulación de ' + creditType + ' próximamente disponible.');
+        }
+        
+        function generatePDF() {
+            alert('Generando reporte PDF... Esta funcionalidad estará disponible próximamente.');
+        }
+        
+        function saveAnalysis() {
+            alert('Guardando análisis en tu historial... Esta funcionalidad estará disponible próximamente.');
+        }
+        
+        function compareScenarios() {
+            alert('Comparador de escenarios próximamente disponible.');
+        }
+        
+        function saveAsTemplate() {
+            alert('Guardando como plantilla... Esta funcionalidad estará disponible próximamente.');
+        }
+        
+        function loadTemplate() {
+            alert('Cargando plantilla... Esta funcionalidad estará disponible próximamente.');
+        }
+    </script>
+</body>
+</html>
