@@ -269,5 +269,38 @@
     "status": "completed",
     "created_at": "2025-09-11T21:36:54.753Z",
     "from_demo": true
+  },
+  {
+    "id": 9,
+    "user_id": 3,
+    "session_id": "demo_1757602681730_yz15xbmu4",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-11T16:24:26.637Z\",\"materia_prima\":324,\"mano_obra\":3245,\"empaque\":2312,\"servicios\":314,\"transporte\":3212,\"marketing\":456,\"arriendo_sueldos\":543,\"otros_costos\":321,\"margen_ganancia\":231}",
+    "results": "{\"exito\":true,\"costoUnitario\":10727,\"precioVenta\":35506,\"puntoEquilibrio\":1,\"margenGanancia\":231,\"gananciaPorUnidad\":24779,\"costosVariables\":{\"Materia Prima\":324,\"Mano de Obra\":3245,\"Empaque\":2312,\"Transporte\":3212,\"Marketing\":456},\"costosFijos\":{\"Servicios\":314,\"Arriendo/Sueldos\":543,\"Otros Costos\":321},\"rentabilidad\":\"231% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-12T02:58:26.463Z",
+    "from_demo": true
+  },
+  {
+    "id": 10,
+    "user_id": 2,
+    "session_id": "demo_1757648024732_s6gqpx6wa",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":324,\"mano_obra\":546,\"empaque\":657,\"servicios\":6789,\"transporte\":987,\"marketing\":342,\"arriendo_sueldos\":239,\"otros_costos\":765,\"margen_ganancia\":30},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-12T03:34:17.127Z\",\"materia_prima\":324,\"mano_obra\":546,\"empaque\":657,\"servicios\":6789,\"transporte\":987,\"marketing\":342,\"arriendo_sueldos\":239,\"otros_costos\":765,\"margen_ganancia\":30}",
+    "results": "{\"exito\":true,\"costoUnitario\":10649,\"precioVenta\":13844,\"puntoEquilibrio\":4,\"margenGanancia\":30,\"gananciaPorUnidad\":3195,\"costosVariables\":{\"Materia Prima\":324,\"Mano de Obra\":546,\"Empaque\":657,\"Transporte\":987,\"Marketing\":342},\"costosFijos\":{\"Servicios\":6789,\"Arriendo/Sueldos\":239,\"Otros Costos\":765},\"rentabilidad\":\"30% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-12T03:34:24.135Z",
+    "from_demo": true
+  },
+  {
+    "id": 11,
+    "user_id": 4,
+    "session_id": "demo_1757648995342_sfuhtsxtb",
+    "business_name": "Negocio Demo",
+    "analysis_data": "{\"nombreNegocio\":\"Negocio Demo\",\"producto\":\"Producto/Servicio\",\"tipoNegocio\":\"Empresa\",\"ubicacion\":\"No especificado\",\"costos\":{\"materia_prima\":456,\"mano_obra\":432,\"empaque\":435,\"servicios\":456,\"transporte\":543,\"marketing\":5436,\"arriendo_sueldos\":456,\"otros_costos\":435,\"margen_ganancia\":20},\"nombreUsuario\":\"Emprendedor\",\"timestamp\":\"2025-09-12T03:50:19.022Z\",\"materia_prima\":456,\"mano_obra\":432,\"empaque\":435,\"servicios\":456,\"transporte\":543,\"marketing\":5436,\"arriendo_sueldos\":456,\"otros_costos\":435,\"margen_ganancia\":20}",
+    "results": "{\"exito\":true,\"costoUnitario\":8649,\"precioVenta\":10379,\"puntoEquilibrio\":5,\"margenGanancia\":20,\"gananciaPorUnidad\":1730,\"costosVariables\":{\"Materia Prima\":456,\"Mano de Obra\":432,\"Empaque\":435,\"Transporte\":543,\"Marketing\":5436},\"costosFijos\":{\"Servicios\":456,\"Arriendo/Sueldos\":456,\"Otros Costos\":435},\"rentabilidad\":\"20% de margen\",\"recomendaciones\":[\"Revisar costos variables para optimización\",\"Considerar estrategias de reducción de costos fijos\",\"Evaluar precios de venta competitivos\"]}",
+    "status": "completed",
+    "created_at": "2025-09-12T03:50:30.885Z",
+    "from_demo": true
   }
 ]

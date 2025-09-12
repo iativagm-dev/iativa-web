@@ -35,5 +35,17 @@
     "created_at": "2025-09-11T16:30:07.585Z",
     "is_admin": false,
     "from_demo": true
+  },
+  {
+    "id": 4,
+    "username": "gamorenom",
+    "email": "gamorenom@sena.edu.co",
+    "password": "",
+    "full_name": "Usuario Demo",
+    "company": "",
+    "phone": "",
+    "created_at": "2025-09-12T03:50:30.883Z",
+    "is_admin": false,
+    "from_demo": true
   }
 ]

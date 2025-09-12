@@ -1628,5 +1628,755 @@
     "ip_address": "::1",
     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "created_at": "2025-09-11T21:36:55.971Z"
+  },
+  {
+    "id": 164,
+    "event_type": "debt_demo_page_view",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"hasUsedDemo\":false,\"isVip\":true,\"clientIp\":\"::1...\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-11T23:22:05.488Z"
+  },
+  {
+    "id": 165,
+    "event_type": "debt_demo_page_view",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"hasUsedDemo\":false,\"isVip\":true,\"clientIp\":\"::1...\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T00:17:46.309Z"
+  },
+  {
+    "id": 166,
+    "event_type": "dashboard_view",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:51:57.331Z"
+  },
+  {
+    "id": 167,
+    "event_type": "dashboard_view",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:52:13.310Z"
+  },
+  {
+    "id": 168,
+    "event_type": "dashboard_view",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:52:24.533Z"
+  },
+  {
+    "id": 169,
+    "event_type": "new_analysis_started",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:52:35.995Z"
+  },
+  {
+    "id": 170,
+    "event_type": "demo_started",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"tempUserId\":\"temp_1757602681730\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:52:36.011Z"
+  },
+  {
+    "id": 171,
+    "event_type": "page_view",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:52:40.727Z"
+  },
+  {
+    "id": 172,
+    "event_type": "page_view",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:57:22.088Z"
+  },
+  {
+    "id": 173,
+    "event_type": "demo_started",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"tempUserId\":\"temp_1757602681730\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:58:12.882Z"
+  },
+  {
+    "id": 174,
+    "event_type": "demo_chat_interaction",
+    "user_id": 2,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"tempUserId\":\"temp_1757602681730\",\"sessionId\":\"demo_1757602681730_yz15xbmu4\",\"messageLength\":2}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:58:19.442Z"
+  },
+  {
+    "id": 175,
+    "event_type": "demo_analysis_saved",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"userId\":3,\"email\":\"gajugan@hotmail.com\",\"analysisId\":9}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:58:26.466Z"
+  },
+  {
+    "id": 176,
+    "event_type": "analysis_viewed",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"analysisId\":\"9\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:58:27.990Z"
+  },
+  {
+    "id": 177,
+    "event_type": "debt_demo_page_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"hasUsedDemo\":false,\"isVip\":true,\"clientIp\":\"::1...\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:58:31.214Z"
+  },
+  {
+    "id": 178,
+    "event_type": "debt_demo_used",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"clientIp\":\"::1...\",\"businessName\":\"servishalom\",\"debtCapacity\":120959999}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:59:13.476Z"
+  },
+  {
+    "id": 179,
+    "event_type": "dashboard_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:59:22.312Z"
+  },
+  {
+    "id": 180,
+    "event_type": "demo_started",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"tempUserId\":\"temp_1757602681730\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:59:46.891Z"
+  },
+  {
+    "id": 181,
+    "event_type": "page_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T02:59:55.801Z"
+  },
+  {
+    "id": 182,
+    "event_type": "page_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:00:28.219Z"
+  },
+  {
+    "id": 183,
+    "event_type": "dashboard_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:00:45.870Z"
+  },
+  {
+    "id": 184,
+    "event_type": "dashboard_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:00:54.908Z"
+  },
+  {
+    "id": 185,
+    "event_type": "dashboard_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:00:58.521Z"
+  },
+  {
+    "id": 186,
+    "event_type": "dashboard_view",
+    "user_id": 3,
+    "session_id": "se4gnMDWfKJUJP6Ke4W21SZnLcUoxRPY",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:09:00.727Z"
+  },
+  {
+    "id": 187,
+    "event_type": "page_view",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:33:15.211Z"
+  },
+  {
+    "id": 188,
+    "event_type": "demo_started",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:33:44.733Z"
+  },
+  {
+    "id": 189,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:33:50.150Z"
+  },
+  {
+    "id": 190,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:33:53.594Z"
+  },
+  {
+    "id": 191,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:33:57.047Z"
+  },
+  {
+    "id": 192,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:33:59.559Z"
+  },
+  {
+    "id": 193,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":4}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:02.374Z"
+  },
+  {
+    "id": 194,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:04.935Z"
+  },
+  {
+    "id": 195,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:07.812Z"
+  },
+  {
+    "id": 196,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:10.755Z"
+  },
+  {
+    "id": 197,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":3}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:13.425Z"
+  },
+  {
+    "id": 198,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"tempUserId\":\"temp_1757648024732\",\"sessionId\":\"demo_1757648024732_s6gqpx6wa\",\"messageLength\":2}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:17.129Z"
+  },
+  {
+    "id": 199,
+    "event_type": "demo_analysis_saved",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"userId\":2,\"email\":\"iativagm@gmail.com\",\"analysisId\":10}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:24.139Z"
+  },
+  {
+    "id": 200,
+    "event_type": "analysis_viewed",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"analysisId\":\"10\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:25.834Z"
+  },
+  {
+    "id": 201,
+    "event_type": "debt_demo_page_view",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"hasUsedDemo\":false,\"isVip\":true,\"clientIp\":\"::1...\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:39.374Z"
+  },
+  {
+    "id": 202,
+    "event_type": "debt_demo_used",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"clientIp\":\"::1...\",\"businessName\":\"servishalom\",\"debtCapacity\":27327996}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:52.649Z"
+  },
+  {
+    "id": 203,
+    "event_type": "dashboard_view",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:34:57.400Z"
+  },
+  {
+    "id": 204,
+    "event_type": "dashboard_view",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:35:47.545Z"
+  },
+  {
+    "id": 205,
+    "event_type": "dashboard_view",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:35:51.357Z"
+  },
+  {
+    "id": 206,
+    "event_type": "dashboard_view",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:35:53.635Z"
+  },
+  {
+    "id": 207,
+    "event_type": "page_view",
+    "user_id": 2,
+    "session_id": "2_8xB5Pn-RF3jYNDUV_Z7AkEntFdVIlL",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "created_at": "2025-09-12T03:36:00.689Z"
+  },
+  {
+    "id": 208,
+    "event_type": "page_view",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:49:23.464Z"
+  },
+  {
+    "id": 209,
+    "event_type": "page_view",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:49:30.817Z"
+  },
+  {
+    "id": 210,
+    "event_type": "page_view",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:49:37.930Z"
+  },
+  {
+    "id": 211,
+    "event_type": "demo_started",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:49:55.343Z"
+  },
+  {
+    "id": 212,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":2}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:00.530Z"
+  },
+  {
+    "id": 213,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":3}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:03.186Z"
+  },
+  {
+    "id": 214,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":3}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:05.701Z"
+  },
+  {
+    "id": 215,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":3}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:07.306Z"
+  },
+  {
+    "id": 216,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":3}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:09.151Z"
+  },
+  {
+    "id": 217,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":3}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:11.139Z"
+  },
+  {
+    "id": 218,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":4}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:12.950Z"
+  },
+  {
+    "id": 219,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":3}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:14.901Z"
+  },
+  {
+    "id": 220,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":3}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:16.803Z"
+  },
+  {
+    "id": 221,
+    "event_type": "demo_chat_interaction",
+    "user_id": null,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\",\"sessionId\":\"demo_1757648995342_sfuhtsxtb\",\"messageLength\":2}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:19.024Z"
+  },
+  {
+    "id": 222,
+    "event_type": "demo_analysis_saved",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"userId\":4,\"email\":\"gamorenom@sena.edu.co\",\"analysisId\":11}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:30.889Z"
+  },
+  {
+    "id": 223,
+    "event_type": "analysis_viewed",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"analysisId\":\"11\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:32.134Z"
+  },
+  {
+    "id": 224,
+    "event_type": "debt_demo_page_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"hasUsedDemo\":false,\"isVip\":true,\"clientIp\":\"::ffff:127...\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:51.762Z"
+  },
+  {
+    "id": 225,
+    "event_type": "dashboard_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:50:58.307Z"
+  },
+  {
+    "id": 226,
+    "event_type": "dashboard_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:51:10.053Z"
+  },
+  {
+    "id": 227,
+    "event_type": "page_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:51:17.148Z"
+  },
+  {
+    "id": 228,
+    "event_type": "demo_started",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:51:37.750Z"
+  },
+  {
+    "id": 229,
+    "event_type": "debt_demo_page_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"hasUsedDemo\":false,\"isVip\":true,\"clientIp\":\"::ffff:127...\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:53:34.035Z"
+  },
+  {
+    "id": 230,
+    "event_type": "debt_demo_used",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"clientIp\":\"::ffff:127...\",\"businessName\":\"serfi\",\"debtCapacity\":2284799}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:54:49.692Z"
+  },
+  {
+    "id": 231,
+    "event_type": "page_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T03:56:00.370Z"
+  },
+  {
+    "id": 232,
+    "event_type": "page_view",
+    "user_id": null,
+    "session_id": "k-rnID9M3FqoogIeMO3FnjcxwWTZbWjC",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv6)\"}",
+    "ip_address": "::1",
+    "user_agent": "curl/8.15.0",
+    "created_at": "2025-09-12T03:57:50.285Z"
+  },
+  {
+    "id": 233,
+    "event_type": "demo_started",
+    "user_id": null,
+    "session_id": "JUPi4kLyaTTiP4JuLuibMUinQNf96rAE",
+    "data": "{\"tempUserId\":\"temp_1757649526951\"}",
+    "ip_address": "::1",
+    "user_agent": "curl/8.15.0",
+    "created_at": "2025-09-12T03:58:46.953Z"
+  },
+  {
+    "id": 234,
+    "event_type": "debt_demo_page_view",
+    "user_id": null,
+    "session_id": "Ps73qnXcsu6gwj-wwZiqxWkfM5wl-ku-",
+    "data": "{\"hasUsedDemo\":false,\"isVip\":true,\"clientIp\":\"::1...\"}",
+    "ip_address": "::1",
+    "user_agent": "curl/8.15.0",
+    "created_at": "2025-09-12T03:59:55.720Z"
+  },
+  {
+    "id": 235,
+    "event_type": "new_analysis_started",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T04:01:38.131Z"
+  },
+  {
+    "id": 236,
+    "event_type": "demo_started",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"tempUserId\":\"temp_1757648995342\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T04:01:38.141Z"
+  },
+  {
+    "id": 237,
+    "event_type": "page_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T04:01:40.769Z"
+  },
+  {
+    "id": 238,
+    "event_type": "page_view",
+    "user_id": 4,
+    "session_id": "uRQukgfUuy_l4y2Fl_Ku8xsKsPTCfU9f",
+    "data": "{\"page\":\"home\",\"isVip\":true,\"vipReason\":\"Desarrollador - Demostraciones EXPOSENA 2025 (IPv4-mapped)\"}",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+    "created_at": "2025-09-12T04:07:05.451Z"
   }
 ]
