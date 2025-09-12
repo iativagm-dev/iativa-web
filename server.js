@@ -4,6 +4,7 @@ const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 // Importar módulos de IAtiva
 const AgenteIAtiva = require('./src/agent');
@@ -26,6 +27,7 @@ const debtCalculator = new DebtCapacityCalculator();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -363,7 +365,11 @@ app.post('/register', (req, res) => {
 });
 
 // Dashboard
-app.get('/dashboard', requireAuth, (req, res) => {
+app.get('/dashboard', (req, res) => {
+    // Si no está autenticado, redirigir a la página principal
+    if (!req.session.userId) {
+        return res.redirect('/');
+    }
     try {
         const analyses = getAnalyses();
         const userAnalyses = analyses
@@ -378,15 +384,17 @@ app.get('/dashboard', requireAuth, (req, res) => {
         
         res.render('dashboard', {
             title: 'Dashboard - IAtiva',
-            user: { id: req.session.userId, name: req.session.userName },
-            analyses: userAnalyses
+            user: { id: req.session.userId, name: req.session.userName, isAdmin: req.session.isAdmin },
+            analyses: userAnalyses,
+            isAdmin: req.session.isAdmin || false
         });
     } catch (error) {
         console.error('Dashboard error:', error);
         res.render('dashboard', {
             title: 'Dashboard - IAtiva',
-            user: { id: req.session.userId, name: req.session.userName },
-            analyses: []
+            user: { id: req.session.userId, name: req.session.userName, isAdmin: req.session.isAdmin },
+            analyses: [],
+            isAdmin: req.session.isAdmin || false
         });
     }
 });

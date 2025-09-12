@@ -49,6 +49,30 @@
         </div>
     </footer>
     
+    <!-- Cookie Banner -->
+    <div id="cookieBanner" class="cookie-banner">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="mb-2 md:mb-0">
+                    <p class="text-sm text-gray-300">
+                        🍪 Usamos cookies para mejorar tu experiencia. Al continuar, aceptas su uso.
+                    </p>
+                </div>
+                <div class="flex flex-row gap-2">
+                    <button id="acceptCookies" class="bg-iativa-blue hover:bg-blue-600 text-white px-3 py-1.5 text-sm rounded transition-colors duration-200">
+                        Aceptar
+                    </button>
+                    <button id="manageCookies" class="bg-transparent border border-white text-white hover:bg-white hover:text-black px-3 py-1.5 text-sm rounded transition-colors duration-200">
+                        Configurar
+                    </button>
+                    <button id="rejectCookies" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 text-sm rounded transition-colors duration-200">
+                        Rechazar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Scripts globales -->
     <script>
         // Utilidades globales
@@ -190,6 +214,194 @@
                     });
                 }
             });
+        });
+        
+        // Cookie Management System
+        const CookieManager = {
+            // Cookie names
+            CONSENT_COOKIE: 'iativa_cookie_consent',
+            ANALYTICS_COOKIE: 'iativa_analytics_consent',
+            FUNCTIONAL_COOKIE: 'iativa_functional_consent',
+            
+            // Check if user has already given consent
+            hasConsent: function() {
+                return this.getCookie(this.CONSENT_COOKIE) !== null;
+            },
+            
+            // Get cookie value
+            getCookie: function(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            },
+            
+            // Set cookie
+            setCookie: function(name, value, days = 365) {
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = `expires=${d.toUTCString()}`;
+                document.cookie = `${name}=${value};${expires};path=/;SameSite=Strict`;
+            },
+            
+            // Show cookie banner
+            showBanner: function() {
+                const banner = document.getElementById('cookieBanner');
+                if (banner) {
+                    banner.classList.add('show');
+                }
+            },
+            
+            // Hide cookie banner
+            hideBanner: function() {
+                const banner = document.getElementById('cookieBanner');
+                if (banner) {
+                    banner.classList.remove('show');
+                    setTimeout(() => {
+                        banner.style.display = 'none';
+                    }, 300);
+                }
+            },
+            
+            // Accept all cookies
+            acceptAll: function() {
+                this.setCookie(this.CONSENT_COOKIE, 'accepted');
+                this.setCookie(this.ANALYTICS_COOKIE, 'true');
+                this.setCookie(this.FUNCTIONAL_COOKIE, 'true');
+                this.hideBanner();
+                this.enableAnalytics();
+                window.IAtiva?.showNotification('Cookies aceptadas. Gracias por confiar en IAtiva.', 'success');
+            },
+            
+            // Reject all cookies (except necessary ones)
+            rejectAll: function() {
+                this.setCookie(this.CONSENT_COOKIE, 'rejected');
+                this.setCookie(this.ANALYTICS_COOKIE, 'false');
+                this.setCookie(this.FUNCTIONAL_COOKIE, 'false');
+                this.hideBanner();
+                window.IAtiva?.showNotification('Cookies rechazadas. Solo usaremos cookies esenciales.', 'info');
+            },
+            
+            // Enable analytics if consent given
+            enableAnalytics: function() {
+                if (this.getCookie(this.ANALYTICS_COOKIE) === 'true') {
+                    // Google Analytics initialization would go here
+                    console.log('Analytics enabled');
+                }
+            },
+            
+            // Initialize cookie system
+            init: function() {
+                // Show banner if no consent given
+                if (!this.hasConsent()) {
+                    setTimeout(() => {
+                        this.showBanner();
+                    }, 2000); // Show after 2 seconds
+                } else {
+                    // Enable analytics if already consented
+                    this.enableAnalytics();
+                }
+                
+                // Bind event listeners
+                const acceptBtn = document.getElementById('acceptCookies');
+                const rejectBtn = document.getElementById('rejectCookies');
+                const manageBtn = document.getElementById('manageCookies');
+                
+                if (acceptBtn) {
+                    acceptBtn.addEventListener('click', () => this.acceptAll());
+                }
+                
+                if (rejectBtn) {
+                    rejectBtn.addEventListener('click', () => this.rejectAll());
+                }
+                
+                if (manageBtn) {
+                    manageBtn.addEventListener('click', () => this.showPreferences());
+                }
+            },
+            
+            // Show cookie preferences modal (simplified version)
+            showPreferences: function() {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+                modal.innerHTML = `
+                    <div class="relative top-10 mx-auto p-5 border max-w-lg shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">🍪 Configuración de Cookies</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium">Cookies Esenciales</h4>
+                                        <p class="text-sm text-gray-500">Necesarias para el funcionamiento básico</p>
+                                    </div>
+                                    <span class="text-green-500 font-medium">Siempre activas</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium">Cookies de Análisis</h4>
+                                        <p class="text-sm text-gray-500">Nos ayudan a mejorar la experiencia</p>
+                                    </div>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="analyticsToggle" class="form-checkbox">
+                                    </label>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium">Cookies Funcionales</h4>
+                                        <p class="text-sm text-gray-500">Mejoran la funcionalidad del sitio</p>
+                                    </div>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="functionalToggle" class="form-checkbox">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="flex justify-end gap-3 mt-6">
+                                <button class="cancel-btn px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md hover:bg-gray-600 transition-colors">
+                                    Cancelar
+                                </button>
+                                <button class="save-btn px-4 py-2 bg-iativa-blue text-white text-base font-medium rounded-md hover:bg-blue-600 transition-colors">
+                                    Guardar Preferencias
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Set current preferences
+                const analyticsToggle = modal.querySelector('#analyticsToggle');
+                const functionalToggle = modal.querySelector('#functionalToggle');
+                
+                analyticsToggle.checked = this.getCookie(this.ANALYTICS_COOKIE) === 'true';
+                functionalToggle.checked = this.getCookie(this.FUNCTIONAL_COOKIE) === 'true';
+                
+                // Cancel button
+                modal.querySelector('.cancel-btn').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                // Save preferences
+                modal.querySelector('.save-btn').addEventListener('click', () => {
+                    this.setCookie(this.CONSENT_COOKIE, 'configured');
+                    this.setCookie(this.ANALYTICS_COOKIE, analyticsToggle.checked ? 'true' : 'false');
+                    this.setCookie(this.FUNCTIONAL_COOKIE, functionalToggle.checked ? 'true' : 'false');
+                    
+                    this.hideBanner();
+                    modal.remove();
+                    
+                    if (analyticsToggle.checked) {
+                        this.enableAnalytics();
+                    }
+                    
+                    window.IAtiva?.showNotification('Preferencias de cookies guardadas.', 'success');
+                });
+            }
+        };
+        
+        // Initialize cookie system when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            CookieManager.init();
         });
     </script>
 </body>
