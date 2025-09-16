@@ -51,7 +51,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // HTTPS en producción
         maxAge: 24 * 60 * 60 * 1000, // 24 horas
         httpOnly: true, // Protección XSS
-        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
+        sameSite: 'lax' // 'lax' permite sesiones persistentes en requests normales
     }
 }));
 
