@@ -174,10 +174,13 @@ Ejemplo: 50000`;
             { nombre: 'margen_ganancia', pregunta: '¿Qué margen de ganancia deseas (%)?' }
         ];
 
-        // ASEGURAR inicialización
-        if (!this.datosSimples || this.indicePregunta === undefined) {
-            console.log('⚠️ Reinicializando datos...');
+        // ASEGURAR inicialización SOLO si realmente no existen
+        if (!this.datosSimples) {
+            console.log('⚠️ Inicializando datosSimples...');
             this.datosSimples = {};
+        }
+        if (this.indicePregunta === undefined || this.indicePregunta === null) {
+            console.log('⚠️ Inicializando indicePregunta...');
             this.indicePregunta = 0;
         }
 
