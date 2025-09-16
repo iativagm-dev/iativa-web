@@ -22,5 +22,21 @@
     "added_date": "2025-09-11T03:00:00.000Z",
     "added_by": "system",
     "notes": "IP del desarrollador para demostraciones en exposiciones y bancos (IPv4-mapped)"
+  },
+  "192.168.1.100": {
+    "reason": "Gabriel - IP local común para demostraciones",
+    "unlimited_debt_demo": true,
+    "unlimited_analysis": true,
+    "added_date": "2025-09-16T10:52:29.930Z",
+    "added_by": "script",
+    "notes": "IP de red local para pruebas y demostraciones"
+  },
+  "181.52.25.139": {
+    "reason": "Gabriel - IP pública para demostraciones ilimitadas IAtiva",
+    "unlimited_debt_demo": true,
+    "unlimited_analysis": true,
+    "added_date": "2025-09-16T10:53:32.508Z",
+    "added_by": "script",
+    "notes": "IP pública del desarrollador - Acceso ilimitado para demostraciones comerciales"
   }
 }
