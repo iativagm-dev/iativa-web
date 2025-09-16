@@ -542,7 +542,7 @@ app.post('/api/demo-chat', async (req, res) => {
             
             // Restaurar datos simples del nuevo flujo
             agente.datosSimples = estadoGuardado.datosSimples || {};
-            agente.indicePregunta = estadoGuardado.indicePregunta || 0;
+            agente.indicePregunta = estadoGuardado.indicePregunta ?? 0;
             
             console.log('🔄 Estado restaurado - Estado agente:', agente.estadoActual);
             console.log('🔄 Estado restaurado - Activo:', agente.activo);
@@ -567,7 +567,7 @@ app.post('/api/demo-chat', async (req, res) => {
             ultimosResultados: agente.ultimosResultados,
             // Datos simples para el nuevo flujo
             datosSimples: agente.datosSimples || {},
-            indicePregunta: agente.indicePregunta || 0,
+            indicePregunta: agente.indicePregunta ?? 0,
             // Estado del recopilador (por compatibilidad)
             recopiladorSesion: agente.recopilador.sesion,
             recopiladorDatosRecopilados: agente.recopilador.datosRecopilados
