@@ -23,16 +23,6 @@ const DebtCapacityCalculator = require('./src/debtCapacityCalculator');
 // Inicializar calculadora de deuda
 const debtCalculator = new DebtCapacityCalculator();
 
-// Middleware de redirección HTTPS para producción
-app.use((req, res, next) => {
-    // Verificar si estamos en producción y la conexión no es segura
-    if (process.env.NODE_ENV === 'production' && req.header('x-forwarded-proto') !== 'https') {
-        // Redirigir a HTTPS
-        return res.redirect(`https://${req.header('host')}${req.url}`);
-    }
-    next();
-});
-
 // Configuración de middleware
 app.use(cors());
 app.use(express.json());
@@ -46,12 +36,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(session({
     secret: process.env.SESSION_SECRET || 'iativa-secret-key-2025',
     resave: false,
-    saveUninitialized: true, // true para crear sesiones
+    saveUninitialized: true, // CAMBIO: true para crear sesiones
     cookie: { 
-        secure: process.env.NODE_ENV === 'production', // HTTPS en producción
-        maxAge: 24 * 60 * 60 * 1000, // 24 horas
-        httpOnly: true, // Protección XSS
-        sameSite: 'lax' // 'lax' permite sesiones persistentes en requests normales
+        secure: false, // CAMBIO: false para que funcione en desarrollo
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
     }
 }));
 
