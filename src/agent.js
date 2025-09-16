@@ -121,14 +121,34 @@ class AgenteIAtiva {
         if (!this.datosSimples) {
             this.datosSimples = {};
         }
-        if (this.indicePregunta === undefined) {
+        if (this.indicePregunta === undefined || this.indicePregunta === null) {
             this.indicePregunta = 0;
         }
         this.estadoActual = 'recopilacion_datos';
-        
+
         console.log('👋 manejarBienvenida - datosSimples:', this.datosSimples);
         console.log('👋 manejarBienvenida - indicePregunta:', this.indicePregunta);
-        
+
+        // Si ya hay progreso, mostrar la pregunta actual sin procesar entrada
+        if (this.indicePregunta > 0) {
+            const preguntas = [
+                { nombre: 'materia_prima', pregunta: '¿Cuánto gastaste en materia prima/insumos?' },
+                { nombre: 'mano_obra', pregunta: '¿Cuánto gastaste en mano de obra directa?' },
+                { nombre: 'empaque', pregunta: '¿Cuánto gastaste en empaque o presentación?' },
+                { nombre: 'servicios', pregunta: '¿Cuánto gastaste en servicios (luz, agua, internet)?' },
+                { nombre: 'transporte', pregunta: '¿Cuánto gastaste en transporte?' },
+                { nombre: 'marketing', pregunta: '¿Cuánto gastaste en marketing?' },
+                { nombre: 'arriendo_sueldos', pregunta: '¿Cuánto gastaste en arriendo o sueldos?' },
+                { nombre: 'otros_costos', pregunta: '¿Otros costos (préstamos, intereses)?' },
+                { nombre: 'margen_ganancia', pregunta: '¿Qué margen de ganancia deseas (%)?' }
+            ];
+
+            if (this.indicePregunta < preguntas.length) {
+                const preguntaActual = preguntas[this.indicePregunta];
+                return `**Pregunta ${this.indicePregunta + 1}/9**\n\n${preguntaActual.pregunta}\n\nEjemplo: ${preguntaActual.nombre === 'margen_ganancia' ? '25' : '15000'}`;
+            }
+        }
+
         return `🧠 **¡Bienvenido al análisis de costeo IAtiva!**
 
 Te haré 9 preguntas rápidas para calcular el precio perfecto de tu producto.
