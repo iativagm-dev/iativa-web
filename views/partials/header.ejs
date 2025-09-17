@@ -18,18 +18,81 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="<%= title %>">
+    <meta property="og:description" content="<%= locals.metaDescription || 'IAtiva - Asesor Virtual de Costeo y Proyecciones. Herramientas profesionales de análisis financiero para emprendedores.' %>">
+    <meta property="og:image" content="<%= locals.baseUrl || 'https://iativa.up.railway.app' %>/images/logo.png">
+    <meta property="og:url" content="<%= locals.baseUrl || 'https://iativa.up.railway.app' %><%= locals.currentPath || '/' %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="IAtiva">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= title %>">
+    <meta name="twitter:description" content="<%= locals.metaDescription || 'IAtiva - Asesor Virtual de Costeo y Proyecciones. Herramientas profesionales de análisis financiero para emprendedores.' %>">
+    <meta name="twitter:image" content="<%= locals.baseUrl || 'https://iativa.up.railway.app' %>/images/logo.png">
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="IAtiva">
+    <meta name="theme-color" content="#C9A961">
+    <link rel="canonical" href="<%= locals.baseUrl || 'https://iativa.up.railway.app' %><%= locals.currentPath || '/' %>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Responsive Enhancements -->
+    <link rel="stylesheet" href="/css/responsive-enhancements.css">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome - Performance Optimized -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
     <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- Alpine.js para interactividad -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "IAtiva",
+        "description": "Asesor Virtual de Costeo y Proyecciones para emprendedores",
+        "url": "https://iativa.up.railway.app",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "COP",
+            "description": "Herramienta gratuita de análisis financiero"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "IAtiva",
+            "url": "https://iativa.up.railway.app",
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "email": "iativagm@gmail.com",
+                "contactType": "Customer Service"
+            }
+        },
+        "featureList": [
+            "Cálculo de costos",
+            "Punto de equilibrio",
+            "Proyecciones financieras",
+            "Análisis de capacidad de endeudamiento",
+            "Recomendaciones personalizadas"
+        ]
+    }
+    </script>
     
     <!-- Configuración de Tailwind personalizada -->
     <script>
@@ -115,6 +178,80 @@
             opacity: 1;
             visibility: visible;
         }
+
+        /* Performance Optimizations */
+        .will-change-transform {
+            will-change: transform;
+        }
+
+        .gpu-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 640px) {
+            .text-responsive {
+                font-size: clamp(0.875rem, 2.5vw, 1rem);
+            }
+
+            .heading-responsive {
+                font-size: clamp(1.5rem, 5vw, 2.25rem);
+            }
+
+            .button-responsive {
+                font-size: clamp(0.875rem, 2.5vw, 1rem);
+                padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 4vw, 1.5rem);
+            }
+        }
+
+        /* Improved Touch Targets for Mobile */
+        @media (hover: none) and (pointer: coarse) {
+            button, a, [role="button"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High Contrast Mode Support */
+        @media (prefers-contrast: high) {
+            .gradient-bg {
+                background: #1A365D !important;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+        }
+
+        /* Loading States */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 
@@ -133,7 +270,7 @@
                     </div>
                     
                     <!-- Navegación desktop -->
-                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                    <div class="hidden md:ml-6 md:flex md:space-x-8 items-center">
                         <a href="/dashboard" 
                            class="text-white hover:text-gray-200 px-3 py-2 text-sm font-medium transition-colors">
                             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard

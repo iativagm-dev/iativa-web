@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://iativa.up.railway.app/sitemap.xml
+
+# Disallow sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /data/
+Disallow: /*.json$
+
+# Allow important pages
+Allow: /demo
+Allow: /debt-capacity-demo
+Allow: /calculadora-costos
+Allow: /donaciones
+Allow: /register
+Allow: /login
+
+# Crawl delay
+Crawl-delay: 1
