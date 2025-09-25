@@ -1,0 +1,11 @@
+{
+  "deploymentId": "railway-prod-2025-09-25T23-49-28-689Z-qgk3zo",
+  "executedAt": "2025-09-25T23:49:40.434Z",
+  "migrations": [
+    "migrations/001-create-business-classifications-table.sql",
+    "migrations/002-create-cost-validations-table.sql",
+    "migrations/003-create-recommendations-table.sql",
+    "migrations/004-create-analytics-tables.sql"
+  ],
+  "status": "completed"
+}

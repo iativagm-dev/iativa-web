@@ -75,5 +75,21 @@
       "intelligentValidation"
     ],
     "is_demo": true
+  },
+  {
+    "id": "1758844288859",
+    "created_at": "2025-09-25T23:51:28.859Z",
+    "user_id": "temp_1758840378274",
+    "session_id": "demo_1758840378274_ce615toxj",
+    "action": "demo_chat_message",
+    "message_length": 2,
+    "response_time": 1,
+    "features_used": [
+      "intelligentCosting",
+      "businessClassification",
+      "adaptiveQuestions",
+      "intelligentValidation"
+    ],
+    "is_demo": true
   }
 ]
