@@ -1708,6 +1708,152 @@ app.get('/analisis/debt/:id', (req, res) => {
     }
 });
 
+// ===== INTELLIGENT FEATURES API ROUTES =====
+
+// Importar módulos inteligentes
+const IntelligentCosting = require('./modules/intelligent-costing/IntelligentCosting');
+const BusinessClassifier = require('./modules/intelligent-costing/BusinessClassifier');
+const CostValidator = require('./modules/intelligent-costing/CostValidator');
+
+// Inicializar sistemas inteligentes
+const intelligentCosting = new IntelligentCosting();
+const businessClassifier = new BusinessClassifier();
+const costValidator = new CostValidator();
+
+// API: Clasificación inteligente de negocios
+app.post('/api/intelligent-features/classify-business', async (req, res) => {
+    try {
+        const { businessInfo, sessionId } = req.body;
+
+        // Verificar rollout percentage
+        const rolloutPercentage = parseInt(process.env.BUSINESS_CLASSIFICATION_ROLLOUT_PERCENTAGE || '100');
+        const isInRollout = (Math.random() * 100) < rolloutPercentage;
+
+        if (!isInRollout) {
+            return res.json({
+                success: true,
+                rollout: false,
+                message: 'Feature not available in current rollout',
+                classification: null
+            });
+        }
+
+        const classification = await businessClassifier.classifyBusiness(businessInfo);
+
+        res.json({
+            success: true,
+            rollout: true,
+            classification: classification,
+            confidence: classification.confidence,
+            categories: classification.categories,
+            recommendations: classification.recommendations
+        });
+
+    } catch (error) {
+        console.error('Business classification error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Classification service temporarily unavailable'
+        });
+    }
+});
+
+// API: Validación inteligente de costos
+app.post('/api/intelligent-features/validate-costs', async (req, res) => {
+    try {
+        const { costs, businessType, sessionId } = req.body;
+
+        const validation = await costValidator.validateCosts(costs, businessType);
+
+        res.json({
+            success: true,
+            validation: validation,
+            warnings: validation.warnings,
+            suggestions: validation.suggestions,
+            coherenceScore: validation.coherenceScore
+        });
+
+    } catch (error) {
+        console.error('Cost validation error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Cost validation service temporarily unavailable'
+        });
+    }
+});
+
+// API: Recomendaciones inteligentes
+app.post('/api/intelligent-features/recommendations', async (req, res) => {
+    try {
+        const { analysisData, sessionId } = req.body;
+
+        const recommendations = await intelligentCosting.generateRecommendations(analysisData, sessionId);
+
+        res.json({
+            success: true,
+            recommendations: recommendations,
+            priority: recommendations.priority,
+            impact: recommendations.estimatedImpact
+        });
+
+    } catch (error) {
+        console.error('Recommendations error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Recommendations service temporarily unavailable'
+        });
+    }
+});
+
+// API: Estado de funciones inteligentes
+app.get('/api/intelligent-features/status', (req, res) => {
+    res.json({
+        success: true,
+        features: {
+            businessClassification: {
+                enabled: process.env.ENABLE_BUSINESS_CLASSIFICATION === 'true',
+                rolloutPercentage: parseInt(process.env.BUSINESS_CLASSIFICATION_ROLLOUT_PERCENTAGE || '100')
+            },
+            costValidation: {
+                enabled: process.env.ENABLE_COST_VALIDATION === 'true',
+                rolloutPercentage: parseInt(process.env.COST_VALIDATION_ROLLOUT_PERCENTAGE || '100')
+            },
+            recommendations: {
+                enabled: process.env.ENABLE_RECOMMENDATION_ENGINE === 'true'
+            },
+            monitoring: {
+                enabled: process.env.ENABLE_PRODUCTION_MONITORING === 'true'
+            }
+        },
+        version: '1.0.0',
+        deploymentId: process.env.RAILWAY_DEPLOYMENT_ID || 'local'
+    });
+});
+
+// API: Análisis de progreso inteligente
+app.post('/api/intelligent-features/progress-analysis', async (req, res) => {
+    try {
+        const { sessionId } = req.body;
+
+        const progressData = await intelligentCosting.getProgressAnalysis(sessionId);
+
+        res.json({
+            success: true,
+            progress: progressData,
+            analysisDepth: progressData.analysisDepth,
+            completionScore: progressData.completionScore,
+            nextSuggestions: progressData.nextSuggestions
+        });
+
+    } catch (error) {
+        console.error('Progress analysis error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Progress analysis service temporarily unavailable'
+        });
+    }
+});
+
 // Error 404
 app.use((req, res) => {
     res.status(404).render('error', {
