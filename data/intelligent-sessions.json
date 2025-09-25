@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "1758841165360",
+    "created_at": "2025-09-25T22:59:25.360Z",
+    "session_id": "demo_1758840378274_ce615toxj",
+    "user_id": "temp_1758840378274",
+    "business_classified": false,
+    "validation_count": 0,
+    "features_used": [
+      "intelligentCosting",
+      "businessClassification",
+      "adaptiveQuestions",
+      "intelligentValidation"
+    ],
+    "is_demo": true,
+    "updated_at": "2025-09-25T23:38:06.003Z"
+  }
+]

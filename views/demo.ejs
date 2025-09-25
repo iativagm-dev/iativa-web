@@ -104,8 +104,86 @@
                 </div>
             </div>
 
+            <!-- Business Type Selector -->
+            <div id="business-type-selector" class="p-6 space-y-6">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                        <i class="fas fa-brain text-iativa-blue mr-2"></i>
+                        ¿Qué tipo de negocio tienes?
+                    </h2>
+                    <p class="text-gray-600 text-sm">
+                        Selecciona tu tipo de negocio para obtener un análisis personalizado
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Opción 1: Producto que fabricas/transformas -->
+                    <div class="business-type-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-iativa-blue group"
+                         data-business-type="manufactura"
+                         data-business-name="Producto que fabricas/transformas">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🏭</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Manufactura</h3>
+                            <p class="text-gray-600 text-sm">Producto que fabricas/transformas</p>
+                            <p class="text-xs text-gray-500 mt-2">Materias primas, producción, mano de obra</p>
+                        </div>
+                    </div>
+
+                    <!-- Opción 2: Producto que compras y revendes -->
+                    <div class="business-type-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-iativa-blue group"
+                         data-business-type="reventa"
+                         data-business-name="Producto que compras y revendes">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🛍️</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Reventa</h3>
+                            <p class="text-gray-600 text-sm">Producto que compras y revendes</p>
+                            <p class="text-xs text-gray-500 mt-2">Compra, almacenamiento, margen comercial</p>
+                        </div>
+                    </div>
+
+                    <!-- Opción 3: Servicio profesional/consultoría -->
+                    <div class="business-type-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-iativa-blue group"
+                         data-business-type="servicio"
+                         data-business-name="Servicio profesional/consultoría">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">💼</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Servicio</h3>
+                            <p class="text-gray-600 text-sm">Servicio profesional/consultoría</p>
+                            <p class="text-xs text-gray-500 mt-2">Tiempo, conocimiento, experiencia</p>
+                        </div>
+                    </div>
+
+                    <!-- Opción 4: Servicio + productos incluidos -->
+                    <div class="business-type-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-iativa-blue group"
+                         data-business-type="hibrido"
+                         data-business-name="Servicio + productos incluidos">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🔄</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Híbrido</h3>
+                            <p class="text-gray-600 text-sm">Servicio + productos incluidos</p>
+                            <p class="text-xs text-gray-500 mt-2">Servicio más insumos/productos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-xs text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Esta información nos ayuda a personalizar tu análisis de costeo
+                    </p>
+                </div>
+            </div>
+
             <!-- Chat Messages -->
-            <div id="chat-messages" class="p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto bg-gray-50">
+            <div id="chat-messages" class="p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto bg-gray-50" style="display: none;">
                 <!-- Los mensajes aparecerán aquí -->
             </div>
 

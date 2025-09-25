@@ -146,8 +146,110 @@
                 </div>
             </div>
 
+            <!-- Business Type Selector -->
+            <div id="business-type-selector" class="p-6 space-y-6">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                        <i class="fas fa-brain text-iativa-blue mr-2"></i>
+                        ¿Qué tipo de negocio tienes?
+                    </h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        Selecciona el tipo de negocio que mejor describa tu actividad para obtener un análisis personalizado y recomendaciones específicas para tu industria.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <!-- Producto que fabricas/transformas -->
+                    <div class="business-type-card group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                         data-business-type="manufactura"
+                         data-business-name="Producto que fabricas/transformas">
+                        <div class="bg-white rounded-xl border-2 border-gray-200 p-6 h-full flex flex-col items-center text-center group-hover:border-iativa-blue group-hover:bg-blue-50">
+                            <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-industry text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-iativa-blue">
+                                Producto que fabricas/transformas
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                Elaboras, produces o transformas materias primas en productos terminados.
+                            </p>
+                            <div class="mt-4 px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500 group-hover:bg-orange-100 group-hover:text-orange-700">
+                                🏭 Manufactura • Producción • Transformación
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto que compras y revendes -->
+                    <div class="business-type-card group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                         data-business-type="reventa"
+                         data-business-name="Producto que compras y revendes">
+                        <div class="bg-white rounded-xl border-2 border-gray-200 p-6 h-full flex flex-col items-center text-center group-hover:border-iativa-green group-hover:bg-green-50">
+                            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-shopping-bag text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-iativa-green">
+                                Producto que compras y revendes
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                Comercializas productos que adquieres de proveedores sin modificarlos.
+                            </p>
+                            <div class="mt-4 px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500 group-hover:bg-green-100 group-hover:text-green-700">
+                                🛍️ Comercio • Reventa • Distribución
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Servicio profesional/consultoría -->
+                    <div class="business-type-card group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                         data-business-type="servicio"
+                         data-business-name="Servicio profesional/consultoría">
+                        <div class="bg-white rounded-xl border-2 border-gray-200 p-6 h-full flex flex-col items-center text-center group-hover:border-iativa-blue group-hover:bg-blue-50">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-briefcase text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-iativa-blue">
+                                Servicio profesional/consultoría
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                Ofreces conocimientos especializados, asesorías o servicios profesionales.
+                            </p>
+                            <div class="mt-4 px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500 group-hover:bg-blue-100 group-hover:text-blue-700">
+                                💼 Consultoría • Servicios • Conocimiento
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Servicio + productos incluidos -->
+                    <div class="business-type-card group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                         data-business-type="hibrido"
+                         data-business-name="Servicio + productos incluidos">
+                        <div class="bg-white rounded-xl border-2 border-gray-200 p-6 h-full flex flex-col items-center text-center group-hover:border-iativa-gold group-hover:bg-yellow-50">
+                            <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-sync-alt text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-iativa-gold">
+                                Servicio + productos incluidos
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                Combinas servicios profesionales con productos o materiales incluidos.
+                            </p>
+                            <div class="mt-4 px-4 py-2 bg-gray-100 rounded-lg text-xs text-gray-500 group-hover:bg-yellow-100 group-hover:text-yellow-700">
+                                🔄 Híbrido • Servicio+Producto • Integral
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <div class="flex items-center justify-center text-sm text-gray-500">
+                        <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                        <span>Esta información nos ayuda a personalizar las preguntas y recomendaciones</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Chat Messages Enhanced -->
-            <div id="chat-messages" class="p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto bg-gray-50">
+            <div id="chat-messages" class="p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto bg-gray-50" style="display: none;">
                 <!-- Intelligent Features Container -->
                 <div id="intelligent-features-container" class="intelligent-features-container">
                     <!-- Intelligent features will be injected here -->

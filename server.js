@@ -1266,6 +1266,46 @@ app.get('/api/demo-stats', (req, res) => {
     }
 });
 
+// Analytics tracking for business type selection
+app.post('/api/analytics/business-type-selection', (req, res) => {
+    try {
+        const { eventType, businessType, businessName, timestamp, sessionId, userAgent, screenSize, viewportSize } = req.body;
+
+        // Log analytics data
+        console.log('📊 Business Type Selection Analytics:', {
+            eventType,
+            businessType,
+            businessName,
+            sessionId,
+            timestamp,
+            userAgent: userAgent?.substring(0, 50) + '...',
+            screenSize,
+            viewportSize
+        });
+
+        // Store analytics data (you can extend this to save to database)
+        logAnalytics('business_type_selected', req, {
+            businessType,
+            businessName,
+            sessionId,
+            screenSize,
+            viewportSize
+        });
+
+        res.json({
+            success: true,
+            message: 'Analytics tracked successfully'
+        });
+
+    } catch (error) {
+        console.error('❌ Error tracking business type analytics:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to track analytics'
+        });
+    }
+});
+
 // ==================== INTELLIGENT DATA ADMIN ====================
 
 // API para obtener estadísticas de sesiones inteligentes (solo administradores)
