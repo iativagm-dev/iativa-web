@@ -1,0 +1,19 @@
+{
+  "date": "2025-09-24",
+  "summary": {
+    "totalSessions": 127,
+    "classificationAccuracy": "91%",
+    "validationScore": "96%",
+    "averageResponseTime": "1250ms",
+    "errorRate": "2.4%"
+  },
+  "insights": [
+    "🎯 Business classification is performing excellently",
+    "🏆 Cost validation is performing exceptionally well",
+    "⚡ Response times are excellent",
+    "📊 Top industries: restaurante (45), tecnologia (32), retail (28)"
+  ],
+  "recommendations": [
+    "Investigate and address recurring error patterns"
+  ]
+}

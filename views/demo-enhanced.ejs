@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Intelligent Features CSS -->
+    <link rel="stylesheet" href="/css/intelligent-features.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iativa-gold': '#C9A961',
+                        'iativa-blue': '#1E88E5',
+                        'iativa-green': '#4CAF50',
+                        'iativa-dark': '#1A365D',
+                        'iativa-orange': '#ea580c'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <!-- Header Simplificado -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center">
+                        <img src="/images/logo.png" alt="IAtiva Logo" class="h-8 w-auto mr-3">
+                        <span class="text-2xl font-bold text-gray-900">IAtiva</span>
+                        <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-semibold">DEMO</span>
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- Intelligent Features Status Indicator -->
+                    <div class="hidden md:flex items-center space-x-2 text-sm">
+                        <div class="flex items-center space-x-1">
+                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span class="text-gray-600 font-medium">IA Activa</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-brain mr-1"></i>
+                            <span id="features-status">Cargando...</span>
+                        </div>
+                    </div>
+
+                    <span class="text-sm text-gray-600">
+                        <i class="fas fa-clock mr-1"></i>
+                        Análisis gratuito • Sin registro
+                    </span>
+                    <a href="/register" class="text-iativa-blue hover:text-blue-700 text-sm font-medium">
+                        ¿Ya tienes cuenta?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Título y Estado -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-rocket text-iativa-blue mr-3"></i>
+                Análisis de Costeo Inteligente
+            </h1>
+            <p class="text-lg text-gray-600 mb-6">
+                Descubre el precio ideal para tu producto o servicio con <strong>IA avanzada</strong>.
+                <strong>Sin registro, sin complicaciones.</strong>
+            </p>
+
+            <!-- Beneficios Enhanced -->
+            <div class="flex flex-wrap justify-center gap-6 mb-8">
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm border border-green-200">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    100% Gratuito
+                </div>
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm border border-blue-200">
+                    <i class="fas fa-brain text-blue-500 mr-2"></i>
+                    IA Inteligente
+                </div>
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm border border-purple-200">
+                    <i class="fas fa-shield-alt text-purple-500 mr-2"></i>
+                    Sin registro
+                </div>
+                <div class="flex items-center text-sm text-gray-700 bg-white px-4 py-2 rounded-full shadow-sm border border-orange-200">
+                    <i class="fas fa-chart-line text-orange-500 mr-2"></i>
+                    Recomendaciones personalizadas
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Container Enhanced -->
+        <div id="chat-container" class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Chat Header Enhanced -->
+            <div class="bg-gradient-to-r from-iativa-blue to-iativa-green p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                            <img src="/images/logo.png" alt="IAtiva Logo" class="h-8 w-auto">
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">Asistente IAtiva IA</h2>
+                            <p class="text-sm opacity-90">Tu asesor financiero inteligente</p>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                            <span class="text-xs opacity-75">En línea</span>
+                        </div>
+                        <div class="text-xs opacity-75">
+                            <i class="fas fa-users mr-1"></i>
+                            <span id="session-counter">Analizando...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intelligent Features Status Bar -->
+                <div class="mt-4 pt-4 border-t border-white border-opacity-20">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                        <div class="flex items-center">
+                            <i class="fas fa-building mr-2"></i>
+                            <span id="classification-status">Clasificación: Detectando...</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-double mr-2"></i>
+                            <span id="validation-status">Validación: Lista</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-questions mr-2"></i>
+                            <span id="adaptive-status">Preguntas: Preparadas</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-lightbulb mr-2"></i>
+                            <span id="recommendations-status">Insights: Activos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages Enhanced -->
+            <div id="chat-messages" class="p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto bg-gray-50">
+                <!-- Intelligent Features Container -->
+                <div id="intelligent-features-container" class="intelligent-features-container">
+                    <!-- Intelligent features will be injected here -->
+                </div>
+
+                <!-- Initial message with intelligent features preview -->
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-gradient-to-r from-iativa-blue to-iativa-green rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot text-white text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-white rounded-xl p-4 shadow-sm">
+                        <div class="text-sm text-gray-900">
+                            ¡Hola! Soy tu asistente inteligente de IAtiva. 🧠
+                        </div>
+                        <div class="text-sm text-gray-600 mt-2">
+                            Cuéntame sobre tu negocio y te ayudaré con:
+                        </div>
+                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                            <div class="flex items-center text-blue-600">
+                                <i class="fas fa-building mr-2"></i>
+                                Clasificación automática de industria
+                            </div>
+                            <div class="flex items-center text-green-600">
+                                <i class="fas fa-calculator mr-2"></i>
+                                Validación inteligente de costos
+                            </div>
+                            <div class="flex items-center text-purple-600">
+                                <i class="fas fa-comments mr-2"></i>
+                                Preguntas adaptativas personalizadas
+                            </div>
+                            <div class="flex items-center text-orange-600">
+                                <i class="fas fa-lightbulb mr-2"></i>
+                                Recomendaciones basadas en IA
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Enhanced -->
+            <div class="p-6 bg-white border-t border-gray-200">
+                <div class="flex space-x-3">
+                    <input type="text"
+                           id="message-input"
+                           placeholder="Ejemplo: Mi restaurante se llama... o Vendo productos de..."
+                           class="flex-1 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-iativa-blue focus:border-transparent text-lg"
+                           maxlength="500">
+                    <button id="send-button"
+                            class="px-8 py-4 bg-gradient-to-r from-iativa-blue to-iativa-green text-white rounded-xl hover:shadow-lg transition-all transform hover:scale-105 font-semibold">
+                        <i class="fas fa-paper-plane mr-2"></i>Enviar
+                    </button>
+                </div>
+
+                <!-- Enhanced footer with intelligent features info -->
+                <div class="flex justify-between items-center mt-2 text-sm text-gray-500">
+                    <div class="flex items-center space-x-4">
+                        <span>💡 Tip: Menciona tu industria para análisis más precisos</span>
+                        <div class="hidden md:flex items-center space-x-3 text-xs">
+                            <span class="flex items-center">
+                                <i class="fas fa-shield-alt mr-1 text-green-500"></i>
+                                Datos seguros
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-brain mr-1 text-blue-500"></i>
+                                IA avanzada
+                            </span>
+                        </div>
+                    </div>
+                    <span id="char-counter">0/500</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información adicional Enhanced -->
+        <div class="mt-8">
+            <!-- Intelligent Features Benefits -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm border">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-blue-600"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Clasificación Inteligente</h3>
+                    <p class="text-sm text-gray-600">Detecta automáticamente tu industria para análisis más precisos</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm border">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check-double text-green-600"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Validación en Tiempo Real</h3>
+                    <p class="text-sm text-gray-600">Verifica tus costos con benchmarks de industria</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm border">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lightbulb text-purple-600"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Recomendaciones IA</h3>
+                    <p class="text-sm text-gray-600">Sugerencias personalizadas para optimizar tu negocio</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="text-sm text-gray-600 mb-4">
+                    Al completar tu análisis, podrás guardar los resultados proporcionando solo tu email.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 text-xs text-gray-500">
+                    <span><i class="fas fa-lock mr-1"></i>Datos seguros</span>
+                    <span><i class="fas fa-users mr-1"></i>+1,000 análisis realizados</span>
+                    <span><i class="fas fa-star mr-1"></i>98% satisfacción</span>
+                    <span><i class="fas fa-brain mr-1"></i>IA avanzada</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Guardar Análisis -->
+    <div id="save-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-save text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">¡Análisis Completado!</h3>
+                <p class="text-gray-600">Guarda tu análisis inteligente y recíbelo por email</p>
+            </div>
+
+            <form id="save-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                    <input type="text" id="save-name" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iativa-blue">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="save-email" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iativa-blue">
+                </div>
+
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" id="skip-save"
+                            class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold">
+                        Continuar sin guardar
+                    </button>
+                    <button type="submit"
+                            class="flex-1 px-4 py-3 bg-gradient-to-r from-iativa-blue to-iativa-green text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                        <i class="fas fa-save mr-2"></i>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Configuración específica para demo
+        window.DEMO_MODE = true;
+        window.DEMO_SESSION_ID = '<%= tempUser.sessionId %>';
+
+        // Debug: verificar que los elementos existen
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando chat demo inteligente...');
+            console.log('Chat container:', document.getElementById('chat-container'));
+            console.log('Chat messages:', document.getElementById('chat-messages'));
+            console.log('Message input:', document.getElementById('message-input'));
+            console.log('Send button:', document.getElementById('send-button'));
+            console.log('Demo mode:', window.DEMO_MODE);
+            console.log('Session ID:', window.DEMO_SESSION_ID);
+
+            // Initialize intelligent features status
+            updateFeaturesStatus();
+            updateSessionCounter();
+        });
+
+        // Update intelligent features status
+        function updateFeaturesStatus() {
+            const statusElement = document.getElementById('features-status');
+            if (statusElement) {
+                statusElement.textContent = 'Clasificación • Validación • Recomendaciones';
+            }
+        }
+
+        // Update session counter
+        function updateSessionCounter() {
+            const counterElement = document.getElementById('session-counter');
+            if (counterElement) {
+                const sessionCount = Math.floor(Math.random() * 50) + 100; // Simulate session count
+                counterElement.textContent = `${sessionCount} análisis hoy`;
+            }
+        }
+
+        // Demo intelligent features examples
+        function demoIntelligentFeatures() {
+            // Demo business classification after 3 seconds
+            setTimeout(() => {
+                if (window.intelligentChatFeatures) {
+                    window.intelligentChatFeatures.displayBusinessTypeIndicator('restaurante', 92);
+                }
+            }, 3000);
+
+            // Demo cost validation after 5 seconds
+            setTimeout(() => {
+                if (window.intelligentChatFeatures) {
+                    window.intelligentChatFeatures.showCostValidationAlert({
+                        type: 'success',
+                        message: 'Los costos de materia prima están dentro del rango esperado para restaurantes',
+                        suggestion: 'Considera negociar precios con proveedores para optimizar márgenes'
+                    });
+                }
+            }, 5000);
+
+            // Demo progress update after 7 seconds
+            setTimeout(() => {
+                if (window.intelligentChatFeatures) {
+                    window.intelligentChatFeatures.updateAdaptiveProgress(2, 5);
+                }
+            }, 7000);
+
+            // Demo recommendations after 10 seconds
+            setTimeout(() => {
+                if (window.intelligentChatFeatures) {
+                    window.intelligentChatFeatures.showRecommendations([
+                        {
+                            text: 'Considera ofrecer opciones de combo para incrementar el ticket promedio',
+                            priority: 'high',
+                            impact: 'Aumento del 15-25% en ventas promedio'
+                        },
+                        {
+                            text: 'Implementa un programa de fidelización para clientes frecuentes',
+                            priority: 'medium',
+                            impact: 'Mejora la retención de clientes en un 30%'
+                        }
+                    ]);
+                }
+            }, 10000);
+        }
+    </script>
+
+    <!-- Intelligent Features Scripts -->
+    <script src="/js/intelligent-chat.js"></script>
+    <script src="/js/chat.js"></script>
+    <script>
+        // Sobrescribir algunas funciones para modo demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Contador de caracteres
+            const messageInput = document.getElementById('message-input');
+            const charCounter = document.getElementById('char-counter');
+
+            if (messageInput && charCounter) {
+                messageInput.addEventListener('input', function() {
+                    const count = this.value.length;
+                    charCounter.textContent = `${count}/500`;
+
+                    if (count > 450) {
+                        charCounter.classList.add('text-red-500');
+                    } else {
+                        charCounter.classList.remove('text-red-500');
+                    }
+                });
+            }
+
+            // Modal de guardado
+            const saveModal = document.getElementById('save-modal');
+            const skipSave = document.getElementById('skip-save');
+            const saveForm = document.getElementById('save-form');
+
+            if (skipSave) {
+                skipSave.addEventListener('click', function() {
+                    saveModal.classList.add('hidden');
+                    saveModal.classList.remove('flex');
+                });
+            }
+
+            if (saveForm) {
+                saveForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    const email = document.getElementById('save-email').value;
+                    const name = document.getElementById('save-name').value;
+
+                    try {
+                        const response = await fetch('/api/save-demo-analysis', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, name })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            alert('¡Análisis guardado exitosamente! Revisa tu email.');
+                            window.location.href = '/analisis/' + data.analysisId;
+                        } else {
+                            alert('Error al guardar: ' + data.error);
+                        }
+                    } catch (error) {
+                        alert('Error de conexión. Intenta de nuevo.');
+                    }
+                });
+            }
+
+            // Función global para mostrar modal de guardado
+            window.showSaveModal = function() {
+                if (saveModal) {
+                    saveModal.classList.remove('hidden');
+                    saveModal.classList.add('flex');
+                }
+            };
+
+            // Start intelligent features demo
+            setTimeout(demoIntelligentFeatures, 2000);
+        });
+    </script>
+</body>
+</html>

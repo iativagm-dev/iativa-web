@@ -1,0 +1,169 @@
+{
+  "restaurante": {
+    "name": "Restaurante/Comida",
+    "keywords": ["restaurante", "comida", "cocina", "chef", "menu", "platos", "bebidas", "bar", "cafeteria", "panaderia", "heladeria"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 30, "range": [25, 40], "description": "Ingredientes y productos frescos" },
+      "mano_obra": { "percentage": 35, "range": [30, 45], "description": "Personal de cocina y servicio" },
+      "empaque": { "percentage": 3, "range": [2, 5], "description": "Envases para delivery" },
+      "servicios": { "percentage": 12, "range": [8, 15], "description": "Luz, gas, agua" },
+      "transporte": { "percentage": 5, "range": [3, 8], "description": "Delivery y suministros" },
+      "marketing": { "percentage": 8, "range": [5, 12], "description": "Publicidad y promociones" },
+      "arriendo_sueldos": { "percentage": 15, "range": [10, 20], "description": "Alquiler del local" },
+      "otros_costos": { "percentage": 5, "range": [3, 8], "description": "Seguros, mantenimiento" }
+    },
+    "recommendations": [
+      "Negocia precios con proveedores para reducir costos de materia prima",
+      "Optimiza el menú eliminando platos de baja rotación",
+      "Considera implementar un sistema de delivery propio"
+    ],
+    "margins": { "typical": 25, "good": 35, "excellent": 45 }
+  },
+
+  "retail": {
+    "name": "Tienda/Retail",
+    "keywords": ["tienda", "retail", "venta", "productos", "ropa", "zapatos", "accesorios", "boutique", "almacen"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 45, "range": [40, 55], "description": "Inventario de productos" },
+      "mano_obra": { "percentage": 20, "range": [15, 25], "description": "Personal de ventas" },
+      "empaque": { "percentage": 3, "range": [2, 5], "description": "Bolsas y empaques" },
+      "servicios": { "percentage": 8, "range": [6, 12], "description": "Electricidad y servicios" },
+      "transporte": { "percentage": 5, "range": [3, 8], "description": "Transporte de mercancía" },
+      "marketing": { "percentage": 10, "range": [7, 15], "description": "Publicidad y promociones" },
+      "arriendo_sueldos": { "percentage": 12, "range": [8, 18], "description": "Alquiler del local" },
+      "otros_costos": { "percentage": 4, "range": [2, 6], "description": "Seguros, sistemas POS" }
+    },
+    "recommendations": [
+      "Mejora la rotación de inventario para reducir costos de almacenamiento",
+      "Implementa estrategias de cross-selling y up-selling",
+      "Considera la venta online para aumentar ingresos"
+    ],
+    "margins": { "typical": 50, "good": 65, "excellent": 80 }
+  },
+
+  "servicios": {
+    "name": "Servicios Profesionales",
+    "keywords": ["servicios", "consultoria", "asesoría", "profesional", "diseño", "marketing", "contabilidad", "legal", "medico"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 10, "range": [5, 20], "description": "Materiales y suministros" },
+      "mano_obra": { "percentage": 60, "range": [50, 70], "description": "Honorarios profesionales" },
+      "empaque": { "percentage": 1, "range": [0, 3], "description": "Presentación de propuestas" },
+      "servicios": { "percentage": 8, "range": [5, 12], "description": "Internet, teléfono, software" },
+      "transporte": { "percentage": 8, "range": [5, 12], "description": "Movilización a clientes" },
+      "marketing": { "percentage": 12, "range": [8, 18], "description": "Marketing digital y networking" },
+      "arriendo_sueldos": { "percentage": 5, "range": [3, 10], "description": "Oficina (puede ser virtual)" },
+      "otros_costos": { "percentage": 6, "range": [3, 10], "description": "Seguros, certificaciones" }
+    },
+    "recommendations": [
+      "Enfócate en construir una sólida reputación profesional",
+      "Crea paquetes de servicios para aumentar el valor promedio",
+      "Considera el trabajo remoto para reducir costos fijos"
+    ],
+    "margins": { "typical": 40, "good": 60, "excellent": 80 }
+  },
+
+  "manufactura": {
+    "name": "Manufactura/Producción",
+    "keywords": ["fabrica", "manufactura", "produccion", "industrial", "maquinaria", "proceso", "fabricar"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 40, "range": [35, 50], "description": "Materias primas y componentes" },
+      "mano_obra": { "percentage": 25, "range": [20, 35], "description": "Operarios y técnicos" },
+      "empaque": { "percentage": 5, "range": [3, 8], "description": "Embalaje del producto" },
+      "servicios": { "percentage": 12, "range": [8, 16], "description": "Energía para maquinaria" },
+      "transporte": { "percentage": 8, "range": [5, 12], "description": "Logística y distribución" },
+      "marketing": { "percentage": 6, "range": [4, 10], "description": "Marketing B2B" },
+      "arriendo_sueldos": { "percentage": 10, "range": [8, 15], "description": "Planta de producción" },
+      "otros_costos": { "percentage": 8, "range": [5, 12], "description": "Mantenimiento, seguros" }
+    },
+    "recommendations": [
+      "Optimiza los procesos de producción para reducir desperdicios",
+      "Invierte en tecnología para mejorar eficiencia",
+      "Desarrolla relaciones sólidas con proveedores confiables"
+    ],
+    "margins": { "typical": 20, "good": 30, "excellent": 40 }
+  },
+
+  "tecnologia": {
+    "name": "Tecnología/Software",
+    "keywords": ["software", "tecnologia", "app", "web", "desarrollo", "programacion", "IT", "digital", "online"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 5, "range": [2, 10], "description": "Licencias y herramientas" },
+      "mano_obra": { "percentage": 65, "range": [55, 75], "description": "Desarrolladores y técnicos" },
+      "empaque": { "percentage": 1, "range": [0, 2], "description": "Presentación digital" },
+      "servicios": { "percentage": 15, "range": [10, 20], "description": "Hosting, cloud, internet" },
+      "transporte": { "percentage": 2, "range": [1, 5], "description": "Movilización ocasional" },
+      "marketing": { "percentage": 15, "range": [10, 25], "description": "Marketing digital" },
+      "arriendo_sueldos": { "percentage": 3, "range": [2, 8], "description": "Oficina o trabajo remoto" },
+      "otros_costos": { "percentage": 4, "range": [2, 8], "description": "Seguros, certificaciones" }
+    },
+    "recommendations": [
+      "Invierte en capacitación continua del equipo técnico",
+      "Implementa metodologías ágiles para optimizar desarrollo",
+      "Considera modelos de suscripción para ingresos recurrentes"
+    ],
+    "margins": { "typical": 60, "good": 80, "excellent": 90 }
+  },
+
+  "ecommerce": {
+    "name": "E-commerce/Ventas Online",
+    "keywords": ["ecommerce", "online", "tienda virtual", "internet", "digital", "marketplace", "ventas web"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 50, "range": [45, 60], "description": "Inventario de productos" },
+      "mano_obra": { "percentage": 15, "range": [10, 20], "description": "Gestión y atención cliente" },
+      "empaque": { "percentage": 8, "range": [5, 12], "description": "Empaques para envío" },
+      "servicios": { "percentage": 8, "range": [5, 12], "description": "Hosting, plataforma, internet" },
+      "transporte": { "percentage": 12, "range": [8, 18], "description": "Envíos y logística" },
+      "marketing": { "percentage": 15, "range": [10, 25], "description": "Marketing digital y ads" },
+      "arriendo_sueldos": { "percentage": 3, "range": [2, 8], "description": "Bodega/almacén" },
+      "otros_costos": { "percentage": 4, "range": [2, 8], "description": "Pasarelas de pago, seguros" }
+    },
+    "recommendations": [
+      "Optimiza las campañas de marketing digital para reducir CAC",
+      "Mejora la experiencia de usuario para aumentar conversiones",
+      "Negocia tarifas de envío más competitivas"
+    ],
+    "margins": { "typical": 35, "good": 50, "excellent": 65 }
+  },
+
+  "belleza": {
+    "name": "Belleza/Estética",
+    "keywords": ["belleza", "salon", "estetica", "peluqueria", "spa", "cosmeticos", "tratamientos"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 25, "range": [20, 35], "description": "Productos de belleza" },
+      "mano_obra": { "percentage": 40, "range": [35, 50], "description": "Estilistas y terapeutas" },
+      "empaque": { "percentage": 2, "range": [1, 4], "description": "Envases para productos" },
+      "servicios": { "percentage": 15, "range": [12, 20], "description": "Agua, electricidad, calefacción" },
+      "transporte": { "percentage": 3, "range": [2, 6], "description": "Compras de suministros" },
+      "marketing": { "percentage": 10, "range": [7, 15], "description": "Redes sociales, promociones" },
+      "arriendo_sueldos": { "percentage": 12, "range": [8, 18], "description": "Alquiler del local" },
+      "otros_costos": { "percentage": 6, "range": [3, 10], "description": "Seguros, equipos" }
+    },
+    "recommendations": [
+      "Crea paquetes de servicios para aumentar ticket promedio",
+      "Implementa un programa de fidelización de clientes",
+      "Considera vender productos para uso en casa"
+    ],
+    "margins": { "typical": 45, "good": 60, "excellent": 75 }
+  },
+
+  "general": {
+    "name": "Negocio General",
+    "keywords": ["negocio", "empresa", "emprendimiento"],
+    "costProfiles": {
+      "materia_prima": { "percentage": 30, "range": [20, 45], "description": "Materiales principales" },
+      "mano_obra": { "percentage": 30, "range": [20, 45], "description": "Personal del negocio" },
+      "empaque": { "percentage": 5, "range": [2, 10], "description": "Presentación del producto" },
+      "servicios": { "percentage": 10, "range": [5, 15], "description": "Servicios básicos" },
+      "transporte": { "percentage": 8, "range": [3, 15], "description": "Movilización y envíos" },
+      "marketing": { "percentage": 10, "range": [5, 20], "description": "Publicidad y promoción" },
+      "arriendo_sueldos": { "percentage": 10, "range": [5, 20], "description": "Local o sede" },
+      "otros_costos": { "percentage": 5, "range": [2, 10], "description": "Gastos varios" }
+    },
+    "recommendations": [
+      "Analiza detalladamente cada categoría de costo",
+      "Compara tus costos con empresas similares de tu sector",
+      "Busca oportunidades de optimización en las categorías más altas"
+    ],
+    "margins": { "typical": 30, "good": 45, "excellent": 60 }
+  }
+}

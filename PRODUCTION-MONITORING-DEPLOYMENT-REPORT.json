@@ -1,0 +1,44 @@
+{
+  "deploymentId": "monitoring-2025-09-25T12-23-28-494Z-xvbtrb",
+  "deploymentTime": "2025-09-25T12:23:28.871Z",
+  "systems": {
+    "dashboard": true,
+    "alerts": true,
+    "rollback": true,
+    "feedback": true,
+    "business": true,
+    "server": true
+  },
+  "configuration": {
+    "port": 3005,
+    "alertChannels": {
+      "console": true,
+      "email": false,
+      "slack": false,
+      "webhook": false
+    },
+    "rollbackEnabled": true,
+    "dashboardUrl": "http://localhost:3005/dashboard",
+    "apiBaseUrl": "http://localhost:3005/api/production-monitoring/"
+  },
+  "features": {
+    "liveDashboard": true,
+    "realTimeAlerts": true,
+    "automaticRollback": true,
+    "userFeedbackMonitoring": true,
+    "businessMetricsTracking": true,
+    "roiCalculation": true,
+    "serverSentEvents": true,
+    "emergencyControls": true
+  },
+  "endpoints": {
+    "dashboard": "/dashboard",
+    "health": "/health",
+    "liveData": "/api/production-monitoring/dashboard/live",
+    "alerts": "/api/production-monitoring/alerts",
+    "feedback": "/api/production-monitoring/feedback",
+    "businessMetrics": "/api/production-monitoring/business-metrics",
+    "rollbackStatus": "/api/production-monitoring/rollback/status",
+    "emergencyRollback": "/api/production-monitoring/rollback/emergency"
+  }
+}

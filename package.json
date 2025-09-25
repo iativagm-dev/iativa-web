@@ -58,7 +58,8 @@
     "nodemailer": "^7.0.6"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "supertest": "^7.1.4"
   },
   "bin": {
     "iativa": "./src/index.js"

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "1758682603729",
+    "created_at": "2025-09-24T02:56:43.729Z",
+    "user_id": "test-user",
+    "session_id": "test-session",
+    "action": "test_action",
+    "message_length": 50,
+    "response_time": 1500,
+    "features_used": [
+      "intelligentCosting"
+    ],
+    "is_demo": true
+  }
+]

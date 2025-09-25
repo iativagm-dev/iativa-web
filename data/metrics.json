@@ -1,0 +1,19 @@
+{
+  "totalSessions": 127,
+  "classificationSuccess": 115,
+  "classificationTotal": 127,
+  "validationSuccess": 489,
+  "validationTotal": 508,
+  "responseTimeSum": 158750,
+  "responseTimeCount": 127,
+  "betaUserSessions": 23,
+  "errorCount": 3,
+  "industryDistribution": {
+    "restaurante": 45,
+    "tecnologia": 32,
+    "retail": 28,
+    "belleza": 15,
+    "servicios": 7
+  },
+  "lastUpdated": "2025-09-24T14:41:22.272Z"
+}

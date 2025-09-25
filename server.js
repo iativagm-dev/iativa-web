@@ -10,9 +10,10 @@ const AgenteIAtiva = require('./src/agent');
 const CalculadoraCostosTiempo = require("./src/calculadoraCostosTiempo");
 const EmailService = require('./src/emailService');
 const PaymentService = require('./src/paymentService');
+const { FeatureToggle } = require('./modules/intelligent-costing');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Inicializar servicios
 const emailService = new EmailService();
@@ -21,6 +22,9 @@ const DebtCapacityCalculator = require('./src/debtCapacityCalculator');
 
 // Inicializar calculadora de deuda
 const debtCalculator = new DebtCapacityCalculator();
+
+// Inicializar sistema de feature toggles para funciones inteligentes
+const featureToggle = new FeatureToggle();
 
 // Configuración de middleware
 app.use(cors());
@@ -53,6 +57,11 @@ const analyticsFile = path.join(dataDir, 'analytics.json');
 const demoLimitsFile = path.join(dataDir, 'demo-limits.json');
 const debtDemoLimitsFile = path.join(dataDir, 'debt-demo-limits.json');
 const vipIpsFile = path.join(dataDir, 'vip-ips.json');
+
+// Nuevos archivos para funciones inteligentes
+const intelligentSessionsFile = path.join(dataDir, 'intelligent-sessions.json');
+const costValidationsFile = path.join(dataDir, 'cost-validations.json');
+const interactionPatternsFile = path.join(dataDir, 'interaction-patterns.json');
 
 // Inicializar archivos si no existen
 function initializeData() {
@@ -88,6 +97,19 @@ function initializeData() {
     
     if (!fs.existsSync(debtDemoLimitsFile)) {
         fs.writeFileSync(debtDemoLimitsFile, JSON.stringify({}, null, 2));
+    }
+
+    // Inicializar archivos de funciones inteligentes
+    if (!fs.existsSync(intelligentSessionsFile)) {
+        fs.writeFileSync(intelligentSessionsFile, JSON.stringify([], null, 2));
+    }
+
+    if (!fs.existsSync(costValidationsFile)) {
+        fs.writeFileSync(costValidationsFile, JSON.stringify([], null, 2));
+    }
+
+    if (!fs.existsSync(interactionPatternsFile)) {
+        fs.writeFileSync(interactionPatternsFile, JSON.stringify([], null, 2));
     }
 }
 
@@ -223,6 +245,118 @@ function isVipIp(ipAddress) {
 function getVipStatus(ipAddress) {
     const vipIps = getVipIps();
     return vipIps[ipAddress] || null;
+}
+
+// ==================== FUNCIONES DE DATOS INTELIGENTES ====================
+
+// Gestión de sesiones inteligentes
+function getIntelligentSessions() {
+    try {
+        return JSON.parse(fs.readFileSync(intelligentSessionsFile, 'utf8'));
+    } catch {
+        return [];
+    }
+}
+
+function saveIntelligentSessions(sessions) {
+    fs.writeFileSync(intelligentSessionsFile, JSON.stringify(sessions, null, 2));
+}
+
+function saveIntelligentSession(sessionData) {
+    try {
+        const sessions = getIntelligentSessions();
+        const existingIndex = sessions.findIndex(s => s.session_id === sessionData.session_id);
+
+        if (existingIndex >= 0) {
+            sessions[existingIndex] = { ...sessions[existingIndex], ...sessionData, updated_at: new Date().toISOString() };
+        } else {
+            sessions.push({
+                id: Date.now().toString(),
+                created_at: new Date().toISOString(),
+                ...sessionData
+            });
+        }
+
+        saveIntelligentSessions(sessions);
+        return sessions[existingIndex >= 0 ? existingIndex : sessions.length - 1];
+    } catch (error) {
+        console.error('Error saving intelligent session:', error);
+        return null;
+    }
+}
+
+// Gestión de validaciones de costos
+function getCostValidations() {
+    try {
+        return JSON.parse(fs.readFileSync(costValidationsFile, 'utf8'));
+    } catch {
+        return [];
+    }
+}
+
+function saveCostValidation(validationData) {
+    try {
+        const validations = getCostValidations();
+        const newValidation = {
+            id: Date.now().toString(),
+            created_at: new Date().toISOString(),
+            ...validationData
+        };
+        validations.push(newValidation);
+        fs.writeFileSync(costValidationsFile, JSON.stringify(validations, null, 2));
+        return newValidation;
+    } catch (error) {
+        console.error('Error saving cost validation:', error);
+        return null;
+    }
+}
+
+// Gestión de patrones de interacción
+function getInteractionPatterns() {
+    try {
+        return JSON.parse(fs.readFileSync(interactionPatternsFile, 'utf8'));
+    } catch {
+        return [];
+    }
+}
+
+function saveInteractionPattern(patternData) {
+    try {
+        const patterns = getInteractionPatterns();
+        const newPattern = {
+            id: Date.now().toString(),
+            created_at: new Date().toISOString(),
+            ...patternData
+        };
+        patterns.push(newPattern);
+        fs.writeFileSync(interactionPatternsFile, JSON.stringify(patterns, null, 2));
+        return newPattern;
+    } catch (error) {
+        console.error('Error saving interaction pattern:', error);
+        return null;
+    }
+}
+
+// Función helper para análisis inteligente
+function analyzeUserPatterns(userId, sessionId) {
+    const patterns = getInteractionPatterns();
+    const userPatterns = patterns.filter(p => p.user_id === userId || p.session_id === sessionId);
+
+    if (userPatterns.length === 0) return null;
+
+    // Análisis básico de patrones
+    const avgResponseTime = userPatterns.reduce((sum, p) => sum + (p.response_time || 0), 0) / userPatterns.length;
+    const commonActions = userPatterns.reduce((acc, p) => {
+        acc[p.action] = (acc[p.action] || 0) + 1;
+        return acc;
+    }, {});
+
+    return {
+        total_interactions: userPatterns.length,
+        avg_response_time: avgResponseTime,
+        most_common_action: Object.keys(commonActions).reduce((a, b) => commonActions[a] > commonActions[b] ? a : b),
+        last_interaction: userPatterns[userPatterns.length - 1].created_at
+    };
 }
 
 // Función mejorada para límites de demo que considera VIPs
@@ -379,14 +513,16 @@ app.get('/dashboard', requireAuth, (req, res) => {
         res.render('dashboard', {
             title: 'Dashboard - IAtiva',
             user: { id: req.session.userId, name: req.session.userName },
-            analyses: userAnalyses
+            analyses: userAnalyses,
+            isAdmin: req.session.userEmail === 'admin@iativa.com'
         });
     } catch (error) {
         console.error('Dashboard error:', error);
         res.render('dashboard', {
             title: 'Dashboard - IAtiva',
             user: { id: req.session.userId, name: req.session.userName },
-            analyses: []
+            analyses: [],
+            isAdmin: req.session.userEmail === 'admin@iativa.com'
         });
     }
 });
@@ -395,17 +531,50 @@ app.get('/dashboard', requireAuth, (req, res) => {
 app.post('/api/chat', requireAuth, async (req, res) => {
     try {
         const { message, sessionId, context } = req.body;
-        
+
         if (!sessionId) {
             return res.status(400).json({ error: 'Session ID requerido' });
         }
 
-        // Inicializar agente
-        const agente = new AgenteIAtiva();
-        
-        // Procesar mensaje
+        // Verificar disponibilidad de funciones inteligentes
+        const intelligentFeaturesEnabled = featureToggle.isEnabled('intelligentCosting', sessionId);
+        console.log(`🧠 [/api/chat] Intelligent features ${intelligentFeaturesEnabled ? 'enabled' : 'disabled'} for session: ${sessionId}`);
+
+        // Inicializar agente con sessionId para funciones inteligentes
+        const agente = new AgenteIAtiva(sessionId);
+
+        // Procesar mensaje y capturar tiempo de inicio
+        const startTime = Date.now();
         const response = await agente.procesarMensaje(message, sessionId, context || {});
-        
+        const responseTime = Date.now() - startTime;
+
+        // Capturar datos inteligentes si las funciones están habilitadas
+        if (intelligentFeaturesEnabled) {
+            // Guardar patrones de interacción
+            saveInteractionPattern({
+                user_id: req.session.userId,
+                session_id: sessionId,
+                action: 'chat_message',
+                message_length: message.length,
+                response_time: responseTime,
+                features_used: agente.intelligentCosting ? agente.intelligentCosting.getUsedFeatures(sessionId) : []
+            });
+
+            // Guardar datos de sesión inteligente si hay información de negocio
+            if (agente.intelligentCosting && agente.intelligentCosting.sessionData.has(sessionId)) {
+                const sessionAnalytics = agente.intelligentCosting.getSessionAnalytics(sessionId);
+                saveIntelligentSession({
+                    session_id: sessionId,
+                    user_id: req.session.userId,
+                    business_classified: sessionAnalytics.businessClassified,
+                    industry: sessionAnalytics.industry,
+                    confidence: sessionAnalytics.confidence,
+                    validation_count: sessionAnalytics.validationCount,
+                    features_used: sessionAnalytics.featuresUsed
+                });
+            }
+        }
+
         // Si el análisis está completo, guardarlo
         if (response.analisisCompleto) {
             const analyses = getAnalyses();
@@ -419,13 +588,13 @@ app.post('/api/chat', requireAuth, async (req, res) => {
                 status: 'completed',
                 created_at: new Date().toISOString()
             };
-            
+
             analyses.push(newAnalysis);
             saveAnalyses(analyses);
         }
-        
+
         logAnalytics('chat_interaction', req, { sessionId, messageLength: message.length });
-        
+
         res.json(response);
     } catch (error) {
         console.error('Chat error:', error);
@@ -476,6 +645,10 @@ app.post('/api/demo-chat', async (req, res) => {
             console.log('👤 Sesión temporal creada:', req.session.tempUser.id);
         }
 
+        // Verificar disponibilidad de funciones inteligentes para demo
+        const intelligentFeaturesEnabled = featureToggle.isEnabled('intelligentCosting', sessionId);
+        console.log(`🧠 [/api/demo-chat] Intelligent features ${intelligentFeaturesEnabled ? 'enabled' : 'disabled'} for session: ${sessionId}`);
+
         // Obtener o crear agente persistente para esta sesión
         console.log('🤖 Obteniendo AgenteIAtiva para sesión:', sessionId);
         let agente;
@@ -486,7 +659,7 @@ app.post('/api/demo-chat', async (req, res) => {
         
         if (!req.session.agentesActivos[sessionId]) {
             console.log('🆕 Creando nuevo agente para sesión');
-            agente = new AgenteIAtiva();
+            agente = new AgenteIAtiva(sessionId);
             agente.iniciar(); // Solo inicializar la primera vez
             // INICIALIZAR datos simples explícitamente
             agente.datosSimples = {};
@@ -505,7 +678,7 @@ app.post('/api/demo-chat', async (req, res) => {
             };
         } else {
             console.log('♻️ Restaurando agente existente');
-            agente = new AgenteIAtiva();
+            agente = new AgenteIAtiva(sessionId);
             // Restaurar estado completo
             const estadoGuardado = req.session.agentesActivos[sessionId];
             agente.estadoActual = estadoGuardado.estadoActual;
@@ -535,10 +708,43 @@ app.post('/api/demo-chat', async (req, res) => {
         console.log('📝 Procesando mensaje:', message);
         console.log('🔍 Estado ANTES de procesar:', agente.estadoActual);
         console.log('🔍 Nombre usuario ANTES:', agente.recopilador.sesion?.nombreUsuario);
+
+        const startTime = Date.now();
         const agenteResponse = agente.procesarEntrada(message);
+        const responseTime = Date.now() - startTime;
+
         console.log('🔍 Estado DESPUÉS de procesar:', agente.estadoActual);
         console.log('🔍 Nombre usuario DESPUÉS:', agente.recopilador.sesion?.nombreUsuario);
         console.log('✅ Respuesta del agente:', agenteResponse ? agenteResponse.substring(0, 150) + '...' : 'NULL');
+
+        // Capturar datos inteligentes para sesiones demo
+        if (intelligentFeaturesEnabled) {
+            // Guardar patrones de interacción para análisis
+            saveInteractionPattern({
+                user_id: req.session.tempUser?.id,
+                session_id: sessionId,
+                action: 'demo_chat_message',
+                message_length: message.length,
+                response_time: responseTime,
+                features_used: agente.intelligentCosting ? agente.intelligentCosting.getUsedFeatures(sessionId) : [],
+                is_demo: true
+            });
+
+            // Guardar sesión inteligente para demos
+            if (agente.intelligentCosting && agente.intelligentCosting.sessionData.has(sessionId)) {
+                const sessionAnalytics = agente.intelligentCosting.getSessionAnalytics(sessionId);
+                saveIntelligentSession({
+                    session_id: sessionId,
+                    user_id: req.session.tempUser?.id,
+                    business_classified: sessionAnalytics.businessClassified,
+                    industry: sessionAnalytics.industry,
+                    confidence: sessionAnalytics.confidence,
+                    validation_count: sessionAnalytics.validationCount,
+                    features_used: sessionAnalytics.featuresUsed,
+                    is_demo: true
+                });
+            }
+        }
         
         // Guardar estado actualizado - INCLUIR DATOS SIMPLES
         req.session.agentesActivos[sessionId] = {
@@ -1056,6 +1262,160 @@ app.get('/api/demo-stats', (req, res) => {
         res.json(stats);
     } catch (error) {
         console.error('Error getting demo stats:', error);
+        res.status(500).json({ error: 'Error interno' });
+    }
+});
+
+// ==================== INTELLIGENT DATA ADMIN ====================
+
+// API para obtener estadísticas de sesiones inteligentes (solo administradores)
+app.get('/api/admin/intelligent-stats', requireAuth, (req, res) => {
+    if (!req.session.isAdmin) {
+        return res.status(403).json({ error: 'Acceso denegado - Solo administradores' });
+    }
+
+    try {
+        const sessions = getIntelligentSessions();
+        const validations = getCostValidations();
+        const patterns = getInteractionPatterns();
+
+        // Análisis básico
+        const stats = {
+            total_intelligent_sessions: sessions.length,
+            classified_businesses: sessions.filter(s => s.business_classified).length,
+            industry_distribution: sessions.reduce((acc, s) => {
+                if (s.industry) {
+                    acc[s.industry] = (acc[s.industry] || 0) + 1;
+                }
+                return acc;
+            }, {}),
+            total_validations: validations.length,
+            total_interactions: patterns.length,
+            avg_response_time: patterns.reduce((sum, p) => sum + (p.response_time || 0), 0) / patterns.length || 0,
+            most_used_features: patterns.reduce((acc, p) => {
+                if (p.features_used) {
+                    p.features_used.forEach(f => acc[f] = (acc[f] || 0) + 1);
+                }
+                return acc;
+            }, {}),
+            demo_vs_registered: {
+                demo: patterns.filter(p => p.is_demo).length,
+                registered: patterns.filter(p => !p.is_demo).length
+            }
+        };
+
+        res.json({ success: true, stats });
+    } catch (error) {
+        console.error('Error getting intelligent stats:', error);
+        res.status(500).json({ error: 'Error interno' });
+    }
+});
+
+// API para obtener patrones de interacción para análisis (solo administradores)
+app.get('/api/admin/interaction-patterns', requireAuth, (req, res) => {
+    if (!req.session.isAdmin) {
+        return res.status(403).json({ error: 'Acceso denegado - Solo administradores' });
+    }
+
+    try {
+        const patterns = getInteractionPatterns();
+        const limit = parseInt(req.query.limit) || 100;
+        const offset = parseInt(req.query.offset) || 0;
+
+        const paginatedPatterns = patterns
+            .slice(offset, offset + limit)
+            .map(p => ({
+                id: p.id,
+                action: p.action,
+                response_time: p.response_time,
+                message_length: p.message_length,
+                features_used: p.features_used,
+                is_demo: p.is_demo,
+                created_at: p.created_at
+            }));
+
+        res.json({
+            success: true,
+            patterns: paginatedPatterns,
+            total: patterns.length,
+            pagination: { limit, offset }
+        });
+    } catch (error) {
+        console.error('Error getting interaction patterns:', error);
+        res.status(500).json({ error: 'Error interno' });
+    }
+});
+
+// API para obtener validaciones de costos para aprendizaje (solo administradores)
+app.get('/api/admin/cost-validations', requireAuth, (req, res) => {
+    if (!req.session.isAdmin) {
+        return res.status(403).json({ error: 'Acceso denegado - Solo administradores' });
+    }
+
+    try {
+        const validations = getCostValidations();
+        const industry = req.query.industry;
+
+        let filteredValidations = validations;
+        if (industry) {
+            filteredValidations = validations.filter(v => v.business_type === industry);
+        }
+
+        res.json({
+            success: true,
+            validations: filteredValidations.slice(0, 50), // Limitar a 50 para rendimiento
+            total: filteredValidations.length
+        });
+    } catch (error) {
+        console.error('Error getting cost validations:', error);
+        res.status(500).json({ error: 'Error interno' });
+    }
+});
+
+// ==================== FEATURE TOGGLES ADMIN ====================
+
+// API para obtener estado de feature toggles (solo administradores)
+app.get('/api/admin/feature-status', requireAuth, (req, res) => {
+    if (!req.session.isAdmin) {
+        return res.status(403).json({ error: 'Acceso denegado - Solo administradores' });
+    }
+
+    try {
+        const status = featureToggle.getFeatureStatus();
+        res.json({ success: true, features: status });
+    } catch (error) {
+        console.error('Error getting feature status:', error);
+        res.status(500).json({ error: 'Error interno' });
+    }
+});
+
+// API para actualizar rollout de feature (solo administradores)
+app.post('/api/admin/feature-rollout', requireAuth, (req, res) => {
+    if (!req.session.isAdmin) {
+        return res.status(403).json({ error: 'Acceso denegado - Solo administradores' });
+    }
+
+    try {
+        const { featureName, rolloutPercentage } = req.body;
+
+        if (!featureName || rolloutPercentage === undefined) {
+            return res.status(400).json({ error: 'Feature name y rollout percentage requeridos' });
+        }
+
+        featureToggle.setRolloutPercentage(featureName, rolloutPercentage);
+
+        logAnalytics('feature_rollout_changed', req, {
+            feature: featureName,
+            rollout: rolloutPercentage,
+            admin: req.session.userName
+        });
+
+        res.json({
+            success: true,
+            message: `Feature ${featureName} rollout actualizado a ${rolloutPercentage}%`
+        });
+    } catch (error) {
+        console.error('Error updating feature rollout:', error);
         res.status(500).json({ error: 'Error interno' });
     }
 });

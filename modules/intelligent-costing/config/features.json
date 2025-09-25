@@ -1,0 +1,76 @@
+{
+  "intelligentCosting": {
+    "enabled": true,
+    "description": "Enable intelligent costing features",
+    "rolloutPercentage": 100,
+    "environment": {
+      "development": true,
+      "staging": true,
+      "production": true
+    }
+  },
+  "businessClassification": {
+    "enabled": true,
+    "description": "Automatic business type classification",
+    "dependencies": [
+      "intelligentCosting"
+    ],
+    "rolloutPercentage": 100,
+    "environment": {
+      "development": true,
+      "staging": true,
+      "production": true
+    }
+  },
+  "adaptiveQuestions": {
+    "enabled": true,
+    "description": "Dynamic question generation based on business type",
+    "dependencies": [
+      "businessClassification"
+    ],
+    "rolloutPercentage": 25,
+    "environment": {
+      "development": true,
+      "staging": true,
+      "production": false
+    },
+    "betaConfig": {
+      "targetUserTypes": [
+        "power_user",
+        "early_adopter",
+        "premium"
+      ],
+      "minSessionCount": 5,
+      "excludeNewUsers": true
+    }
+  },
+  "intelligentValidation": {
+    "enabled": true,
+    "description": "Smart cost validation with industry benchmarks",
+    "dependencies": [
+      "businessClassification"
+    ],
+    "rolloutPercentage": 100,
+    "environment": {
+      "development": true,
+      "staging": true,
+      "production": true
+    }
+  },
+  "industryBenchmarking": {
+    "enabled": true,
+    "description": "Compare costs against industry averages",
+    "dependencies": [
+      "businessClassification"
+    ],
+    "rolloutPercentage": 25
+  },
+  "advancedRecommendations": {
+    "enabled": false,
+    "description": "AI-powered business recommendations",
+    "dependencies": [
+      "intelligentCosting",
+      "businessClassification"
+    ]
+  }
+}

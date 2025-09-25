@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Monitoring Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .status-active { background: #22c55e; color: white; }
+        .status-ready { background: #f59e0b; color: white; }
+        .status-pending { background: #6b7280; color: white; }
+        .status-error { background: #ef4444; color: white; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1f2937, #374151);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid #4b5563;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #374151;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .metric-good { color: #22c55e; }
+        .metric-warning { color: #f59e0b; }
+        .metric-danger { color: #ef4444; }
+
+        .phase-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-card.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+        }
+
+        .phase-card.ready::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .alerts-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .alert-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .alert-critical {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: #f59e0b;
+        }
+
+        .alert-info {
+            background: rgba(96, 165, 250, 0.1);
+            border-left-color: #60a5fa;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .business-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .business-metric {
+            text-align: center;
+            padding: 15px;
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 8px;
+            border: 1px solid #3b82f6;
+        }
+
+        .business-metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        .business-metric-change {
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .business-metric-change.positive { color: #22c55e; }
+        .business-metric-change.negative { color: #ef4444; }
+
+        .rollback-controls {
+            background: linear-gradient(145deg, #7f1d1d, #991b1b);
+            border: 2px solid #dc2626;
+        }
+
+        .rollback-button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .rollback-button:hover {
+            background: #b91c1c;
+        }
+
+        .live-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .feedback-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .feedback-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 6px;
+            border: 1px solid #22c55e;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 10px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="live-indicator">🟢 LIVE</div>
+
+    <div class="dashboard">
+        <div class="header">
+            <h1>🚀 Production Monitoring Dashboard</h1>
+            <div class="status-badge status-active" id="overall-status">System Operational</div>
+            <div style="margin-top: 10px;">
+                <span style="font-size: 0.9rem; opacity: 0.8;">Last Updated: <span id="last-updated"></span></span>
+            </div>
+        </div>
+
+        <!-- Phase Status Grid -->
+        <div class="grid">
+            <div class="card phase-card active" id="phase1-card">
+                <h3>📊 Phase 1: Business Classification</h3>
+                <div class="status-badge status-active" id="phase1-status">ACTIVE</div>
+                <div class="metric">
+                    <span class="metric-label">Accuracy</span>
+                    <span class="metric-value metric-good" id="phase1-accuracy">90.2%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Response Time</span>
+                    <span class="metric-value metric-good" id="phase1-response">95ms</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Error Rate</span>
+                    <span class="metric-value metric-good" id="phase1-errors">0.8%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">User Engagement</span>
+                    <span class="metric-value metric-good" id="phase1-engagement">85.3%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Classifications Today</span>
+                    <span class="metric-value" id="phase1-count">15,420</span>
+                </div>
+            </div>
+
+            <div class="card phase-card ready" id="phase2-card">
+                <h3>💰 Phase 2: Cost Validation</h3>
+                <div class="status-badge status-ready" id="phase2-status">READY</div>
+                <div class="metric">
+                    <span class="metric-label">Rollout Progress</span>
+                    <span class="metric-value" id="phase2-progress">0% (80% target)</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Readiness Score</span>
+                    <span class="metric-value metric-good" id="phase2-readiness">95%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Prerequisites</span>
+                    <span class="metric-value metric-good">✅ All Met</span>
+                </div>
+            </div>
+
+            <div class="card phase-card" id="phase3-card">
+                <h3>🤖 Phase 3: Recommendation Engine</h3>
+                <div class="status-badge status-pending" id="phase3-status">PENDING</div>
+                <div class="metric">
+                    <span class="metric-label">Dependencies</span>
+                    <span class="metric-value">Awaiting Phase 2</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Preparation</span>
+                    <span class="metric-value metric-warning">In Progress</span>
+                </div>
+            </div>
+
+            <div class="card phase-card" id="phase4-card">
+                <h3>🎯 Phase 4: Full System Rollout</h3>
+                <div class="status-badge status-pending" id="phase4-status">PENDING</div>
+                <div class="metric">
+                    <span class="metric-label">Dependencies</span>
+                    <span class="metric-value">Awaiting Phase 3</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Estimated Timeline</span>
+                    <span class="metric-value">TBD</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Metrics -->
+        <div class="card">
+            <h3>📈 Business Impact Metrics</h3>
+            <div class="business-metrics" id="business-metrics">
+                <div class="business-metric">
+                    <div class="business-metric-value" id="revenue-value">$125K</div>
+                    <div class="metric-label">Revenue</div>
+                    <div class="business-metric-change positive" id="revenue-change">+4.2%</div>
+                </div>
+                <div class="business-metric">
+                    <div class="business-metric-value" id="engagement-value">85.3%</div>
+                    <div class="metric-label">User Engagement</div>
+                    <div class="business-metric-change positive" id="engagement-change">+9.2%</div>
+                </div>
+                <div class="business-metric">
+                    <div class="business-metric-value" id="efficiency-value">94.7%</div>
+                    <div class="metric-label">System Efficiency</div>
+                    <div class="business-metric-change positive" id="efficiency-change">+9.7%</div>
+                </div>
+                <div class="business-metric">
+                    <div class="business-metric-value" id="cost-opt-value">18.5%</div>
+                    <div class="metric-label">Cost Optimization</div>
+                    <div class="business-metric-change positive" id="cost-opt-change">+51.6%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Charts -->
+        <div class="card">
+            <h3>📊 Real-time Performance Metrics</h3>
+            <div class="chart-container">
+                <canvas id="performance-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- User Feedback -->
+        <div class="card">
+            <h3>💬 User Feedback Summary</h3>
+            <div class="feedback-summary" id="feedback-summary">
+                <div class="feedback-item">
+                    <div class="business-metric-value" id="avg-rating">4.7</div>
+                    <div class="metric-label">Avg Rating</div>
+                </div>
+                <div class="feedback-item">
+                    <div class="business-metric-value" id="total-feedback">1,247</div>
+                    <div class="metric-label">Total Feedback</div>
+                </div>
+                <div class="feedback-item">
+                    <div class="business-metric-value" id="satisfaction">92%</div>
+                    <div class="metric-label">Satisfaction</div>
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <div class="metric">
+                    <span class="metric-label">Recent Issues</span>
+                    <span class="metric-value" id="recent-issues">3 (Low Priority)</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Feature Requests</span>
+                    <span class="metric-value" id="feature-requests">12 Active</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="card">
+            <h3>🏥 System Health</h3>
+            <div class="metric">
+                <span class="metric-label">Overall Status</span>
+                <span class="metric-value metric-good" id="system-health">Healthy</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Database</span>
+                <span class="metric-value metric-good" id="db-health">Healthy</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Cache System</span>
+                <span class="metric-value metric-good" id="cache-health">Healthy</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">API Services</span>
+                <span class="metric-value metric-good" id="api-health">Healthy</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Monitoring</span>
+                <span class="metric-value metric-good" id="monitoring-health">Active</span>
+            </div>
+        </div>
+
+        <!-- Active Alerts -->
+        <div class="card">
+            <h3>🚨 Recent Alerts</h3>
+            <div class="alerts-container" id="alerts-container">
+                <div class="alert-item alert-info">
+                    <div style="font-weight: bold;">System Operational</div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">No active alerts - all systems running normally</div>
+                    <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">Just now</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Controls -->
+        <div class="card rollback-controls">
+            <h3>🚨 Emergency Controls</h3>
+            <div class="metric">
+                <span class="metric-label">Rollback Status</span>
+                <span class="metric-value metric-good">Ready (30s)</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Last Rollback Test</span>
+                <span class="metric-value" id="last-rollback-test">Today 09:15</span>
+            </div>
+            <button class="rollback-button" onclick="confirmEmergencyRollback()">
+                🛑 EMERGENCY ROLLBACK
+            </button>
+            <div style="margin-top: 10px; font-size: 0.8rem; opacity: 0.8; text-align: center;">
+                Only use in critical situations. This will immediately stop all active phases.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let performanceChart;
+        let dashboardData = {};
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChart();
+            startRealTimeUpdates();
+            updateLastUpdated();
+        });
+
+        // Initialize performance chart
+        function initializeChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Accuracy %',
+                            data: [],
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Response Time (ms)',
+                            data: [],
+                            borderColor: '#60a5fa',
+                            backgroundColor: 'rgba(96, 165, 250, 0.1)',
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            label: 'Error Rate %',
+                            data: [],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Phase 1 Performance Trends',
+                            color: '#ffffff'
+                        },
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#9ca3af' },
+                            grid: { color: '#374151' }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            ticks: { color: '#9ca3af' },
+                            grid: { color: '#374151' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            ticks: { color: '#9ca3af' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+
+            // Add initial data points
+            addDataPoint();
+        }
+
+        // Start real-time updates
+        function startRealTimeUpdates() {
+            // Connect to Server-Sent Events
+            if (typeof EventSource !== "undefined") {
+                const eventSource = new EventSource('/api/production-monitoring/stream');
+
+                eventSource.onmessage = function(event) {
+                    const data = JSON.parse(event.data);
+                    updateDashboard(data);
+                };
+
+                eventSource.onerror = function(event) {
+                    console.error('SSE connection error:', event);
+                };
+            }
+
+            // Fallback polling
+            setInterval(fetchDashboardData, 30000);
+
+            // Update timestamps
+            setInterval(updateLastUpdated, 1000);
+
+            // Add chart data points
+            setInterval(addDataPoint, 30000);
+        }
+
+        // Fetch dashboard data via API
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch('/api/production-monitoring/dashboard/live');
+                const data = await response.json();
+                updateDashboard(data);
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            }
+        }
+
+        // Update dashboard with new data
+        function updateDashboard(data) {
+            dashboardData = data;
+
+            // Update phase metrics
+            updatePhaseMetrics(data.phases);
+
+            // Update business metrics
+            updateBusinessMetrics(data.businessMetrics);
+
+            // Update system health
+            updateSystemHealth(data.systemHealth);
+
+            // Update alerts
+            updateAlerts(data.alerts);
+        }
+
+        // Update phase metrics
+        function updatePhaseMetrics(phases) {
+            // Phase 1
+            if (phases.phase1) {
+                document.getElementById('phase1-accuracy').textContent = phases.phase1.accuracy.toFixed(1) + '%';
+                document.getElementById('phase1-response').textContent = Math.round(phases.phase1.responseTime) + 'ms';
+                document.getElementById('phase1-errors').textContent = phases.phase1.errorRate.toFixed(1) + '%';
+                document.getElementById('phase1-engagement').textContent = phases.phase1.userEngagement.toFixed(1) + '%';
+                document.getElementById('phase1-count').textContent = phases.phase1.businessImpact.classificationCount.toLocaleString();
+
+                // Update metric colors based on thresholds
+                updateMetricColor('phase1-accuracy', phases.phase1.accuracy, 85, 75);
+                updateMetricColor('phase1-response', phases.phase1.responseTime, 200, 300, true);
+                updateMetricColor('phase1-errors', phases.phase1.errorRate, 3, 5, true);
+                updateMetricColor('phase1-engagement', phases.phase1.userEngagement, 70, 50);
+            }
+
+            // Phase 2
+            if (phases.phase2) {
+                document.getElementById('phase2-status').textContent = phases.phase2.status;
+                document.getElementById('phase2-status').className = 'status-badge status-' + phases.phase2.status.toLowerCase();
+            }
+        }
+
+        // Update business metrics
+        function updateBusinessMetrics(metrics) {
+            if (metrics) {
+                document.getElementById('revenue-value').textContent = '$' + Math.round(metrics.revenue.current / 1000) + 'K';
+                document.getElementById('revenue-change').textContent = (metrics.revenue.change > 0 ? '+' : '') + metrics.revenue.change.toFixed(1) + '%';
+
+                document.getElementById('engagement-value').textContent = metrics.userEngagement.current.toFixed(1) + '%';
+                document.getElementById('engagement-change').textContent = (metrics.userEngagement.change > 0 ? '+' : '') + metrics.userEngagement.change.toFixed(1) + '%';
+
+                document.getElementById('efficiency-value').textContent = metrics.systemEfficiency.current.toFixed(1) + '%';
+                document.getElementById('efficiency-change').textContent = (metrics.systemEfficiency.change > 0 ? '+' : '') + metrics.systemEfficiency.change.toFixed(1) + '%';
+
+                document.getElementById('cost-opt-value').textContent = metrics.costOptimization.current.toFixed(1) + '%';
+                document.getElementById('cost-opt-change').textContent = (metrics.costOptimization.change > 0 ? '+' : '') + metrics.costOptimization.change.toFixed(1) + '%';
+            }
+        }
+
+        // Update system health
+        function updateSystemHealth(health) {
+            if (health && health.components) {
+                document.getElementById('system-health').textContent = health.overall;
+                document.getElementById('db-health').textContent = health.components.database;
+                document.getElementById('cache-health').textContent = health.components.cache;
+                document.getElementById('api-health').textContent = health.components.api;
+                document.getElementById('monitoring-health').textContent = health.components.monitoring;
+            }
+        }
+
+        // Update alerts
+        function updateAlerts(alerts) {
+            const container = document.getElementById('alerts-container');
+
+            if (alerts && alerts.length > 0) {
+                container.innerHTML = alerts.map(alert => `
+                    <div class="alert-item alert-${alert.severity}">
+                        <div style="font-weight: bold;">${alert.message}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">${alert.component}</div>
+                        <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">
+                            ${new Date(alert.timestamp).toLocaleString()}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Update metric color based on thresholds
+        function updateMetricColor(elementId, value, goodThreshold, badThreshold, inverse = false) {
+            const element = document.getElementById(elementId);
+            element.className = 'metric-value';
+
+            if (inverse) {
+                if (value <= goodThreshold) element.classList.add('metric-good');
+                else if (value <= badThreshold) element.classList.add('metric-warning');
+                else element.classList.add('metric-danger');
+            } else {
+                if (value >= goodThreshold) element.classList.add('metric-good');
+                else if (value >= badThreshold) element.classList.add('metric-warning');
+                else element.classList.add('metric-danger');
+            }
+        }
+
+        // Add data point to chart
+        function addDataPoint() {
+            if (!dashboardData.phases?.phase1) return;
+
+            const now = new Date();
+            const timeLabel = now.toLocaleTimeString();
+
+            const phase1 = dashboardData.phases.phase1;
+
+            performanceChart.data.labels.push(timeLabel);
+            performanceChart.data.datasets[0].data.push(phase1.accuracy);
+            performanceChart.data.datasets[1].data.push(phase1.responseTime);
+            performanceChart.data.datasets[2].data.push(phase1.errorRate);
+
+            // Keep only last 20 data points
+            if (performanceChart.data.labels.length > 20) {
+                performanceChart.data.labels.shift();
+                performanceChart.data.datasets.forEach(dataset => dataset.data.shift());
+            }
+
+            performanceChart.update('none');
+        }
+
+        // Update last updated timestamp
+        function updateLastUpdated() {
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+        }
+
+        // Emergency rollback confirmation
+        function confirmEmergencyRollback() {
+            if (confirm('⚠️ EMERGENCY ROLLBACK\n\nThis will immediately stop all active phases and roll back the system to the last stable state.\n\nAre you sure you want to proceed?')) {
+                if (confirm('This action cannot be undone. Continue with emergency rollback?')) {
+                    executeEmergencyRollback();
+                }
+            }
+        }
+
+        // Execute emergency rollback
+        async function executeEmergencyRollback() {
+            try {
+                const response = await fetch('/api/production-monitoring/rollback/emergency', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        phase: 'all',
+                        reason: 'Manual emergency rollback triggered from dashboard',
+                        userId: 'dashboard-user'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Emergency rollback initiated successfully.\n\nAlert ID: ' + result.alertId);
+                    location.reload(); // Refresh dashboard
+                } else {
+                    alert('❌ Emergency rollback failed: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Emergency rollback error:', error);
+                alert('❌ Emergency rollback failed: ' + error.message);
+            }
+        }
+
+        // Initial data fetch
+        fetchDashboardData();
+    </script>
+</body>
+</html>

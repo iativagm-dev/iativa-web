@@ -1,0 +1,36 @@
+{
+  "automatedProgression": {
+    "enabled": true,
+    "autoAdvance": true,
+    "requiresApproval": false,
+    "maxTotalTime": 43200000
+  },
+  "phases": {
+    "phase1": {
+      "name": "Business Classification",
+      "status": "ACTIVE",
+      "readyForNext": true
+    },
+    "phase2": {
+      "name": "Cost Validation (80%)",
+      "status": "READY",
+      "readyForNext": false
+    },
+    "phase3": {
+      "name": "Recommendation Engine",
+      "status": "PENDING",
+      "readyForNext": false
+    },
+    "phase4": {
+      "name": "Full System Rollout",
+      "status": "PENDING",
+      "readyForNext": false
+    }
+  },
+  "progressionRules": {
+    "waitBetweenPhases": 300000,
+    "stabilityCheckInterval": 300000,
+    "maxRetries": 3,
+    "rollbackOnFailure": true
+  }
+}

@@ -9,5 +9,29 @@
     "phone": "",
     "created_at": "2025-08-29T02:26:16.379Z",
     "is_admin": true
+  },
+  {
+    "id": 2,
+    "username": "iativagm",
+    "email": "iativagm@gmail.com",
+    "password": "",
+    "full_name": "Usuario Demo",
+    "company": "",
+    "phone": "",
+    "created_at": "2025-09-23T21:29:51.544Z",
+    "is_admin": false,
+    "from_demo": true
+  },
+  {
+    "id": 3,
+    "username": "gajugan",
+    "email": "gajugan@hotmail.com",
+    "password": "",
+    "full_name": "Usuario Demo",
+    "company": "",
+    "phone": "",
+    "created_at": "2025-09-24T00:26:46.677Z",
+    "is_admin": false,
+    "from_demo": true
   }
 ]

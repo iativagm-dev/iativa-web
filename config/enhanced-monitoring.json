@@ -1,0 +1,68 @@
+{
+  "realTimeMetrics": {
+    "collectionInterval": 30000,
+    "metricsRetention": 7200000,
+    "alertThresholds": {
+      "accuracy": {
+        "warning": 80,
+        "critical": 75
+      },
+      "responseTime": {
+        "warning": 1500,
+        "critical": 2000
+      },
+      "errorRate": {
+        "warning": 3,
+        "critical": 5
+      },
+      "uptime": {
+        "warning": 95,
+        "critical": 90
+      }
+    }
+  },
+  "phaseMonitoring": {
+    "phase1": {
+      "stabilityPeriod": 1800000,
+      "successCriteria": {
+        "minAccuracy": 85
+      }
+    },
+    "phase2": {
+      "stabilityPeriod": 2400000,
+      "successCriteria": {
+        "minAccuracy": 80
+      }
+    },
+    "phase3": {
+      "stabilityPeriod": 3600000,
+      "successCriteria": {
+        "minAccuracy": 75
+      }
+    },
+    "phase4": {
+      "stabilityPeriod": 7200000,
+      "successCriteria": {
+        "minAccuracy": 80
+      }
+    }
+  },
+  "alertChannels": {
+    "console": {
+      "enabled": true,
+      "level": "all"
+    },
+    "email": {
+      "enabled": false,
+      "level": "critical"
+    },
+    "webhook": {
+      "enabled": false,
+      "level": "warning"
+    },
+    "slack": {
+      "enabled": false,
+      "level": "critical"
+    }
+  }
+}

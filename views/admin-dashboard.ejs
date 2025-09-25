@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'Admin Dashboard - Sistema Optimizado' %></title>
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body class="admin-dashboard">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="dashboard-title">
+                    <i class="icon-dashboard">📊</i>
+                    Admin Dashboard
+                </h1>
+                <div class="breadcrumb">
+                    <span>Sistema Optimizado</span>
+                    <span>/</span>
+                    <span>Monitoreo</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="connection-status" id="connection-status">
+                    Connecting...
+                </div>
+                <div class="last-refresh">
+                    Last update: <span id="last-refresh">--</span>
+                </div>
+                <button class="refresh-btn" onclick="location.reload()">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="dashboard-nav">
+        <div class="nav-tabs">
+            <button class="tab-button active" data-tab="metrics">
+                📈 Real-time Metrics
+            </button>
+            <button class="tab-button" data-tab="features">
+                🎛️ Feature Flags
+            </button>
+            <button class="tab-button" data-tab="tests">
+                🧪 A/B Testing
+            </button>
+            <button class="tab-button" data-tab="analytics">
+                👥 User Analytics
+            </button>
+            <button class="tab-button" data-tab="performance">
+                ⚡ Performance
+            </button>
+        </div>
+        <div class="nav-actions">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search...">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Real-time Metrics Tab -->
+        <div id="metrics-tab" class="tab-content active">
+            <div class="metrics-grid">
+                <!-- Key Performance Indicators -->
+                <div class="metrics-section">
+                    <h2>📊 Key Performance Indicators</h2>
+                    <div class="kpi-grid">
+                        <div class="metric-card" id="coherence-score">
+                            <div class="metric-header">
+                                <h3>Coherence Score</h3>
+                                <div class="trend-indicator up">↗</div>
+                            </div>
+                            <div class="metric-value">--</div>
+                            <div class="metric-change positive">--</div>
+                        </div>
+
+                        <div class="metric-card" id="conversion-rate">
+                            <div class="metric-header">
+                                <h3>Conversion Rate</h3>
+                                <div class="trend-indicator up">↗</div>
+                            </div>
+                            <div class="metric-value">--</div>
+                            <div class="metric-change positive">--</div>
+                        </div>
+
+                        <div class="metric-card" id="active-users">
+                            <div class="metric-header">
+                                <h3>Active Users</h3>
+                                <div class="trend-indicator up">↗</div>
+                            </div>
+                            <div class="metric-value">--</div>
+                            <div class="metric-change positive">--</div>
+                        </div>
+
+                        <div class="metric-card" id="response-time">
+                            <div class="metric-header">
+                                <h3>Response Time</h3>
+                                <div class="trend-indicator down">↘</div>
+                            </div>
+                            <div class="metric-value">--</div>
+                            <div class="metric-change negative">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Health -->
+                <div class="health-section">
+                    <h2>🏥 System Health</h2>
+                    <div class="health-overview">
+                        <div class="health-indicator healthy" id="system-health-indicator">
+                            HEALTHY
+                        </div>
+                        <div class="health-details" id="health-details">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Type Distribution -->
+                <div class="chart-section">
+                    <h2>🏢 Business Type Distribution</h2>
+                    <div class="chart-container" id="business-type-chart">
+                        <canvas></canvas>
+                    </div>
+                </div>
+
+                <!-- Performance Trends -->
+                <div class="chart-section">
+                    <h2>📈 Performance Trends</h2>
+                    <div class="chart-container" id="performance-chart">
+                        <canvas></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Flags Tab -->
+        <div id="features-tab" class="tab-content">
+            <div class="features-section">
+                <div class="section-header">
+                    <h2>🎛️ Feature Flag Management</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="adminDashboard.loadFeatureFlags()">
+                            🔄 Refresh Flags
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-flags-grid">
+                    <div class="flags-summary">
+                        <div class="summary-card">
+                            <h3>Active Flags</h3>
+                            <div class="summary-value" id="active-flags-count">--</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Total Flags</h3>
+                            <div class="summary-value" id="total-flags-count">--</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Rollout Coverage</h3>
+                            <div class="summary-value" id="rollout-coverage">--%</div>
+                        </div>
+                    </div>
+
+                    <div class="feature-flags-list" id="feature-flags-list">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A/B Testing Tab -->
+        <div id="tests-tab" class="tab-content">
+            <div class="tests-section">
+                <div class="section-header">
+                    <h2>🧪 A/B Testing Dashboard</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="adminDashboard.loadABTests()">
+                            🔄 Refresh Tests
+                        </button>
+                        <button class="btn btn-success" onclick="adminDashboard.createNewTest()">
+                            ➕ New Test
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tests-grid">
+                    <div class="tests-summary">
+                        <div class="summary-card">
+                            <h3>Running Tests</h3>
+                            <div class="summary-value" id="running-tests-count">--</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Completed Tests</h3>
+                            <div class="summary-value" id="completed-tests-count">--</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Total Participants</h3>
+                            <div class="summary-value" id="total-participants">--</div>
+                        </div>
+                    </div>
+
+                    <div class="ab-tests-list" id="ab-tests-list">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Analytics Tab -->
+        <div id="analytics-tab" class="tab-content">
+            <div class="analytics-section">
+                <div class="section-header">
+                    <h2>👥 User Analytics & Segments</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="adminDashboard.loadUserAnalytics()">
+                            🔄 Refresh Analytics
+                        </button>
+                        <button class="btn btn-secondary" onclick="adminDashboard.exportAnalytics()">
+                            📊 Export Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="user-segments-section">
+                        <h3>User Segments</h3>
+                        <div class="chart-container" id="user-segments-chart">
+                            <canvas></canvas>
+                        </div>
+                    </div>
+
+                    <div class="behavior-flow-section">
+                        <h3>Behavior Flow</h3>
+                        <div class="flow-visualization" id="behavior-flow">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="cohort-analysis-section">
+                        <h3>Cohort Analysis</h3>
+                        <div class="cohort-table" id="cohort-analysis">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="conversion-funnel-section">
+                        <h3>Conversion Funnel</h3>
+                        <div class="funnel-chart" id="conversion-funnel">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Tab -->
+        <div id="performance-tab" class="tab-content">
+            <div class="performance-section">
+                <div class="section-header">
+                    <h2>⚡ Performance Monitoring</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="adminDashboard.refreshPerformanceData()">
+                            🔄 Refresh Data
+                        </button>
+                        <button class="btn btn-warning" onclick="adminDashboard.clearCaches()">
+                            🗑️ Clear Caches
+                        </button>
+                    </div>
+                </div>
+
+                <div class="performance-grid">
+                    <div class="performance-overview">
+                        <div class="perf-card">
+                            <h4>Cache Hit Rate</h4>
+                            <div class="perf-value" id="cache-hit-rate">--%</div>
+                        </div>
+                        <div class="perf-card">
+                            <h4>Memory Usage</h4>
+                            <div class="perf-value" id="memory-usage">--MB</div>
+                        </div>
+                        <div class="perf-card">
+                            <h4>CPU Usage</h4>
+                            <div class="perf-value" id="cpu-usage">--%</div>
+                        </div>
+                        <div class="perf-card">
+                            <h4>Throughput</h4>
+                            <div class="perf-value" id="throughput">-- req/s</div>
+                        </div>
+                    </div>
+
+                    <div class="alerts-section">
+                        <h3>🚨 Performance Alerts</h3>
+                        <div class="alerts-list" id="performance-alerts">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="optimization-controls">
+                        <h3>🎛️ Optimization Controls</h3>
+                        <div class="controls-grid">
+                            <div class="control-group">
+                                <label>Cache Size Limit (MB)</label>
+                                <input type="range" id="cache-size-control" min="50" max="500" value="100">
+                                <span id="cache-size-value">100</span>
+                            </div>
+                            <div class="control-group">
+                                <label>Compression Level</label>
+                                <input type="range" id="compression-level" min="1" max="9" value="6">
+                                <span id="compression-level-value">6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <span>Sistema Optimizado Admin Dashboard</span>
+                <span>|</span>
+                <span>Version 2.0.0</span>
+                <span>|</span>
+                <span>Last deployed: <%= timestamp || new Date().toISOString() %></span>
+            </div>
+            <div class="footer-actions">
+                <a href="/api/performance/health" target="_blank" class="footer-link">
+                    🏥 System Health
+                </a>
+                <a href="/api/performance/dashboard" target="_blank" class="footer-link">
+                    📊 Performance Dashboard
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notifications Container -->
+    <div id="notifications" class="notifications-container">
+        <!-- Notifications will be dynamically inserted here -->
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/admin-dashboard.js"></script>
+    <script>
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Admin Dashboard page loaded');
+
+            // Show loading overlay initially
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('hidden');
+
+                // Hide loading overlay after dashboard initialization
+                setTimeout(() => {
+                    loadingOverlay.classList.add('hidden');
+                }, 2000);
+            }
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'r':
+                            e.preventDefault();
+                            location.reload();
+                            break;
+                        case '1':
+                            e.preventDefault();
+                            adminDashboard?.switchTab('metrics');
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            adminDashboard?.switchTab('features');
+                            break;
+                        case '3':
+                            e.preventDefault();
+                            adminDashboard?.switchTab('tests');
+                            break;
+                        case '4':
+                            e.preventDefault();
+                            adminDashboard?.switchTab('analytics');
+                            break;
+                    }
+                }
+            });
+
+            // Handle visibility change to pause/resume real-time updates
+            document.addEventListener('visibilitychange', function() {
+                if (adminDashboard) {
+                    if (document.hidden) {
+                        console.log('📱 Page hidden, pausing updates');
+                        // Could implement pause functionality here
+                    } else {
+                        console.log('📱 Page visible, resuming updates');
+                        // Could implement resume functionality here
+                    }
+                }
+            });
+        });
+
+        // Handle page errors
+        window.addEventListener('error', function(e) {
+            console.error('Page error:', e);
+            if (adminDashboard) {
+                adminDashboard.showNotification('An error occurred. Please refresh the page.', 'error');
+            }
+        });
+
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e);
+            if (adminDashboard) {
+                adminDashboard.showNotification('A network error occurred.', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

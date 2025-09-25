@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Monitoreo - A/B Testing</title>
+
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="/css/monitoring-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Meta tags -->
+    <meta name="description" content="Dashboard de monitoreo para A/B testing y características inteligentes">
+    <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+    <div class="monitoring-dashboard">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">
+                <i class="fas fa-chart-line"></i>
+                Dashboard de Monitoreo
+            </h1>
+            <p class="dashboard-subtitle">A/B Testing y Características Inteligentes</p>
+            <div class="dashboard-status">
+                <div class="status-indicator"></div>
+                <span class="status-text">Cargando...</span>
+            </div>
+        </div>
+
+        <!-- Main Metrics Grid -->
+        <div class="dashboard-grid">
+            <!-- System Health -->
+            <div class="dashboard-card" id="system-health">
+                <div class="card-header">
+                    <i class="fas fa-heartbeat card-icon"></i>
+                    <h3 class="card-title">Estado del Sistema</h3>
+                </div>
+                <div class="card-value">100%</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i> Sistema saludable
+                </div>
+            </div>
+
+            <!-- Total Users -->
+            <div class="dashboard-card" id="total-users">
+                <div class="card-header">
+                    <i class="fas fa-users card-icon"></i>
+                    <h3 class="card-title">Usuarios Totales</h3>
+                </div>
+                <div class="card-value">0</div>
+                <div class="card-change neutral">
+                    <i class="fas fa-minus"></i> Sin cambios
+                </div>
+            </div>
+
+            <!-- Active Experiments -->
+            <div class="dashboard-card" id="active-experiments">
+                <div class="card-header">
+                    <i class="fas fa-flask card-icon"></i>
+                    <h3 class="card-title">Experimentos Activos</h3>
+                </div>
+                <div class="card-value">0</div>
+                <div class="card-change neutral">
+                    <i class="fas fa-minus"></i> Sin cambios
+                </div>
+            </div>
+
+            <!-- Feature Flags -->
+            <div class="dashboard-card" id="feature-flags">
+                <div class="card-header">
+                    <i class="fas fa-flag card-icon"></i>
+                    <h3 class="card-title">Feature Flags</h3>
+                </div>
+                <div class="card-value">0</div>
+                <div class="card-change neutral">
+                    <i class="fas fa-minus"></i> Sin cambios
+                </div>
+            </div>
+
+            <!-- Conversion Rate -->
+            <div class="dashboard-card" id="conversion-rate">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie card-icon"></i>
+                    <h3 class="card-title">Tasa de Conversión</h3>
+                </div>
+                <div class="card-value">0.0%</div>
+                <div class="card-change neutral">
+                    <i class="fas fa-minus"></i> Sin cambios
+                </div>
+            </div>
+
+            <!-- Engagement Rate -->
+            <div class="dashboard-card" id="engagement-rate">
+                <div class="card-header">
+                    <i class="fas fa-thumbs-up card-icon"></i>
+                    <h3 class="card-title">Engagement</h3>
+                </div>
+                <div class="card-value">0.0%</div>
+                <div class="card-change neutral">
+                    <i class="fas fa-minus"></i> Sin cambios
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="dashboard-grid">
+            <!-- Engagement Chart -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-chart-area card-icon"></i>
+                    <h3 class="card-title">Engagement en Tiempo Real</h3>
+                </div>
+                <div class="chart-container" id="engagement-chart">
+                    <div class="chart-placeholder">
+                        <div class="loading"></div>
+                        <p>Cargando datos de engagement...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Chart -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-tachometer-alt card-icon"></i>
+                    <h3 class="card-title">Rendimiento del Sistema</h3>
+                </div>
+                <div class="chart-container" id="performance-chart">
+                    <div class="chart-placeholder">
+                        <div class="loading"></div>
+                        <p>Cargando métricas de rendimiento...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversion Funnel -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-funnel-dollar card-icon"></i>
+                    <h3 class="card-title">Embudo de Conversión</h3>
+                </div>
+                <div class="chart-container" id="funnel-chart">
+                    <div class="chart-placeholder">
+                        <div class="loading"></div>
+                        <p>Cargando embudo de conversión...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experiments Section -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <i class="fas fa-vial card-icon"></i>
+                <h3 class="card-title">Experimentos A/B en Curso</h3>
+            </div>
+            <div id="experiments-container">
+                <div class="chart-placeholder">
+                    <div class="loading"></div>
+                    <p>Cargando experimentos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Flags Control Panel -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <i class="fas fa-toggle-on card-icon"></i>
+                <h3 class="card-title">Control de Feature Flags</h3>
+            </div>
+            <div class="feature-flags-grid" id="feature-flags-container">
+                <div class="chart-placeholder">
+                    <div class="loading"></div>
+                    <p>Cargando feature flags...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="dashboard-controls" style="text-align: center; margin-top: 30px;">
+            <button id="refresh-dashboard" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Actualizar Dashboard
+            </button>
+
+            <label style="margin-left: 20px;">
+                <input type="checkbox" id="auto-refresh" checked>
+                Actualización automática (30s)
+            </label>
+
+            <button id="export-data" class="btn btn-secondary" onclick="window.monitoringDashboard?.exportDashboardData()">
+                <i class="fas fa-download"></i> Exportar Datos
+            </button>
+        </div>
+    </div>
+
+    <!-- Real-time Alerts Container -->
+    <div class="alerts-container"></div>
+
+    <!-- JavaScript Dependencies -->
+    <script src="/js/monitoring-dashboard.js"></script>
+
+    <!-- Additional Styles for Controls -->
+    <style>
+        .dashboard-controls {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-2px);
+        }
+
+        .chart-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            height: 100%;
+            align-items: center;
+        }
+
+        .perf-metric {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+        }
+
+        .perf-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .perf-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .funnel-step {
+            margin-bottom: 10px;
+        }
+
+        .step-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            color: white;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-controls {
+                text-align: left;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 10px;
+                margin-left: 0 !important;
+            }
+
+            .performance-metrics,
+            .chart-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <!-- Initialize Dashboard Message -->
+    <script>
+        console.log('🚀 Monitoring Dashboard page loaded');
+
+        // Add some demo data if no real data is available
+        setTimeout(() => {
+            if (window.monitoringDashboard) {
+                console.log('📊 Dashboard initialization complete');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

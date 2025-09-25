@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Features - FAQ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .faq-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-section {
+            margin-bottom: 40px;
+        }
+
+        .faq-section h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .faq-item {
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .faq-answer ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .faq-answer li {
+            margin-bottom: 5px;
+        }
+
+        .feature-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .score-example {
+            background: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .alert-example {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .alert-critical {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .tip-box h4 {
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .faq-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Intelligent Features FAQ</h1>
+            <p>Your guide to understanding AI-powered business analysis</p>
+        </div>
+
+        <div class="faq-container">
+
+            <!-- Business Type Detection -->
+            <div class="faq-section">
+                <h2>🏢 Business Type Detection</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: How does automatic business type detection work?</div>
+                    <div class="faq-answer">
+                        Our AI analyzes multiple factors to identify your business type:
+                        <ul>
+                            <li>Business name patterns and keywords</li>
+                            <li>Industry terminology in descriptions</li>
+                            <li>Cost structure patterns typical of different business types</li>
+                            <li>Historical data from similar businesses</li>
+                        </ul>
+                        The system provides a confidence score to help you understand how certain the detection is.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: What do the confidence scores mean?</div>
+                    <div class="faq-answer">
+                        <div class="score-example">
+                        <strong>90-100%:</strong> 🟢 Highly confident - trust the results<br>
+                        <strong>75-89%:</strong> 🟡 Good confidence - results likely accurate<br>
+                        <strong>60-74%:</strong> 🟠 Moderate confidence - review if needed<br>
+                        <strong>Below 60%:</strong> 🔴 Low confidence - please verify manually
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: The system detected the wrong business type. What should I do?</div>
+                    <div class="faq-answer">
+                        Simply correct it in your business profile settings. The system learns from your correction and improves future detections for similar businesses.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Validation -->
+            <div class="faq-section">
+                <h2>💰 Cost Validation & Smart Alerts</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: What are the different types of cost alerts?</div>
+                    <div class="faq-answer">
+                        <div class="alert-example alert-critical">
+                            🔴 <strong>Critical:</strong> Significant issues detected - review immediately
+                        </div>
+                        <div class="alert-example alert-warning">
+                            🟡 <strong>Warning:</strong> Unusual but possibly correct - verify entry
+                        </div>
+                        <div class="alert-example alert-info">
+                            ℹ️ <strong>Info:</strong> Helpful suggestions for optimization
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: I keep getting cost alerts, but my numbers are correct. What's happening?</div>
+                    <div class="faq-answer">
+                        This can happen if your business is unique or operates in a specialized niche. You can:
+                        <ul>
+                            <li>Mark costs as "verified" to train the system</li>
+                            <li>Add notes explaining special circumstances</li>
+                            <li>Adjust alert sensitivity in your preferences</li>
+                        </ul>
+                        The system learns from your feedback and becomes more accurate over time.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: How does the system know if my costs are unusual?</div>
+                    <div class="faq-answer">
+                        We compare your costs against:
+                        <ul>
+                            <li>Industry benchmarks from thousands of similar businesses</li>
+                            <li>Your historical patterns for consistency</li>
+                            <li>Cost ratios and proportions that make business sense</li>
+                            <li>Regional factors and seasonal adjustments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coherence Scores -->
+            <div class="faq-section">
+                <h2>📊 Coherence Scores</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: What is a coherence score?</div>
+                    <div class="faq-answer">
+                        Think of it as a "consistency grade" for your business data. It measures how well all your information fits together logically, like pieces of a puzzle.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: How do I interpret my coherence score?</div>
+                    <div class="faq-answer">
+                        <div class="score-example">
+                        <strong>90-100:</strong> A+ 🟢 Excellent - everything fits perfectly<br>
+                        <strong>80-89:</strong> A 🟢 Very good - minor inconsistencies<br>
+                        <strong>70-79:</strong> B 🟡 Good - some areas need attention<br>
+                        <strong>60-69:</strong> C 🟠 Fair - several inconsistencies found<br>
+                        <strong>Below 60:</strong> D-F 🔴 Poor - significant problems detected
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: My coherence score dropped after adding more information. Why?</div>
+                    <div class="faq-answer">
+                        Sometimes additional information reveals inconsistencies that weren't apparent before. This is actually good - it helps identify areas that need attention. Focus on the specific issues highlighted in your coherence report.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: How can I improve my coherence score?</div>
+                    <div class="faq-answer">
+                        <ul>
+                            <li>Complete all required fields with accurate information</li>
+                            <li>Use consistent terminology throughout your entries</li>
+                            <li>Ensure cost relationships make business sense</li>
+                            <li>Double-check for any contradictory data</li>
+                            <li>Keep your information current and up-to-date</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="faq-section">
+                <h2>🎯 Intelligent Recommendations</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: How personalized are the recommendations?</div>
+                    <div class="faq-answer">
+                        Very personalized! Recommendations are based on:
+                        <ul>
+                            <li>Your specific business type and industry</li>
+                            <li>Current performance vs. industry benchmarks</li>
+                            <li>Business size and location factors</li>
+                            <li>Success patterns from similar businesses</li>
+                        </ul>
+                        No two businesses get identical recommendations.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: What do the priority levels mean?</div>
+                    <div class="faq-answer">
+                        <span class="feature-badge">🔥 High Priority</span> Critical for success - implement within 30 days<br><br>
+                        <span class="feature-badge">⭐ Medium Priority</span> Important improvement - implement within 90 days<br><br>
+                        <span class="feature-badge">💡 Low Priority</span> Nice to have - consider for future planning
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: Are the savings estimates realistic?</div>
+                    <div class="faq-answer">
+                        Our estimates are based on real results from similar businesses. However, your actual results may vary depending on:
+                        <ul>
+                            <li>How well you implement the recommendations</li>
+                            <li>Market conditions and timing</li>
+                            <li>Your specific business circumstances</li>
+                        </ul>
+                        We provide confidence levels with each estimate to help you gauge reliability.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: Can I disagree with a recommendation?</div>
+                    <div class="faq-answer">
+                        Absolutely! You can mark recommendations as "not applicable" or "not interested." This helps our AI learn your preferences and provide better suggestions in the future.
+                    </div>
+                </div>
+            </div>
+
+            <!-- General Questions -->
+            <div class="faq-section">
+                <h2>❓ General Questions</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: Do I need to do anything different to use the intelligent features?</div>
+                    <div class="faq-answer">
+                        No! The intelligent features work automatically in the background. Just use the system as you normally would, and you'll see the enhanced results with AI insights.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: Is my data secure with AI analysis?</div>
+                    <div class="faq-answer">
+                        Absolutely. All AI processing happens securely within our system. Your data is:
+                        <ul>
+                            <li>Never shared with other businesses</li>
+                            <li>Not used to train models for other companies</li>
+                            <li>Processed with enterprise-grade security</li>
+                            <li>Handled according to strict privacy policies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: Why are results so much faster now?</div>
+                    <div class="faq-answer">
+                        We use advanced caching and prediction algorithms that:
+                        <ul>
+                            <li>Anticipate what you need and pre-compute common analyses</li>
+                            <li>Cache frequently requested information</li>
+                            <li>Use pattern recognition to speed up similar requests</li>
+                        </ul>
+                        This reduces processing time by up to 90% compared to traditional methods.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: What if the intelligent features aren't working?</div>
+                    <div class="faq-answer">
+                        The system automatically falls back to standard processing if AI features are unavailable. You'll still get accurate results, just without the intelligent enhancements. Try refreshing the page or contact support if issues persist.
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Pro Tip</h4>
+                <p>The more you use these features and provide feedback, the smarter they become for your specific business. Don't hesitate to mark recommendations as helpful or not applicable - it improves the AI's understanding of your needs!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="/" class="back-link">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the help widget for additional support -->
+    <script src="/js/help-widget.js"></script>
+</body>
+</html>

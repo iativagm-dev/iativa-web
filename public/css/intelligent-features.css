@@ -1,0 +1,408 @@
+/* ============================================
+   Intelligent Features UI Components
+   Enhances the chat interface with intelligent features
+   ============================================ */
+
+/* Business Type Indicator */
+.business-type-indicator {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #4CAF50 0%, #2196F3 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 8px 0;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    animation: slideInRight 0.5s ease-out;
+}
+
+.business-type-indicator .icon {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+.business-type-indicator.restaurant { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); }
+.business-type-indicator.technology { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.business-type-indicator.retail { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.business-type-indicator.beauty { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; }
+.business-type-indicator.services { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+
+/* Cost Validation Alerts */
+.cost-validation-alert {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 12px;
+    border-left: 4px solid;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.cost-validation-alert.success {
+    background: linear-gradient(135deg, #E8F5E8 0%, #F0F9F0 100%);
+    border-left-color: #4CAF50;
+}
+
+.cost-validation-alert.warning {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFFBF0 100%);
+    border-left-color: #FF9800;
+}
+
+.cost-validation-alert.error {
+    background: linear-gradient(135deg, #FFEBEE 0%, #FFF5F5 100%);
+    border-left-color: #F44336;
+}
+
+.cost-validation-alert .alert-icon {
+    margin-right: 12px;
+    font-size: 1.2rem;
+    margin-top: 2px;
+}
+
+.cost-validation-alert.success .alert-icon { color: #4CAF50; }
+.cost-validation-alert.warning .alert-icon { color: #FF9800; }
+.cost-validation-alert.error .alert-icon { color: #F44336; }
+
+.cost-validation-alert .alert-content {
+    flex: 1;
+}
+
+.cost-validation-alert .alert-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.cost-validation-alert .alert-message {
+    color: #666;
+    line-height: 1.5;
+}
+
+.cost-validation-alert .alert-suggestion {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Progress Bar for Adaptive Questioning */
+.adaptive-progress-container {
+    background: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.adaptive-progress-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.adaptive-progress-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.adaptive-progress-percentage {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.adaptive-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.adaptive-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50 0%, #2196F3 50%, #FF9800 100%);
+    border-radius: 10px;
+    transition: width 0.8s ease-out;
+    position: relative;
+}
+
+.adaptive-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+}
+
+.adaptive-progress-steps {
+    display: flex;
+    justify-content: between;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.adaptive-progress-step {
+    flex: 1;
+    text-align: center;
+    padding: 2px;
+}
+
+.adaptive-progress-step.completed { color: #4CAF50; font-weight: 600; }
+.adaptive-progress-step.current { color: #2196F3; font-weight: 600; }
+
+/* Intelligent Recommendations Panel */
+.recommendations-panel {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin: 16px 0;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    animation: slideInUp 0.6s ease-out;
+}
+
+.recommendations-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.recommendations-icon {
+    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.recommendations-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.recommendations-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.recommendations-list {
+    space-y: 12px;
+}
+
+.recommendation-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.recommendation-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+}
+
+.recommendation-priority {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.recommendation-priority.high { background: rgba(255, 87, 34, 0.8); }
+.recommendation-priority.medium { background: rgba(255, 152, 0, 0.8); }
+.recommendation-priority.low { background: rgba(76, 175, 80, 0.8); }
+
+.recommendation-text {
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.recommendation-impact {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Industry Insights Widget */
+.industry-insights {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.industry-insights-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.industry-insights-icon {
+    background: linear-gradient(135deg, #4CAF50 0%, #2196F3 100%);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 0.9rem;
+}
+
+.industry-insights-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.industry-benchmarks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.benchmark-item {
+    text-align: center;
+    padding: 8px;
+    background: #F8F9FA;
+    border-radius: 8px;
+}
+
+.benchmark-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2196F3;
+}
+
+.benchmark-label {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 2px;
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .business-type-indicator {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+
+    .cost-validation-alert {
+        padding: 10px 12px;
+        margin: 10px 0;
+    }
+
+    .adaptive-progress-container {
+        padding: 12px 16px;
+    }
+
+    .recommendations-panel {
+        padding: 16px;
+        margin: 12px 0;
+    }
+
+    .recommendation-item {
+        padding: 10px 12px;
+    }
+
+    .industry-benchmarks {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .adaptive-progress-steps {
+        font-size: 0.7rem;
+    }
+
+    .recommendations-title {
+        font-size: 1rem;
+    }
+
+    .recommendations-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .industry-benchmarks {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading states */
+.intelligent-feature-loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #2196F3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

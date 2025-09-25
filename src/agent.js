@@ -3,19 +3,47 @@ const RecopiladorDatos = require('./recopilador-datos');
 const GeneradorReportes = require('./generador-reportes');
 const RecomendadorMarketing = require('./recomendador-marketing');
 
+// Importar módulo de costeo inteligente
+const { IntelligentCosting } = require('../modules/intelligent-costing');
+
 class AgenteIAtiva {
-    constructor() {
+    constructor(sessionId = null) {
         this.calculadora = new CalculadoraFinanciera();
         this.recopilador = new RecopiladorDatos();
         this.generadorReportes = new GeneradorReportes();
         this.recomendador = new RecomendadorMarketing();
-        
+
+        // Initialize intelligent costing module
+        this.intelligentCosting = new IntelligentCosting({
+            enableLogging: process.env.NODE_ENV === 'development',
+            fallbackToDefault: true
+        });
+        this.sessionId = sessionId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
         this.activo = false;
         this.config = this.calculadora.config;
         this.nombre = this.config.agente.nombre;
         this.version = this.config.agente.version;
         this.estadoActual = 'inactivo';
         this.ultimosResultados = null;
+
+        // Variable de memoria para nombre de usuario
+        this.nombre_usuario = '';
+
+        // Métricas para monitorear
+        this.metricas = {
+            intentos_captura_nombre: 0,
+            nombres_capturados_exitosamente: 0,
+            respuestas_personalizadas: 0,
+            respuestas_totales: 0,
+            fallos_deteccion: 0
+        };
+
+        // Initialize intelligent costing session
+        this.intelligentCosting.initializeSession(this.sessionId, {
+            agentVersion: this.version,
+            timestamp: new Date().toISOString()
+        });
     }
 
     iniciar() {
@@ -51,9 +79,57 @@ class AgenteIAtiva {
         `);
     }
 
+    // Método para detectar y extraer nombres de frases
+    detectarNombre(texto) {
+        const textoLimpio = texto.toLowerCase().trim();
+
+        // Patrones para detectar nombres
+        const patronesNombre = [
+            /(?:me\s+llamo|mi\s+nombre\s+es|soy)\s+([a-záéíóúñ][a-záéíóúñ\s]+)/i,
+            /^([a-záéíóúñ][a-záéíóúñ\s]{1,30})$/i  // Solo nombre directo
+        ];
+
+        for (const patron of patronesNombre) {
+            const match = textoLimpio.match(patron);
+            if (match && match[1]) {
+                const nombreExtraido = match[1].trim()
+                    .split(' ')
+                    .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
+                    .join(' ');
+
+                // Validar que el nombre tenga sentido (no números, no muy largo)
+                if (nombreExtraido.length >= 2 &&
+                    nombreExtraido.length <= 30 &&
+                    !/\d/.test(nombreExtraido) &&
+                    !/^(hola|hi|buenos|buenas|gracias|ok|si|no|quiero|necesito)$/i.test(nombreExtraido)) {
+                    return nombreExtraido;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // Método para personalizar respuestas con el nombre
+    personalizarRespuesta(respuesta) {
+        this.metricas.respuestas_totales++;
+
+        if (this.nombre_usuario) {
+            this.metricas.respuestas_personalizadas++;
+            // Solo personalizar si la respuesta no incluye ya el nombre
+            if (!respuesta.includes(this.nombre_usuario)) {
+                return respuesta.replace(/¡Hola[^!]*!/, `¡Hola ${this.nombre_usuario}!`)
+                               .replace(/Hola[^,]*,/, `Hola ${this.nombre_usuario},`)
+                               .replace(/^🧠/, `🧠 ${this.nombre_usuario},`);
+            }
+        }
+
+        return respuesta;
+    }
+
     procesarEntrada(entrada) {
         if (!this.activo) {
-            return "❌ El agente no está activo. Usa el método iniciar() primero.";
+            return this.personalizarRespuesta("❌ El agente no está activo. Usa el método iniciar() primero.");
         }
 
         const entradaLimpia = entrada.toLowerCase().trim();
@@ -124,28 +200,71 @@ class AgenteIAtiva {
         if (this.indicePregunta === undefined) {
             this.indicePregunta = 0;
         }
-        this.estadoActual = 'recopilacion_datos';
-        
+
+        // Cambiar estado a solicitar nombre primero
+        this.estadoActual = 'solicitar_nombre';
+
+        console.log('👋 manejarBienvenida - solicitando nombre del usuario');
         console.log('👋 manejarBienvenida - datosSimples:', this.datosSimples);
         console.log('👋 manejarBienvenida - indicePregunta:', this.indicePregunta);
-        
-        return `🧠 **¡Bienvenido al análisis de costeo IAtiva!**
 
-Te haré 9 preguntas rápidas para calcular el precio perfecto de tu producto.
+        const baseMessage = `🧠 **¡Bienvenido al análisis de costeo IAtiva!**
+
+Antes de comenzar con las 9 preguntas para calcular el precio perfecto de tu producto, me gustaría conocerte mejor.
+
+**¿Cómo te llamas?**
+
+Por favor compárteme tu nombre para personalizar tu experiencia de análisis.`;
+
+        // Enhance with intelligent costing if enabled
+        return this.intelligentCosting.enhanceWelcomeMessage(baseMessage, this.sessionId);
+    }
+
+    manejarSolicitudNombre(entrada) {
+        this.metricas.intentos_captura_nombre++;
+
+        // Intentar detectar el nombre en la entrada
+        const nombreDetectado = this.detectarNombre(entrada);
+
+        if (nombreDetectado) {
+            // Guardar el nombre detectado
+            this.nombre_usuario = nombreDetectado;
+            this.recopilador.sesion.nombreUsuario = nombreDetectado;
+            this.metricas.nombres_capturados_exitosamente++;
+
+            // Process business information with intelligent costing
+            this.intelligentCosting.processBusinessInfo({
+                nombreUsuario: nombreDetectado
+            }, this.sessionId);
+
+            // Continuar al flujo de recopilación de datos
+            this.estadoActual = 'recopilacion_datos';
+
+            console.log(`✅ Nombre capturado exitosamente: ${nombreDetectado}`);
+
+            return this.personalizarRespuesta(`¡Perfecto ${nombreDetectado}! Me da mucho gusto conocerte.
+
+Ahora empecemos con el análisis de costos para tu producto 💪
 
 **Pregunta 1/9**
 
 ¿Cuánto gastaste en materia prima/insumos?
 
-Ejemplo: 50000`;
-    }
+Ejemplo: 50000`);
+        } else {
+            // No se pudo detectar un nombre válido
+            this.metricas.fallos_deteccion++;
 
-    manejarSolicitudNombre(entrada) {
-        // MODO DEMO: Saltar solicitud de nombre, ir directo a recopilación
-        this.recopilador.sesion.nombreUsuario = "Emprendedor";
-        this.estadoActual = 'recopilacion_datos';
-        const siguientePregunta = this.recopilador.generarPregunta();
-        return `¡Perfecto! Empecemos con el análisis de costos 💪\n\n${siguientePregunta}`;
+            return `Me disculpo, pero no logré capturar tu nombre correctamente.
+
+¿Podrías decirme tu nombre de una forma más clara?
+
+Ejemplos:
+- "Me llamo María"
+- "Soy Carlos"
+- "Mi nombre es Ana"
+- O simplemente: "Pedro"`;
+        }
     }
 
     manejarRecopilacionDatos(entrada) {
@@ -158,7 +277,7 @@ Ejemplo: 50000`;
         console.log('🔢 Número procesado:', numero);
         
         if (isNaN(numero) || numero < 0) {
-            return "❌ Por favor ingresa solo números. Ejemplo: 50000";
+            return this.personalizarRespuesta("❌ Por favor ingresa solo números. Ejemplo: 50000");
         }
 
         // Lista simple de preguntas
@@ -184,6 +303,19 @@ Ejemplo: 50000`;
         // Guardar respuesta actual
         if (this.indicePregunta < preguntas.length) {
             const preguntaActual = preguntas[this.indicePregunta];
+
+            // Validate with intelligent costing if enabled
+            const validation = this.intelligentCosting.validateCostInput(
+                preguntaActual.nombre,
+                numero,
+                this.sessionId
+            );
+
+            // Show validation warnings (but don't block)
+            if (validation.type === 'warning' && validation.message) {
+                console.log(`⚠️ Validation warning for ${preguntaActual.nombre}: ${validation.message}`);
+            }
+
             this.datosSimples[preguntaActual.nombre] = numero;
             console.log('✅ Guardado:', preguntaActual.nombre, '=', numero);
             this.indicePregunta++;
@@ -194,7 +326,7 @@ Ejemplo: 50000`;
         if (this.indicePregunta < preguntas.length) {
             const siguientePregunta = preguntas[this.indicePregunta];
             console.log('➡️ Siguiente pregunta:', siguientePregunta.nombre);
-            return `✅ Guardado: $${numero.toLocaleString()}\n\n**Pregunta ${this.indicePregunta + 1}/9**\n\n${siguientePregunta.pregunta}\n\nEjemplo: ${siguientePregunta.nombre === 'margen_ganancia' ? '25' : '15000'}`;
+            return this.personalizarRespuesta(`✅ Guardado: $${numero.toLocaleString()}\n\n**Pregunta ${this.indicePregunta + 1}/9**\n\n${siguientePregunta.pregunta}\n\nEjemplo: ${siguientePregunta.nombre === 'margen_ganancia' ? '25' : '15000'}`);
         }
 
         // ¡ANÁLISIS COMPLETO!
@@ -225,7 +357,7 @@ Ejemplo: 50000`;
         this.ultimosResultados = {
             datosOriginales: {
                 costos: datos,
-                nombreUsuario: "Emprendedor",
+                nombreUsuario: this.nombre_usuario || "Emprendedor",
                 timestamp: new Date().toISOString()
             },
             calculos: {
@@ -239,22 +371,43 @@ Ejemplo: 50000`;
         };
         
         this.estadoActual = 'completado';
-        
-        return `🎉 **¡ANÁLISIS COMPLETO!**
+
+        // Analyze with intelligent costing
+        const analysis = this.intelligentCosting.analyzeCostStructure(datos, this.sessionId);
+
+        let baseMessage = `🎉 **¡ANÁLISIS COMPLETO!**
 
 📊 **RESULTADOS:**
 • **Costo total:** $${costoTotal.toLocaleString()}
 • **Precio sugerido:** $${precioVenta.toLocaleString()}
 • **Ganancia por unidad:** $${ganancia.toLocaleString()}
 • **Margen:** ${margen}%
-• **Punto de equilibrio:** ${puntoEquilibrio} unidades
+• **Punto de equilibrio:** ${puntoEquilibrio} unidades`;
 
-💡 **RECOMENDACIONES:**
-✅ Con estos números, necesitas vender ${puntoEquilibrio} unidades para cubrir costos
-✅ Cada unidad adicional te dará $${ganancia.toLocaleString()} de ganancia
-✅ Considera ajustar precios si el mercado lo permite
+        // Add intelligent insights if available
+        if (analysis.industryComparison) {
+            baseMessage += `\n\n🏭 **ANÁLISIS SECTORIAL:**`;
+            baseMessage += `\n📈 Comparado con ${analysis.industryComparison.industry}`;
+            baseMessage += `\n🎯 Puntuación de validación: ${analysis.validationScore}/100`;
+        }
 
-🚀 **¡Tu negocio tiene potencial! Sigue estos números para crecer.**`;
+        baseMessage += `\n\n💡 **RECOMENDACIONES:**`;
+
+        if (analysis.recommendations && analysis.recommendations.length > 0) {
+            // Use intelligent recommendations
+            analysis.recommendations.slice(0, 4).forEach(rec => {
+                baseMessage += `\n✅ ${rec}`;
+            });
+        } else {
+            // Fallback to basic recommendations
+            baseMessage += `\n✅ Con estos números, necesitas vender ${puntoEquilibrio} unidades para cubrir costos`;
+            baseMessage += `\n✅ Cada unidad adicional te dará $${ganancia.toLocaleString()} de ganancia`;
+            baseMessage += `\n✅ Considera ajustar precios si el mercado lo permite`;
+        }
+
+        baseMessage += `\n\n🚀 **¡Tu negocio tiene potencial! Sigue estos números para crecer.**`;
+
+        return this.personalizarRespuesta(baseMessage);
     }
 
     procesarCalculos() {
@@ -263,7 +416,7 @@ Ejemplo: 50000`;
             const resultadosCalculos = this.calculadora.calcularCompleto(datosParaCalculos);
             
             if (!resultadosCalculos.exito) {
-                return `❌ Error en los cálculos: ${resultadosCalculos.error}\n\nPuedes escribir "reiniciar" para comenzar de nuevo.`;
+                return this.personalizarRespuesta(`❌ Error en los cálculos: ${resultadosCalculos.error}\n\nPuedes escribir "reiniciar" para comenzar de nuevo.`);
             }
 
             this.ultimosResultados = {
@@ -280,7 +433,7 @@ Ejemplo: 50000`;
             
             return `${resumenAmigable}\n🔍 **¿Qué quieres hacer ahora?**\n• Escribe "recomendaciones" para consejos personalizados\n• Escribe "reporte" para generar documento descargable\n• Escribe "nuevo" para hacer otro análisis`;
         } catch (error) {
-            return `❌ Error inesperado: ${error.message}\n\nPuedes escribir "reiniciar" para comenzar de nuevo.`;
+            return this.personalizarRespuesta(`❌ Error inesperado: ${error.message}\n\nPuedes escribir "reiniciar" para comenzar de nuevo.`);
         }
     }
 
@@ -308,7 +461,7 @@ Ejemplo: 50000`;
     generarYMostrarRecomendaciones() {
         try {
             if (!this.ultimosResultados) {
-                return "❌ No hay resultados disponibles para generar recomendaciones.";
+                return this.personalizarRespuesta("❌ No hay resultados disponibles para generar recomendaciones.");
             }
 
             const recomendaciones = this.recomendador.generarRecomendacionesCompletas(
@@ -317,7 +470,7 @@ Ejemplo: 50000`;
             );
 
             if (!recomendaciones.exito) {
-                return `❌ Error generando recomendaciones: ${recomendaciones.error}`;
+                return this.personalizarRespuesta(`❌ Error generando recomendaciones: ${recomendaciones.error}`);
             }
 
             let respuesta = `${recomendaciones.recomendacionesFormateadas}\n`;
@@ -330,7 +483,7 @@ Ejemplo: 50000`;
             return respuesta;
 
         } catch (error) {
-            return `❌ Error generando recomendaciones: ${error.message}`;
+            return this.personalizarRespuesta(`❌ Error generando recomendaciones: ${error.message}`);
         }
     }
 
@@ -364,7 +517,7 @@ Ejemplo: 50000`;
         const entradaLimpia = entrada.toLowerCase().trim();
         
         if (!this.ultimosResultados) {
-            return "❌ No hay datos para generar el reporte.";
+            return this.personalizarRespuesta("❌ No hay datos para generar el reporte.");
         }
 
         let formato = 'html';
@@ -390,7 +543,7 @@ Ejemplo: 50000`;
             }
 
         } catch (error) {
-            return `❌ Error generando reporte: ${error.message}`;
+            return this.personalizarRespuesta(`❌ Error generando reporte: ${error.message}`);
         }
     }
 
@@ -411,7 +564,7 @@ Ejemplo: 50000`;
 
     async manejarSolicitudReporte(entrada) {
         if (!this.ultimosResultados) {
-            return "❌ No hay datos disponibles para generar reporte.";
+            return this.personalizarRespuesta("❌ No hay datos disponibles para generar reporte.");
         }
 
         const formato = this.contienePatron(entrada.toLowerCase(), ['txt', 'texto']) ? 'txt' : 'html';
@@ -423,9 +576,9 @@ Ejemplo: 50000`;
                 formato
             );
 
-            return resultado.exito ? resultado.mensaje : `❌ ${resultado.mensaje}`;
+            return resultado.exito ? this.personalizarRespuesta(resultado.mensaje) : this.personalizarRespuesta(`❌ ${resultado.mensaje}`);
         } catch (error) {
-            return `❌ Error generando reporte: ${error.message}`;
+            return this.personalizarRespuesta(`❌ Error generando reporte: ${error.message}`);
         }
     }
 
@@ -480,7 +633,22 @@ Ejemplo: 50000`;
         console.log(`📧 ${this.config.agente.contacto}`);
         console.log('=====================================');
         console.log(`${this.nombre} desconectado. ¡Hasta la próxima! 👋\n`);
-        
+
+        // Cleanup intelligent costing session
+        if (this.intelligentCosting && this.sessionId) {
+            const analytics = this.intelligentCosting.getSessionAnalytics(this.sessionId);
+            if (analytics) {
+                console.log('📊 Análisis inteligente - Métricas de sesión:');
+                console.log(`   ⏱️  Duración: ${Math.round(analytics.duration / 1000)}s`);
+                if (analytics.industry) {
+                    console.log(`   🏭 Industria detectada: ${analytics.industry} (${analytics.confidence}%)`);
+                }
+                console.log(`   🔍 Validaciones realizadas: ${analytics.validationCount}`);
+                console.log(`   ⚙️  Características usadas: ${analytics.featuresUsed.join(', ')}`);
+            }
+            this.intelligentCosting.cleanupSession(this.sessionId);
+        }
+
         return null; // Señal para terminar
     }
 
