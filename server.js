@@ -12,6 +12,10 @@ const EmailService = require('./src/emailService');
 const PaymentService = require('./src/paymentService');
 const { FeatureToggle } = require('./modules/intelligent-costing');
 
+// Import packages for export functionality
+const puppeteer = require('puppeteer');
+const ExcelJS = require('exceljs');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -1893,6 +1897,368 @@ app.post('/api/intelligent-features/progress-analysis', async (req, res) => {
         });
     }
 });
+
+// ===========================
+// EXPORT FUNCTIONALITY ENDPOINTS
+// ===========================
+
+// API: Generar PDF del análisis
+app.post('/api/export/pdf', async (req, res) => {
+    try {
+        const { costs, businessType, analysis, timestamp } = req.body;
+
+        if (!costs || !businessType || !analysis) {
+            return res.status(400).json({
+                success: false,
+                error: 'Datos incompletos para generar PDF'
+            });
+        }
+
+        // Generate HTML content for PDF
+        const htmlContent = generateAnalysisHTML(costs, businessType, analysis, timestamp);
+
+        // Launch puppeteer to generate PDF
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+
+        const page = await browser.newPage();
+        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: {
+                top: '20mm',
+                right: '15mm',
+                bottom: '20mm',
+                left: '15mm'
+            }
+        });
+
+        await browser.close();
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename="analisis-costos-${businessType}-${new Date().toISOString().split('T')[0]}.pdf"`
+        });
+
+        res.send(pdfBuffer);
+
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al generar PDF'
+        });
+    }
+});
+
+// API: Generar Excel del análisis
+app.post('/api/export/excel', async (req, res) => {
+    try {
+        const { costs, businessType, analysis, timestamp } = req.body;
+
+        if (!costs || !businessType || !analysis) {
+            return res.status(400).json({
+                success: false,
+                error: 'Datos incompletos para generar Excel'
+            });
+        }
+
+        const workbook = new ExcelJS.Workbook();
+
+        // Hoja 1: Resumen del análisis
+        const summarySheet = workbook.addWorksheet('Resumen del Análisis');
+
+        // Header styling
+        const headerStyle = {
+            font: { bold: true, color: { argb: 'FFFFFFFF' } },
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2563EB' } },
+            alignment: { horizontal: 'center' }
+        };
+
+        summarySheet.columns = [
+            { header: 'Concepto', key: 'concept', width: 25 },
+            { header: 'Valor', key: 'value', width: 20 },
+            { header: 'Porcentaje', key: 'percentage', width: 15 }
+        ];
+
+        // Apply header styling
+        summarySheet.getRow(1).eachCell(cell => {
+            cell.style = headerStyle;
+        });
+
+        // Add cost data
+        let totalCosts = 0;
+        Object.entries(costs).forEach(([key, value]) => {
+            if (typeof value === 'number') {
+                totalCosts += value;
+            }
+        });
+
+        Object.entries(costs).forEach(([key, value]) => {
+            if (typeof value === 'number') {
+                const percentage = totalCosts > 0 ? ((value / totalCosts) * 100).toFixed(1) + '%' : '0%';
+                summarySheet.addRow({
+                    concept: getCostDisplayName(key),
+                    value: new Intl.NumberFormat('es-CO', {
+                        style: 'currency',
+                        currency: 'COP'
+                    }).format(value),
+                    percentage
+                });
+            }
+        });
+
+        // Total row
+        summarySheet.addRow({
+            concept: 'TOTAL',
+            value: new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            }).format(totalCosts),
+            percentage: '100%'
+        });
+
+        // Style total row
+        const lastRow = summarySheet.lastRow;
+        lastRow.eachCell(cell => {
+            cell.style = {
+                font: { bold: true },
+                fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+            };
+        });
+
+        // Hoja 2: Recomendaciones
+        const recSheet = workbook.addWorksheet('Recomendaciones');
+        recSheet.columns = [
+            { header: 'Recomendación', key: 'recommendation', width: 50 },
+            { header: 'Prioridad', key: 'priority', width: 15 },
+            { header: 'Impacto Estimado', key: 'impact', width: 20 }
+        ];
+
+        // Apply header styling to recommendations sheet
+        recSheet.getRow(1).eachCell(cell => {
+            cell.style = headerStyle;
+        });
+
+        // Add recommendations
+        if (analysis.recommendations) {
+            analysis.recommendations.forEach(rec => {
+                recSheet.addRow({
+                    recommendation: rec.suggestion || rec.text || rec,
+                    priority: rec.priority || 'Media',
+                    impact: rec.impact || rec.estimatedSavings || 'A determinar'
+                });
+            });
+        }
+
+        // Generate buffer
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        res.set({
+            'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition': `attachment; filename="analisis-costos-${businessType}-${new Date().toISOString().split('T')[0]}.xlsx"`
+        });
+
+        res.send(buffer);
+
+    } catch (error) {
+        console.error('Error generating Excel:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al generar Excel'
+        });
+    }
+});
+
+// API: Enviar análisis por email
+app.post('/api/export/email', async (req, res) => {
+    try {
+        const { costs, businessType, analysis, timestamp, recipientEmail, recipientName } = req.body;
+
+        if (!costs || !businessType || !analysis || !recipientEmail) {
+            return res.status(400).json({
+                success: false,
+                error: 'Datos incompletos para envío por email'
+            });
+        }
+
+        // Generate email content
+        const emailHTML = generateEmailHTML(costs, businessType, analysis, timestamp, recipientName);
+
+        // Send email using existing email service
+        const subject = `Análisis de Costos IAtiva - ${businessType}`;
+
+        await emailService.sendEmail({
+            to: recipientEmail,
+            subject: subject,
+            html: emailHTML,
+            from: 'IAtiva Análisis de Costos <noreply@iativa.com>'
+        });
+
+        res.json({
+            success: true,
+            message: 'Análisis enviado por email exitosamente'
+        });
+
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al enviar email'
+        });
+    }
+});
+
+// Utility functions for export functionality
+function generateAnalysisHTML(costs, businessType, analysis, timestamp) {
+    const date = timestamp ? new Date(timestamp).toLocaleDateString('es-CO') : new Date().toLocaleDateString('es-CO');
+
+    let html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+            .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 15px; }
+            .logo { color: #2563eb; font-size: 24px; font-weight: bold; }
+            .business-type { background: #eff6ff; padding: 10px; border-radius: 8px; margin: 20px 0; }
+            .costs-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .costs-table th, .costs-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+            .costs-table th { background-color: #2563eb; color: white; }
+            .costs-table .total-row { background-color: #f3f4f6; font-weight: bold; }
+            .recommendations { margin: 20px 0; }
+            .recommendation { background: #f0f9ff; padding: 15px; margin: 10px 0; border-left: 4px solid #2563eb; border-radius: 4px; }
+            .footer { margin-top: 30px; text-align: center; color: #666; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="logo">🎯 IAtiva - Análisis de Costos</div>
+            <p>Reporte generado el ${date}</p>
+        </div>
+
+        <div class="business-type">
+            <h2>Tipo de Negocio: ${businessType}</h2>
+        </div>
+
+        <h3>Desglose de Costos</h3>
+        <table class="costs-table">
+            <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Valor</th>
+                    <th>Porcentaje</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    let totalCosts = 0;
+    Object.entries(costs).forEach(([key, value]) => {
+        if (typeof value === 'number') {
+            totalCosts += value;
+        }
+    });
+
+    Object.entries(costs).forEach(([key, value]) => {
+        if (typeof value === 'number') {
+            const percentage = totalCosts > 0 ? ((value / totalCosts) * 100).toFixed(1) + '%' : '0%';
+            html += `
+                <tr>
+                    <td>${getCostDisplayName(key)}</td>
+                    <td>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value)}</td>
+                    <td>${percentage}</td>
+                </tr>
+            `;
+        }
+    });
+
+    html += `
+                <tr class="total-row">
+                    <td>TOTAL</td>
+                    <td>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalCosts)}</td>
+                    <td>100%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="recommendations">
+            <h3>Recomendaciones</h3>
+    `;
+
+    if (analysis.recommendations) {
+        analysis.recommendations.forEach(rec => {
+            html += `<div class="recommendation">${rec.suggestion || rec.text || rec}</div>`;
+        });
+    }
+
+    html += `
+        </div>
+
+        <div class="footer">
+            <p>Generado por IAtiva - Sistema Inteligente de Análisis de Costos</p>
+            <p>© ${new Date().getFullYear()} IAtiva. Todos los derechos reservados.</p>
+        </div>
+    </body>
+    </html>
+    `;
+
+    return html;
+}
+
+function generateEmailHTML(costs, businessType, analysis, timestamp, recipientName) {
+    const greeting = recipientName ? `Hola ${recipientName},` : 'Hola,';
+    const analysisHTML = generateAnalysisHTML(costs, businessType, analysis, timestamp);
+
+    return `
+        <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
+            <p>${greeting}</p>
+            <p>Te enviamos el análisis de costos que solicitaste de IAtiva:</p>
+
+            ${analysisHTML}
+
+            <p>Si tienes alguna pregunta sobre este análisis, no dudes en contactarnos.</p>
+            <p>¡Gracias por usar IAtiva!</p>
+
+            <hr style="margin: 20px 0;">
+            <p style="color: #666; font-size: 12px;">
+                Este email fue generado automáticamente por el sistema IAtiva.<br>
+                Para más información visita: <a href="https://iativa.com">iativa.com</a>
+            </p>
+        </div>
+    `;
+}
+
+function getCostDisplayName(key) {
+    const displayNames = {
+        materiasPrimas: 'Materias Primas',
+        manoDeObra: 'Mano de Obra',
+        costosIndirectos: 'Costos Indirectos',
+        gastosOperativos: 'Gastos Operativos',
+        gastosAdministrativos: 'Gastos Administrativos',
+        gastosVentas: 'Gastos de Ventas',
+        gastosFinancieros: 'Gastos Financieros',
+        depreciacion: 'Depreciación',
+        impuestos: 'Impuestos',
+        otrosGastos: 'Otros Gastos',
+        costoCompra: 'Costo de Compra',
+        gastosLogistica: 'Gastos de Logística',
+        comisiones: 'Comisiones',
+        publicidad: 'Publicidad y Marketing',
+        horasConsultor: 'Horas de Consultor',
+        gastosDesplazamiento: 'Gastos de Desplazamiento',
+        herramientas: 'Herramientas y Software',
+        certificaciones: 'Certificaciones',
+        seguros: 'Seguros'
+    };
+
+    return displayNames[key] || key;
+}
 
 // Error 404
 app.use((req, res) => {

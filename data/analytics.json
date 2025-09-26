@@ -2018,5 +2018,15 @@
     "ip_address": "::1",
     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
     "created_at": "2025-09-25T23:51:28.864Z"
+  },
+  {
+    "id": 203,
+    "event_type": "demo_started",
+    "user_id": null,
+    "session_id": "8yqRW_Ky1sBWqHVhispgWPt6vedW7yuz",
+    "data": "{\"tempUserId\":\"temp_1758840378274\"}",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+    "created_at": "2025-09-25T23:57:59.981Z"
   }
 ]

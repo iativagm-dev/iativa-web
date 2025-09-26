@@ -833,6 +833,10 @@ ${this.getBusinessTypeQuestions(businessType)}`;
 
         analysisDiv.innerHTML = analysisHTML;
         this.chatMessages.appendChild(analysisDiv);
+
+        // Add export buttons after analysis
+        this.addExportButtons(costs, businessType, analysis);
+
         this.scrollToBottom();
     }
 
@@ -2826,6 +2830,561 @@ Solo necesitamos tu email - ¡es gratis y sin compromisos!`,
             overhead: this.context.overheadCosts || 0,
             total: this.context.totalCosts || 0
         };
+    }
+
+    addExportButtons(costs, businessType, analysis) {
+        const exportDiv = document.createElement('div');
+        exportDiv.className = 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-4 mx-4';
+        exportDiv.id = 'export-buttons-container';
+
+        exportDiv.innerHTML = `
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-download text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="ml-3 flex-1">
+                    <h4 class="text-lg font-semibold text-blue-900 mb-4">
+                        📥 Exportar y Compartir Análisis
+                    </h4>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <!-- PDF Download Button -->
+                        <button id="download-pdf-btn" class="export-button bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            <i class="fas fa-file-pdf text-xl mb-2"></i>
+                            <div class="text-sm font-medium">Descargar PDF</div>
+                        </button>
+
+                        <!-- Excel Download Button -->
+                        <button id="download-excel-btn" class="export-button bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            <i class="fas fa-file-excel text-xl mb-2"></i>
+                            <div class="text-sm font-medium">Descargar Excel</div>
+                        </button>
+
+                        <!-- Print Button -->
+                        <button id="print-analysis-btn" class="export-button bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            <i class="fas fa-print text-xl mb-2"></i>
+                            <div class="text-sm font-medium">Imprimir</div>
+                        </button>
+
+                        <!-- Email Share Button -->
+                        <button id="email-share-btn" class="export-button bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            <i class="fas fa-envelope text-xl mb-2"></i>
+                            <div class="text-sm font-medium">Enviar Email</div>
+                        </button>
+                    </div>
+
+                    <div class="mt-4 text-sm text-blue-700 bg-blue-100 p-3 rounded-lg">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Todos los formatos incluyen:</strong> Análisis completo, recomendaciones inteligentes, métricas y benchmarks de tu negocio tipo ${this.selectedBusinessType?.name || businessType}.
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.chatMessages.appendChild(exportDiv);
+
+        // Add event listeners for export buttons
+        this.setupExportButtonHandlers(costs, businessType, analysis);
+    }
+
+    setupExportButtonHandlers(costs, businessType, analysis) {
+        const pdfBtn = document.getElementById('download-pdf-btn');
+        const excelBtn = document.getElementById('download-excel-btn');
+        const printBtn = document.getElementById('print-analysis-btn');
+        const emailBtn = document.getElementById('email-share-btn');
+
+        // PDF Download
+        if (pdfBtn) {
+            pdfBtn.addEventListener('click', () => {
+                this.downloadPDF(costs, businessType, analysis);
+            });
+        }
+
+        // Excel Download
+        if (excelBtn) {
+            excelBtn.addEventListener('click', () => {
+                this.downloadExcel(costs, businessType, analysis);
+            });
+        }
+
+        // Print Analysis
+        if (printBtn) {
+            printBtn.addEventListener('click', () => {
+                this.printAnalysis(costs, businessType, analysis);
+            });
+        }
+
+        // Email Share
+        if (emailBtn) {
+            emailBtn.addEventListener('click', () => {
+                this.shareByEmail(costs, businessType, analysis);
+            });
+        }
+    }
+
+    downloadPDF(costs, businessType, analysis) {
+        // Show loading state
+        const btn = document.getElementById('download-pdf-btn');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xl mb-2"></i><div class="text-sm font-medium">Generando...</div>';
+        btn.disabled = true;
+
+        try {
+            // Create comprehensive analysis data
+            const analysisData = {
+                businessType: businessType,
+                businessName: this.selectedBusinessType?.name || businessType,
+                costs: costs,
+                analysis: analysis,
+                timestamp: new Date().toISOString(),
+                recommendations: this.generateIntelligentRecommendations(businessType, costs)
+            };
+
+            // Send to server for PDF generation
+            fetch('/api/export/pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(analysisData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Analisis_Costos_${businessType}_${new Date().getTime()}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                // Show success message
+                this.showExportSuccess('PDF descargado exitosamente');
+            })
+            .catch(error => {
+                console.error('Error downloading PDF:', error);
+                this.showExportError('Error al generar PDF');
+            })
+            .finally(() => {
+                // Restore button state
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            });
+
+        } catch (error) {
+            console.error('Error in downloadPDF:', error);
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            this.showExportError('Error al generar PDF');
+        }
+    }
+
+    downloadExcel(costs, businessType, analysis) {
+        // Show loading state
+        const btn = document.getElementById('download-excel-btn');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xl mb-2"></i><div class="text-sm font-medium">Generando...</div>';
+        btn.disabled = true;
+
+        try {
+            const analysisData = {
+                businessType: businessType,
+                businessName: this.selectedBusinessType?.name || businessType,
+                costs: costs,
+                analysis: analysis,
+                timestamp: new Date().toISOString(),
+                recommendations: this.generateIntelligentRecommendations(businessType, costs)
+            };
+
+            fetch('/api/export/excel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(analysisData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Analisis_Costos_${businessType}_${new Date().getTime()}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                this.showExportSuccess('Excel descargado exitosamente');
+            })
+            .catch(error => {
+                console.error('Error downloading Excel:', error);
+                this.showExportError('Error al generar Excel');
+            })
+            .finally(() => {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            });
+
+        } catch (error) {
+            console.error('Error in downloadExcel:', error);
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            this.showExportError('Error al generar Excel');
+        }
+    }
+
+    printAnalysis(costs, businessType, analysis) {
+        const printWindow = window.open('', '_blank');
+        const recommendations = this.generateIntelligentRecommendations(businessType, costs);
+
+        const printHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Análisis de Costos - ${this.selectedBusinessType?.name || businessType}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                        line-height: 1.6;
+                        color: #333;
+                    }
+                    .header {
+                        text-align: center;
+                        border-bottom: 2px solid #2563eb;
+                        padding-bottom: 20px;
+                        margin-bottom: 30px;
+                    }
+                    .header h1 {
+                        color: #2563eb;
+                        margin: 0;
+                        font-size: 28px;
+                    }
+                    .header p {
+                        margin: 10px 0 0 0;
+                        color: #6b7280;
+                        font-size: 16px;
+                    }
+                    .section {
+                        margin-bottom: 30px;
+                        break-inside: avoid;
+                    }
+                    .section h2 {
+                        color: #1f2937;
+                        border-left: 4px solid #2563eb;
+                        padding-left: 15px;
+                        font-size: 20px;
+                    }
+                    .costs-table, .analysis-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 15px 0;
+                    }
+                    .costs-table th, .costs-table td,
+                    .analysis-table th, .analysis-table td {
+                        border: 1px solid #d1d5db;
+                        padding: 12px;
+                        text-align: left;
+                    }
+                    .costs-table th, .analysis-table th {
+                        background-color: #f3f4f6;
+                        font-weight: bold;
+                    }
+                    .recommendations {
+                        background-color: #f8fafc;
+                        padding: 20px;
+                        border-left: 4px solid #10b981;
+                        margin: 15px 0;
+                    }
+                    .recommendation-item {
+                        margin-bottom: 15px;
+                        padding: 10px;
+                        background: white;
+                        border-radius: 5px;
+                    }
+                    .recommendation-title {
+                        font-weight: bold;
+                        color: #065f46;
+                        margin-bottom: 5px;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 40px;
+                        padding-top: 20px;
+                        border-top: 1px solid #d1d5db;
+                        color: #6b7280;
+                        font-size: 14px;
+                    }
+                    @media print {
+                        body { margin: 0; }
+                        .section { page-break-inside: avoid; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>📊 Análisis de Costos IAtiva</h1>
+                    <p><strong>Tipo de Negocio:</strong> ${this.selectedBusinessType?.name || businessType}</p>
+                    <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-CO')}</p>
+                </div>
+
+                <div class="section">
+                    <h2>💰 Desglose de Costos</h2>
+                    <table class="costs-table">
+                        <thead>
+                            <tr>
+                                <th>Componente</th>
+                                <th>Valor (COP)</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.generateCostTableRows(costs, analysis)}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h2>📈 Análisis de Precios</h2>
+                    <table class="analysis-table">
+                        <tr><th>Precio Mínimo</th><td>$${analysis.minPrice?.toLocaleString('es-CO') || 'N/A'}</td></tr>
+                        <tr><th>Precio Óptimo</th><td>$${analysis.optimalPrice?.toLocaleString('es-CO') || 'N/A'}</td></tr>
+                        <tr><th>Precio Premium</th><td>$${analysis.premiumPrice?.toLocaleString('es-CO') || 'N/A'}</td></tr>
+                        <tr><th>Ganancia Estimada</th><td>$${analysis.profit?.toLocaleString('es-CO') || 'N/A'}</td></tr>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h2>🎯 Recomendaciones Inteligentes</h2>
+                    <div class="recommendations">
+                        ${this.generateRecommendationsHTML(recommendations)}
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <p>Generado por IAtiva - Sistema Inteligente de Análisis de Costos</p>
+                    <p>© ${new Date().getFullYear()} IAtiva. Todos los derechos reservados.</p>
+                </div>
+            </body>
+            </html>
+        `;
+
+        printWindow.document.write(printHTML);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Wait a bit for content to load, then print
+        setTimeout(() => {
+            printWindow.print();
+        }, 500);
+
+        this.showExportSuccess('Análisis enviado a impresión');
+    }
+
+    shareByEmail(costs, businessType, analysis) {
+        const emailModal = document.createElement('div');
+        emailModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        emailModal.innerHTML = `
+            <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-envelope text-blue-500 mr-2"></i>
+                    Compartir Análisis por Email
+                </h3>
+                <form id="email-form">
+                    <div class="mb-4">
+                        <label for="email-to" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email destinatario:
+                        </label>
+                        <input type="email" id="email-to" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="ejemplo@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email-message" class="block text-sm font-medium text-gray-700 mb-2">
+                            Mensaje adicional (opcional):
+                        </label>
+                        <textarea id="email-message" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="Agrega un mensaje personalizado..."></textarea>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancel-email"
+                                class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            <i class="fas fa-paper-plane mr-2"></i>Enviar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        `;
+
+        document.body.appendChild(emailModal);
+
+        // Handle form submission
+        document.getElementById('email-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailTo = document.getElementById('email-to').value;
+            const message = document.getElementById('email-message').value;
+
+            this.sendAnalysisByEmail(emailTo, message, costs, businessType, analysis);
+            document.body.removeChild(emailModal);
+        });
+
+        // Handle cancel
+        document.getElementById('cancel-email').addEventListener('click', () => {
+            document.body.removeChild(emailModal);
+        });
+    }
+
+    sendAnalysisByEmail(emailTo, message, costs, businessType, analysis) {
+        const analysisData = {
+            emailTo,
+            message,
+            businessType,
+            businessName: this.selectedBusinessType?.name || businessType,
+            costs,
+            analysis,
+            recommendations: this.generateIntelligentRecommendations(businessType, costs),
+            timestamp: new Date().toISOString()
+        };
+
+        fetch('/api/export/email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(analysisData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.showExportSuccess('Análisis enviado por email exitosamente');
+            } else {
+                this.showExportError('Error al enviar email: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error sending email:', error);
+            this.showExportError('Error al enviar email');
+        });
+    }
+
+    generateCostTableRows(costs, analysis) {
+        const total = analysis.totalCost || Object.values(costs).reduce((sum, cost) => sum + cost, 0);
+        let rows = '';
+
+        for (const [key, value] of Object.entries(costs)) {
+            const percentage = ((value / total) * 100).toFixed(1);
+            const displayName = this.getCostDisplayName(key);
+            rows += `
+                <tr>
+                    <td>${displayName}</td>
+                    <td>$${value.toLocaleString('es-CO')}</td>
+                    <td>${percentage}%</td>
+                </tr>
+            `;
+        }
+
+        rows += `
+            <tr style="background-color: #f9fafb; font-weight: bold;">
+                <td>TOTAL</td>
+                <td>$${total.toLocaleString('es-CO')}</td>
+                <td>100%</td>
+            </tr>
+        `;
+
+        return rows;
+    }
+
+    getCostDisplayName(key) {
+        const displayNames = {
+            materials: 'Materias Primas',
+            labor: 'Mano de Obra',
+            packaging: 'Empaque',
+            overhead: 'Gastos Indirectos',
+            purchase: 'Costo de Compra',
+            logistics: 'Logística',
+            storage: 'Almacenamiento',
+            hourlyRate: 'Valor por Hora',
+            projectTime: 'Tiempo de Proyecto',
+            expenses: 'Gastos Operativos',
+            productsIncluded: 'Productos Incluidos',
+            professionalTime: 'Tiempo Profesional'
+        };
+        return displayNames[key] || key;
+    }
+
+    generateRecommendationsHTML(recommendations) {
+        let html = '';
+
+        if (recommendations.priority) {
+            html += '<h4>🚨 Recomendaciones Prioritarias:</h4>';
+            recommendations.priority.forEach(rec => {
+                html += `
+                    <div class="recommendation-item">
+                        <div class="recommendation-title">${rec.title}</div>
+                        <p><strong>Impacto:</strong> ${rec.impact} | <strong>ROI:</strong> ${rec.roi}</p>
+                        <p><strong>Valor Actual:</strong> ${rec.currentValue}% | <strong>Objetivo:</strong> ${rec.targetValue}</p>
+                    </div>
+                `;
+            });
+        }
+
+        if (recommendations.strategic) {
+            html += '<h4>📈 Recomendaciones Estratégicas:</h4>';
+            recommendations.strategic.forEach(rec => {
+                html += `
+                    <div class="recommendation-item">
+                        <div class="recommendation-title">${rec.title}</div>
+                        <p>${rec.description}</p>
+                        <p><strong>Impacto:</strong> ${rec.impact} | <strong>Timeline:</strong> ${rec.timeline}</p>
+                    </div>
+                `;
+            });
+        }
+
+        return html || '<p>No hay recomendaciones disponibles.</p>';
+    }
+
+    showExportSuccess(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce';
+        toast.innerHTML = `
+            <i class="fas fa-check-circle mr-2"></i>
+            ${message}
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (document.body.contains(toast)) {
+                document.body.removeChild(toast);
+            }
+        }, 4000);
+    }
+
+    showExportError(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        toast.innerHTML = `
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            ${message}
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (document.body.contains(toast)) {
+                document.body.removeChild(toast);
+            }
+        }, 4000);
     }
 
     trackBusinessTypeSelection(businessType, businessName) {
