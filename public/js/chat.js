@@ -837,6 +837,9 @@ ${this.getBusinessTypeQuestions(businessType)}`;
         // Add export buttons after analysis
         this.addExportButtons(costs, businessType, analysis);
 
+        // Add debt capacity analysis button
+        this.addDebtCapacityButton(costs, businessType, analysis);
+
         this.scrollToBottom();
     }
 
@@ -3436,6 +3439,430 @@ Solo necesitamos tu email - ¡es gratis y sin compromisos!`,
         } catch (error) {
             console.error('❌ Error in trackBusinessTypeSelection:', error);
         }
+    }
+
+    // ===========================
+    // DEBT CAPACITY ANALYSIS FUNCTIONALITY
+    // ===========================
+
+    addDebtCapacityButton(costs, businessType, analysis) {
+        const debtButtonDiv = document.createElement('div');
+        debtButtonDiv.className = 'bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-lg p-6 mb-4 mx-4';
+        debtButtonDiv.id = 'debt-capacity-button-container';
+
+        debtButtonDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-chart-line text-emerald-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="text-lg font-semibold text-emerald-900 mb-2">
+                            💰 Análisis de Capacidad de Endeudamiento
+                        </h4>
+                        <p class="text-emerald-700 text-sm mb-3">
+                            Descubre cuánto puedes endeudarte de forma segura para hacer crecer tu negocio
+                        </p>
+                        <div class="flex items-center text-xs text-emerald-600">
+                            <i class="fas fa-star mr-1"></i>
+                            <span class="font-medium">Servicio Premium</span>
+                            <span class="ml-2 bg-emerald-100 px-2 py-1 rounded">Personalizado para ${businessType}</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="debt-capacity-analysis-btn" class="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Analizar Capacidad
+                </button>
+            </div>
+        `;
+
+        this.chatMessages.appendChild(debtButtonDiv);
+
+        // Add event listener for debt capacity analysis
+        document.getElementById('debt-capacity-analysis-btn').addEventListener('click', () => {
+            this.showDebtCapacityForm(costs, businessType, analysis);
+        });
+    }
+
+    showDebtCapacityForm(costs, businessType, analysis) {
+        const formDiv = document.createElement('div');
+        formDiv.className = 'bg-white border border-gray-200 rounded-lg p-6 mb-4 mx-4 shadow-lg';
+        formDiv.id = 'debt-capacity-form-container';
+
+        formDiv.innerHTML = `
+            <div class="mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-forms text-emerald-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">📊 Análisis de Capacidad de Endeudamiento</h3>
+                        <p class="text-sm text-gray-600">Complete la información financiera para calcular su capacidad de endeudamiento</p>
+                    </div>
+                </div>
+            </div>
+
+            <form id="debt-capacity-form" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label for="monthly-income" class="block text-sm font-semibold text-gray-700 mb-2">
+                            💰 Ingresos Mensuales Actuales
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500">$</span>
+                            <input type="number" id="monthly-income" name="monthly-income" class="w-full pl-8 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="5,000,000" required>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Ingresos netos promedio del negocio</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="existing-debts" class="block text-sm font-semibold text-gray-700 mb-2">
+                            📋 Deudas Existentes (Mensual)
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500">$</span>
+                            <input type="number" id="existing-debts" name="existing-debts" class="w-full pl-8 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="800,000" required>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Suma de todas las cuotas mensuales existentes</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fixed-expenses" class="block text-sm font-semibold text-gray-700 mb-2">
+                            🏠 Gastos Fijos Mensuales
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500">$</span>
+                            <input type="number" id="fixed-expenses" name="fixed-expenses" class="w-full pl-8 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="2,500,000" required>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Gastos operativos, alquiler, servicios, salarios</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business-time" class="block text-sm font-semibold text-gray-700 mb-2">
+                            ⏰ Tiempo en el Negocio
+                        </label>
+                        <select id="business-time" name="business-time" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="menos-6">Menos de 6 meses</option>
+                            <option value="6-12">6 meses - 1 año</option>
+                            <option value="1-2">1 - 2 años</option>
+                            <option value="2-5">2 - 5 años</option>
+                            <option value="mas-5">Más de 5 años</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Tiempo de operación continua del negocio</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="loan-purpose" class="block text-sm font-semibold text-gray-700 mb-2">
+                        🎯 Propósito del Financiamiento
+                    </label>
+                    <select id="loan-purpose" name="loan-purpose" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <option value="">Seleccionar propósito...</option>
+                        <option value="capital-trabajo">Capital de Trabajo</option>
+                        <option value="expansion">Expansión del Negocio</option>
+                        <option value="equipos">Compra de Equipos</option>
+                        <option value="inventario">Aumentar Inventario</option>
+                        <option value="infraestructura">Mejoras en Infraestructura</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+                    <button type="button" id="cancel-debt-analysis" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-chart-bar mr-2"></i>
+                        Calcular Capacidad de Endeudamiento
+                    </button>
+                </div>
+            </form>
+        `;
+
+        this.chatMessages.appendChild(formDiv);
+
+        // Add event listeners
+        document.getElementById('debt-capacity-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.calculateDebtCapacity(costs, businessType, analysis);
+        });
+
+        document.getElementById('cancel-debt-analysis').addEventListener('click', () => {
+            formDiv.remove();
+        });
+
+        this.scrollToBottom();
+    }
+
+    calculateDebtCapacity(costs, businessType, analysis) {
+        const monthlyIncome = parseFloat(document.getElementById('monthly-income').value);
+        const existingDebts = parseFloat(document.getElementById('existing-debts').value);
+        const fixedExpenses = parseFloat(document.getElementById('fixed-expenses').value);
+        const businessTime = document.getElementById('business-time').value;
+        const loanPurpose = document.getElementById('loan-purpose').value;
+
+        if (!monthlyIncome || !fixedExpenses) {
+            this.showNotification('Por favor complete todos los campos requeridos', 'error');
+            return;
+        }
+
+        // Calculate debt capacity
+        const availableIncome = monthlyIncome - fixedExpenses - (existingDebts || 0);
+        const debtToIncomeRatio = ((existingDebts || 0) / monthlyIncome) * 100;
+
+        // Business time multiplier for risk assessment
+        const timeMultipliers = {
+            'menos-6': 0.5,
+            '6-12': 0.7,
+            '1-2': 0.85,
+            '2-5': 1.0,
+            'mas-5': 1.15
+        };
+
+        const timeMultiplier = timeMultipliers[businessTime] || 0.7;
+
+        // Safe debt ratios by business type
+        const safeDebtRatios = {
+            'manufactura': 0.35,
+            'reventa': 0.40,
+            'servicio': 0.30,
+            'hibrido': 0.32
+        };
+
+        const maxSafeDebtRatio = safeDebtRatios[businessType] || 0.30;
+        const adjustedMaxDebt = (monthlyIncome * maxSafeDebtRatio) * timeMultiplier;
+        const maxNewDebt = Math.max(0, adjustedMaxDebt - (existingDebts || 0));
+
+        // Calculate loan amounts (assuming different terms)
+        const loanCalculations = {
+            '12': maxNewDebt * 10,  // 12 months
+            '24': maxNewDebt * 18,  // 24 months
+            '36': maxNewDebt * 24   // 36 months
+        };
+
+        this.showDebtCapacityResults({
+            monthlyIncome,
+            existingDebts: existingDebts || 0,
+            fixedExpenses,
+            availableIncome,
+            debtToIncomeRatio,
+            maxNewDebt,
+            loanCalculations,
+            businessType,
+            loanPurpose,
+            businessTime,
+            riskLevel: this.calculateRiskLevel(debtToIncomeRatio, availableIncome, businessTime)
+        });
+    }
+
+    calculateRiskLevel(debtToIncomeRatio, availableIncome, businessTime) {
+        let riskScore = 0;
+
+        // Debt-to-income ratio scoring
+        if (debtToIncomeRatio > 40) riskScore += 3;
+        else if (debtToIncomeRatio > 25) riskScore += 2;
+        else if (debtToIncomeRatio > 15) riskScore += 1;
+
+        // Available income scoring
+        if (availableIncome < 500000) riskScore += 3;
+        else if (availableIncome < 1000000) riskScore += 2;
+        else if (availableIncome < 2000000) riskScore += 1;
+
+        // Business time scoring
+        if (businessTime === 'menos-6') riskScore += 3;
+        else if (businessTime === '6-12') riskScore += 2;
+        else if (businessTime === '1-2') riskScore += 1;
+
+        if (riskScore >= 6) return 'ALTO';
+        else if (riskScore >= 3) return 'MEDIO';
+        else return 'BAJO';
+    }
+
+    showDebtCapacityResults(results) {
+        // Remove the form
+        const formContainer = document.getElementById('debt-capacity-form-container');
+        if (formContainer) {
+            formContainer.remove();
+        }
+
+        const resultsDiv = document.createElement('div');
+        resultsDiv.className = 'bg-white border border-gray-200 rounded-lg p-6 mb-4 mx-4 shadow-lg';
+        resultsDiv.id = 'debt-capacity-results';
+
+        const riskColors = {
+            'BAJO': 'text-green-600 bg-green-100',
+            'MEDIO': 'text-yellow-600 bg-yellow-100',
+            'ALTO': 'text-red-600 bg-red-100'
+        };
+
+        const riskColor = riskColors[results.riskLevel] || riskColors['MEDIO'];
+
+        resultsDiv.innerHTML = `
+            <div class="mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-chart-pie text-emerald-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">📊 Análisis de Capacidad de Endeudamiento</h3>
+                        <p class="text-sm text-gray-600">Resultados personalizados para tu negocio de ${results.businessType}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-blue-800">Ingresos Disponibles</span>
+                        <i class="fas fa-dollar-sign text-blue-600"></i>
+                    </div>
+                    <p class="text-2xl font-bold text-blue-900">${new Intl.NumberFormat('es-CO').format(results.availableIncome)}</p>
+                    <p class="text-xs text-blue-700">Después de gastos fijos</p>
+                </div>
+
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-purple-800">Ratio Deuda/Ingresos</span>
+                        <i class="fas fa-percentage text-purple-600"></i>
+                    </div>
+                    <p class="text-2xl font-bold text-purple-900">${results.debtToIncomeRatio.toFixed(1)}%</p>
+                    <p class="text-xs text-purple-700">Nivel actual de endeudamiento</p>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-800">Riesgo Crediticio</span>
+                        <i class="fas fa-shield-alt text-gray-600"></i>
+                    </div>
+                    <p class="text-lg font-bold ${riskColor} px-3 py-1 rounded-full inline-block">${results.riskLevel}</p>
+                </div>
+            </div>
+
+            <div class="bg-emerald-50 p-6 rounded-lg mb-6">
+                <h4 class="text-lg font-bold text-emerald-900 mb-4 flex items-center">
+                    <i class="fas fa-money-check-alt mr-2"></i>
+                    Capacidad de Endeudamiento Recomendada
+                </h4>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-emerald-700 mb-2">${new Intl.NumberFormat('es-CO').format(results.maxNewDebt)}</p>
+                    <p class="text-sm text-emerald-600">Cuota mensual máxima segura para nuevo crédito</p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Simulación de Préstamos Recomendados
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="text-center">
+                            <h5 class="font-semibold text-gray-800 mb-2">12 Meses</h5>
+                            <p class="text-xl font-bold text-blue-600">${new Intl.NumberFormat('es-CO').format(results.loanCalculations['12'])}</p>
+                            <p class="text-sm text-gray-600 mt-1">Cuota: ${new Intl.NumberFormat('es-CO').format(results.maxNewDebt)}</p>
+                            <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mt-2">Corto Plazo</span>
+                        </div>
+                    </div>
+                    <div class="border border-emerald-200 rounded-lg p-4 bg-emerald-50">
+                        <div class="text-center">
+                            <h5 class="font-semibold text-emerald-800 mb-2">24 Meses</h5>
+                            <p class="text-xl font-bold text-emerald-600">${new Intl.NumberFormat('es-CO').format(results.loanCalculations['24'])}</p>
+                            <p class="text-sm text-gray-600 mt-1">Cuota: ${new Intl.NumberFormat('es-CO').format(results.maxNewDebt)}</p>
+                            <span class="inline-block bg-emerald-200 text-emerald-800 px-2 py-1 rounded text-xs mt-2">Recomendado</span>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="text-center">
+                            <h5 class="font-semibold text-gray-800 mb-2">36 Meses</h5>
+                            <p class="text-xl font-bold text-purple-600">${new Intl.NumberFormat('es-CO').format(results.loanCalculations['36'])}</p>
+                            <p class="text-sm text-gray-600 mt-1">Cuota: ${new Intl.NumberFormat('es-CO').format(results.maxNewDebt)}</p>
+                            <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mt-2">Largo Plazo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            ${this.getFinancingOptionsForBusinessType(results.businessType, results.loanPurpose)}
+
+            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-2"></i>
+                    <div>
+                        <h5 class="font-semibold text-yellow-800 mb-1">Importante:</h5>
+                        <p class="text-sm text-yellow-700">
+                            Este análisis es referencial y no constituye una oferta de crédito.
+                            Los resultados pueden variar según las políticas de cada entidad financiera
+                            y la evaluación específica de su perfil crediticio.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.chatMessages.appendChild(resultsDiv);
+        this.scrollToBottom();
+
+        // Update todo
+        this.updateTodoStatus('Complete debt capacity analysis implementation', 'completed');
+    }
+
+    getFinancingOptionsForBusinessType(businessType, loanPurpose) {
+        const options = {
+            'manufactura': [
+                { name: 'Bancóldex', desc: 'Líneas especiales para manufactura y exportación', icon: 'fas fa-industry' },
+                { name: 'Banco Agrario', desc: 'Créditos para micro y pequeñas empresas manufactureras', icon: 'fas fa-seedling' },
+                { name: 'Findeter', desc: 'Financiamiento para proyectos productivos', icon: 'fas fa-hammer' }
+            ],
+            'reventa': [
+                { name: 'Bancamía', desc: 'Microcréditos para comerciantes', icon: 'fas fa-store' },
+                { name: 'Banco de Bogotá', desc: 'Línea PyME Comercial', icon: 'fas fa-shopping-cart' },
+                { name: 'Davivienda', desc: 'Crédito Capital de Trabajo', icon: 'fas fa-cash-register' }
+            ],
+            'servicio': [
+                { name: 'Bancolombia', desc: 'Créditos para profesionales independientes', icon: 'fas fa-user-tie' },
+                { name: 'Banco de Occidente', desc: 'Financiamiento para servicios profesionales', icon: 'fas fa-briefcase' },
+                { name: 'BBVA', desc: 'Línea Freelancer', icon: 'fas fa-laptop' }
+            ],
+            'hibrido': [
+                { name: 'Banco Popular', desc: 'Créditos flexibles para negocios mixtos', icon: 'fas fa-balance-scale' },
+                { name: 'Scotiabank Colpatria', desc: 'Financiamiento integral', icon: 'fas fa-handshake' },
+                { name: 'Itaú', desc: 'Soluciones financieras personalizadas', icon: 'fas fa-puzzle-piece' }
+            ]
+        };
+
+        const typeOptions = options[businessType] || options['hibrido'];
+
+        return `
+            <div class="mb-6">
+                <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                    <i class="fas fa-university mr-2"></i>
+                    Opciones de Financiamiento Recomendadas para ${businessType.charAt(0).toUpperCase() + businessType.slice(1)}
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    ${typeOptions.map(option => `
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex items-center mb-2">
+                                <i class="${option.icon} text-blue-600 mr-2"></i>
+                                <h5 class="font-semibold text-gray-800">${option.name}</h5>
+                            </div>
+                            <p class="text-sm text-gray-600">${option.desc}</p>
+                            <div class="mt-3">
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Especializado en ${businessType}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    updateTodoStatus(taskContent, newStatus) {
+        // This would update the todo list if we had a todo management system
+        console.log(`Task "${taskContent}" updated to ${newStatus}`);
     }
 }
 
