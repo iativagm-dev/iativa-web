@@ -418,6 +418,7 @@ app.post('/login', (req, res) => {
         if (user && bcrypt.compareSync(password, user.password)) {
             req.session.userId = user.id;
             req.session.userName = user.full_name || user.username;
+            req.session.userEmail = user.email;
             req.session.isAdmin = user.is_admin === true;
             req.session.user = {
                 id: user.id,
@@ -518,7 +519,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
             title: 'Dashboard - IAtiva',
             user: { id: req.session.userId, name: req.session.userName },
             analyses: userAnalyses,
-            isAdmin: req.session.userEmail === 'admin@iativa.com'
+            isAdmin: req.session.userEmail === 'admin@iativa.com' || false
         });
     } catch (error) {
         console.error('Dashboard error:', error);
@@ -526,7 +527,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
             title: 'Dashboard - IAtiva',
             user: { id: req.session.userId, name: req.session.userName },
             analyses: [],
-            isAdmin: req.session.userEmail === 'admin@iativa.com'
+            isAdmin: req.session.userEmail === 'admin@iativa.com' || false
         });
     }
 });
@@ -1021,8 +1022,90 @@ app.post('/api/calcular-costos-tiempo', (req, res) => {
     }
 });
 
-// DEMO - Acceso directo sin registro
+// API SIMPLIFICADA PARA TESTING - Versión con persistencia corregida
+app.post('/api/demo-chat-fixed', async (req, res) => {
+    try {
+        console.log('🎯 API Demo Chat FIXED - Iniciando...');
+        const { message, sessionId, context } = req.body;
+        console.log('📨 Mensaje recibido:', message);
+        console.log('🆔 Session ID:', sessionId);
+
+        if (!sessionId) {
+            console.log('❌ Session ID faltante');
+            return res.status(400).json({ error: 'Session ID requerido' });
+        }
+
+        // SIMPLIFIED AGENT PERSISTENCE
+        if (!global.agentesGlobales) {
+            global.agentesGlobales = new Map();
+        }
+
+        let agente;
+        if (global.agentesGlobales.has(sessionId)) {
+            console.log('♻️ Restaurando agente existente');
+            const estadoGuardado = global.agentesGlobales.get(sessionId);
+            agente = new AgenteIAtiva(sessionId);
+
+            // Restaurar estado
+            agente.estadoActual = estadoGuardado.estadoActual;
+            agente.activo = true;
+            agente.datosSimples = estadoGuardado.datosSimples || {};
+            agente.indicePregunta = estadoGuardado.indicePregunta || 0;
+            agente.nombreUsuario = estadoGuardado.nombreUsuario;
+
+            console.log('♻️ Estado restaurado:', agente.estadoActual);
+        } else {
+            console.log('🆕 Creando nuevo agente');
+            agente = new AgenteIAtiva(sessionId);
+            agente.iniciar();
+            agente.datosSimples = {};
+            agente.indicePregunta = 0;
+        }
+
+        // Procesar mensaje
+        console.log('📝 Procesando mensaje...');
+        console.log('🔍 Estado ANTES:', agente.estadoActual);
+
+        const respuesta = agente.procesarEntrada(message);
+
+        console.log('🔍 Estado DESPUÉS:', agente.estadoActual);
+
+        // Guardar estado
+        global.agentesGlobales.set(sessionId, {
+            estadoActual: agente.estadoActual,
+            datosSimples: agente.datosSimples,
+            indicePregunta: agente.indicePregunta,
+            nombreUsuario: agente.nombreUsuario,
+            updated: new Date().toISOString()
+        });
+
+        console.log('💾 Estado guardado en memoria global');
+
+        res.json({
+            respuesta: respuesta,
+            context: { estado: agente.estadoActual },
+            analisisCompleto: false,
+            debug: {
+                sessionId,
+                estado: agente.estadoActual,
+                agentesEnMemoria: global.agentesGlobales.size
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ Error en API Demo Chat Fixed:', error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// DEMO - Acceso directo sin registro (TEMPORAL REDIRECT)
 app.get('/demo', (req, res) => {
+    // Temporal: redirigir a demo-debug hasta solucionar problema de JS
+    res.redirect('/demo-debug');
+});
+
+// DEMO ORIGINAL - Temporalmente deshabilitado
+app.get('/demo-original', (req, res) => {
     // Crear sesión temporal si no existe
     if (!req.session.tempUser) {
         req.session.tempUser = {
@@ -1031,13 +1114,53 @@ app.get('/demo', (req, res) => {
             startTime: new Date().toISOString()
         };
     }
-    
+
     logAnalytics('demo_started', req, { tempUserId: req.session.tempUser.id });
-    
+
     res.render('demo', {
         title: 'Análisis Gratuito - IAtiva',
         tempUser: req.session.tempUser,
         user: null // Importante: no mostrar como usuario registrado
+    });
+});
+
+// DEMO DEBUG - Versión de debug para solucionar problemas
+app.get('/demo-debug', (req, res) => {
+    // Crear sesión temporal si no existe
+    if (!req.session.tempUser) {
+        req.session.tempUser = {
+            id: 'temp_' + Date.now(),
+            sessionId: 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            startTime: new Date().toISOString()
+        };
+    }
+
+    logAnalytics('demo_debug_started', req, { tempUserId: req.session.tempUser.id });
+
+    res.render('demo-debug', {
+        title: 'Demo Debug - IAtiva',
+        tempUser: req.session.tempUser,
+        user: null
+    });
+});
+
+// DIAGNÓSTICO DEL SISTEMA - Para identificar errores
+app.get('/diagnostico', (req, res) => {
+    // Crear sesión temporal si no existe
+    if (!req.session.tempUser) {
+        req.session.tempUser = {
+            id: 'temp_' + Date.now(),
+            sessionId: 'diagnostic_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            startTime: new Date().toISOString()
+        };
+    }
+
+    logAnalytics('diagnostic_started', req, { tempUserId: req.session.tempUser.id });
+
+    res.render('diagnostico-sistema', {
+        title: 'Diagnóstico del Sistema - IAtiva',
+        tempUser: req.session.tempUser,
+        user: null
     });
 });
 
@@ -1512,6 +1635,52 @@ app.post('/api/create-donation', async (req, res) => {
     }
 });
 
+// API para crear suscripción
+app.post('/api/create-subscription', async (req, res) => {
+    try {
+        const { plan, email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                error: 'Email es requerido'
+            });
+        }
+
+        if (!plan) {
+            return res.status(400).json({
+                success: false,
+                error: 'Plan es requerido'
+            });
+        }
+
+        // Obtener userId si está autenticado
+        const userId = req.session.userId || 'guest';
+
+        const suscripcion = await paymentService.crearSuscripcion(plan, userId, email);
+
+        logAnalytics('subscription_created', req, {
+            plan,
+            email: email,
+            userId: userId
+        });
+
+        res.json({
+            success: true,
+            payment_url: suscripcion.init_point,
+            preference_id: suscripcion.id
+        });
+
+    } catch (error) {
+        console.error('Error creando suscripción:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
 // Páginas de resultado de donación
 app.get('/donation/success', (req, res) => {
     logAnalytics('donation_success', req);
@@ -1571,6 +1740,37 @@ app.post('/webhooks/mercadopago-donation', async (req, res) => {
         console.error('Error procesando webhook de donación:', error);
         res.status(500).send('Error');
     }
+});
+
+// Páginas de resultado de suscripción
+app.get('/payment/success', (req, res) => {
+    logAnalytics('subscription_success', req);
+    res.render('donation-result', {
+        title: '¡Bienvenido al Plan Premium! - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        success: true,
+        message: '¡Tu suscripción ha sido activada! Ya puedes disfrutar de todas las funcionalidades premium.'
+    });
+});
+
+app.get('/payment/failure', (req, res) => {
+    logAnalytics('subscription_failure', req);
+    res.render('donation-result', {
+        title: 'Pago No Completado - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        success: false,
+        message: 'El pago no pudo procesarse. No te preocupes, puedes intentar nuevamente.'
+    });
+});
+
+app.get('/payment/pending', (req, res) => {
+    logAnalytics('subscription_pending', req);
+    res.render('donation-result', {
+        title: 'Pago Pendiente - IAtiva',
+        user: req.session.userId ? { id: req.session.userId, name: req.session.userName } : null,
+        success: true,
+        message: 'Tu pago está siendo procesado. Te notificaremos cuando se complete la activación de tu suscripción.'
+    });
 });
 
 // ==================== DEMO DE CAPACIDAD DE ENDEUDAMIENTO ====================
