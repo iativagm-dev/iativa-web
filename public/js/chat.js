@@ -1330,6 +1330,138 @@ ${this.getBusinessTypeQuestions(businessType)}`;
                     </div>
                 `;
                 break;
+
+            case 'paquete':
+                // Calculate optimal discount and individual prices
+                const optimalDiscount = analysis.discountPercentage || 15;
+                const individualTotal = Math.round(analysis.totalComponentsCost * 1.5); // If sold separately with markup
+                const packageSavings = individualTotal - analysis.suggestedPrice;
+                const savingsPercentage = Math.round((packageSavings / individualTotal) * 100);
+
+                analysisHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-box-open text-purple-600"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h4 class="text-lg font-semibold text-purple-900 mb-4">
+                                📦 Análisis de tu Paquete/Combo
+                            </h4>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Component Breakdown -->
+                                <div class="space-y-3">
+                                    <div class="bg-purple-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-purple-800 mb-2">Desglose de Componentes</h5>
+                                        <div class="space-y-1 text-sm">
+                                            <div class="flex justify-between">
+                                                <span>Costo de Componentes:</span>
+                                                <span class="font-medium">$${costs.componentsCost.toLocaleString('es-CO')}</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Número de Items:</span>
+                                                <span class="font-medium">${costs.itemsCount} productos/servicios</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Precio Promedio/Item:</span>
+                                                <span class="font-medium">$${analysis.avgItemPrice.toLocaleString('es-CO')}</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Empaque y Presentación:</span>
+                                                <span class="font-medium">$${costs.presentation.toLocaleString('es-CO')}</span>
+                                            </div>
+                                            <hr class="border-purple-200 my-2">
+                                            <div class="flex justify-between font-bold">
+                                                <span>Costo Base Total:</span>
+                                                <span class="text-purple-700">$${analysis.totalBaseCost.toLocaleString('es-CO')}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Package vs Individual Pricing -->
+                                <div class="space-y-3">
+                                    <div class="bg-gradient-to-br from-green-50 to-blue-50 p-4 rounded-lg border border-green-200">
+                                        <h5 class="font-medium text-green-800 mb-2">Paquete vs Individual</h5>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <span>Precio Individual Total:</span>
+                                                <span class="font-medium line-through text-gray-500">$${individualTotal.toLocaleString('es-CO')}</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Precio del Paquete:</span>
+                                                <span class="font-bold text-green-700 text-lg">$${analysis.suggestedPrice.toLocaleString('es-CO')}</span>
+                                            </div>
+                                            <div class="flex justify-between text-green-700">
+                                                <span>Ahorro del Cliente:</span>
+                                                <span class="font-bold">$${packageSavings.toLocaleString('es-CO')} (${savingsPercentage}%)</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Tu Ganancia:</span>
+                                                <span class="font-medium text-blue-700">$${analysis.totalProfit.toLocaleString('es-CO')}</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 p-2 bg-green-100 rounded text-xs text-green-800">
+                                            <strong>🎯 Margen del paquete:</strong> ${analysis.profitMargin}% - ¡Excelente!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Package-Specific Recommendations -->
+                            <div class="mt-6 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+                                <h5 class="font-semibold text-purple-900 mb-3 flex items-center">
+                                    <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                                    Recomendaciones Estratégicas para tu Paquete
+                                </h5>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex items-start bg-white p-3 rounded-lg">
+                                        <div class="text-green-600 mr-3 text-lg">✓</div>
+                                        <div>
+                                            <strong class="text-gray-900">Tu paquete genera mejor margen que venta individual</strong>
+                                            <p class="text-gray-600 mt-1">Con ${analysis.profitMargin}% de margen, tu combo es ${Math.round(analysis.profitMargin / 30 * 100) - 100}% más rentable que vender items por separado.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start bg-white p-3 rounded-lg">
+                                        <div class="text-blue-600 mr-3 text-lg">💡</div>
+                                        <div>
+                                            <strong class="text-gray-900">Descuento óptimo recomendado: ${optimalDiscount}%</strong>
+                                            <p class="text-gray-600 mt-1">Este descuento atrae clientes sin sacrificar rentabilidad. Considera rangos entre 10-25% según temporada.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start bg-white p-3 rounded-lg">
+                                        <div class="text-purple-600 mr-3 text-lg">🎯</div>
+                                        <div>
+                                            <strong class="text-gray-900">Oportunidades de Cross-selling</strong>
+                                            <p class="text-gray-600 mt-1">
+                                                • Crea paquetes tiered (Básico, Pro, Premium)<br>
+                                                • Ofrece "agrega 1 más por solo $X"<br>
+                                                • Bundle con productos complementarios para aumentar ticket promedio
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start bg-white p-3 rounded-lg">
+                                        <div class="text-orange-600 mr-3 text-lg">📊</div>
+                                        <div>
+                                            <strong class="text-gray-900">Estrategia de precios escalonados</strong>
+                                            <p class="text-gray-600 mt-1">
+                                                • Paquete Básico (${costs.itemsCount - 1} items): $${Math.round(analysis.suggestedPrice * 0.75).toLocaleString('es-CO')}<br>
+                                                • Paquete Actual (${costs.itemsCount} items): $${analysis.suggestedPrice.toLocaleString('es-CO')}<br>
+                                                • Paquete Premium (${costs.itemsCount + 1} items): $${Math.round(analysis.suggestedPrice * 1.3).toLocaleString('es-CO')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
         }
 
         analysisDiv.innerHTML = analysisHTML;
