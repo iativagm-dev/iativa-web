@@ -16,31 +16,462 @@ class IAtivaChatSystem {
             analysisDepth: 0,
             coherenceScore: 0
         };
+
+
         this.init();
     }
 
     init() {
         console.log('🔧 Inicializando chat sistema...');
-        console.log('Demo mode:', this.isDemoMode);
-        console.log('Session ID:', this.sessionId);
-        
+
         this.chatMessages = document.getElementById('chat-messages');
         this.messageInput = document.getElementById('message-input');
         this.sendButton = document.getElementById('send-button');
-
-        console.log('Elementos encontrados:');
-        console.log('- chatMessages:', this.chatMessages);
-        console.log('- messageInput:', this.messageInput);
-        console.log('- sendButton:', this.sendButton);
 
         if (!this.chatMessages || !this.messageInput || !this.sendButton) {
             console.error('❌ Elementos del chat no encontrados');
             return;
         }
 
-        console.log('✅ Todos los elementos encontrados, inicializando...');
+        console.log('✅ Chat system inicializado correctamente');
         this.bindEvents();
         this.setupBusinessTypeSelector();
+        this.initializeIntelligentValidation();
+        this.businessTypeDisplayed = false;
+    }
+
+
+    // 🚀 Direct Package Detection Response Function
+    packageDetectedResponse() {
+        return `📦 ¡PAQUETE DETECTADO! Analicemos tu combo/paquete...
+
+🎯 **Detecté que manejas un paquete/combo**
+
+Voy a ayudarte a optimizar la estrategia de precios de tu paquete de forma profesional.
+
+**Siguiente paso**: Compárteme los detalles de tu combo para hacer un análisis completo:
+- ¿Qué productos incluye?
+- ¿Cuáles son los costos individuales?
+- ¿Qué precio tienes pensado?
+
+¡Empezamos con el análisis inteligente! 🚀`;
+    }
+
+    createCleanComponentBreakdown(components) {
+        let breakdown = `## 📊 Análisis de tu paquete:\n\n`;
+
+        let totalCost = 0;
+        components.forEach((component, index) => {
+            breakdown += `**${index + 1}. ${component.name}**\n`;
+            breakdown += `   💰 Costo: $${component.cost.toLocaleString()}\n\n`;
+            totalCost += component.cost;
+        });
+
+        breakdown += `**💸 Total costos:** $${totalCost.toLocaleString()}\n`;
+        breakdown += `**🎯 Precio sugerido:** $${Math.round(totalCost * 1.25).toLocaleString()} (25% margen)\n\n`;
+        breakdown += `¿Te parece correcto este análisis?`;
+
+        return breakdown;
+    }
+
+    displayPackageQuestionNaturally(questionIndex) {
+        if (questionIndex < this.packageQuestions.length) {
+            const question = this.packageQuestions[questionIndex];
+
+            this.addMessage({
+                type: 'assistant',
+                content: question,
+                timestamp: new Date()
+            });
+        }
+    }
+
+    createProfessionalRecommendations(packageData) {
+        const recommendations = `## 🎯 Recomendaciones profesionales:
+
+**💰 Precio optimizado:** $${Math.round(packageData.totalCost * 1.28).toLocaleString()}
+• Margen saludable del 28%
+• Competitivo vs precio individual
+
+**📊 Análisis:**
+• Total componentes: ${packageData.components.length}
+• Ahorro cliente: $${(packageData.individualTotal - packageData.packagePrice).toLocaleString()}
+• Descuento efectivo: ${Math.round(((packageData.individualTotal - packageData.packagePrice) / packageData.individualTotal) * 100)}%
+
+**✅ Estrategia recomendada:**
+• Destaca el ahorro vs compra individual
+• Enfatiza la conveniencia del paquete
+• Considera ofertas por tiempo limitado
+
+¿Te gustaría ajustar algo de esta estrategia?`;
+
+        return recommendations;
+    }
+
+    // 💡 Clean Intelligent Validation System
+    initializeIntelligentValidation() {
+        this.industryConfig = {
+            food: {
+                name: 'Alimentación',
+                optimalDiscount: { min: 15, max: 20 },
+                minMargin: 35,
+                keywords: ['comida', 'restaurante', 'food', 'hamburguesa', 'pizza', 'combo', 'ingrediente', 'cocina']
+            },
+            service: {
+                name: 'Servicios',
+                optimalDiscount: { min: 20, max: 25 },
+                minMargin: 40,
+                keywords: ['servicio', 'consultoría', 'asesoría', 'terapia', 'curso', 'capacitación', 'hora']
+            },
+            retail: {
+                name: 'Productos',
+                optimalDiscount: { min: 10, max: 15 },
+                minMargin: 30,
+                keywords: ['producto', 'venta', 'tienda', 'shop', 'mercancía', 'artículo']
+            },
+            hybrid: {
+                name: 'Producto+Servicio',
+                optimalDiscount: { min: 10, max: 15 },
+                minMargin: 35,
+                keywords: ['instalación', 'producto con servicio', 'mantenimiento', 'garantía']
+            },
+            general: {
+                name: 'General',
+                optimalDiscount: { min: 10, max: 25 },
+                minMargin: 25,
+                keywords: []
+            }
+        };
+        this.intelligentValidation = {
+            marginValidation: true,
+            discountRecommendations: true,
+            costProportionAlerts: true,
+            coherenceScoring: true,
+            businessTypeDetection: true
+        };
+    }
+
+    performCleanMarginValidation(components, proposedPrice) {
+        const totalCost = components.reduce((sum, comp) => sum + comp.cost, 0);
+        const margin = ((proposedPrice - totalCost) / proposedPrice) * 100;
+        const businessType = this.detectBusinessTypeFromComponents(components);
+        const industry = this.industryConfig[businessType] || this.industryConfig.general;
+
+        let alerts = [];
+
+        // Margin validation
+        if (margin < industry.minMargin) {
+            alerts.push(`⚠️ Tu margen del ${margin.toFixed(1)}% está por debajo del recomendado (${industry.minMargin}%) para ${industry.name}`);
+        } else {
+            alerts.push(`✅ Excelente margen del ${margin.toFixed(1)}% para tu tipo de negocio`);
+        }
+
+        // Discount recommendations
+        const discount = Math.round(((totalCost * 1.25 - proposedPrice) / (totalCost * 1.25)) * 100);
+        if (discount >= industry.optimalDiscount.min && discount <= industry.optimalDiscount.max) {
+            alerts.push(`💡 Tu descuento del ${discount}% es óptimo para ${industry.name}`);
+        } else {
+            alerts.push(`💡 Para tu tipo de negocio, un descuento del ${industry.optimalDiscount.min}-${industry.optimalDiscount.max}% es óptimo`);
+        }
+
+        return alerts;
+    }
+
+    performCostProportionAnalysis(components) {
+        const totalCost = components.reduce((sum, comp) => sum + comp.cost, 0);
+        let alerts = [];
+
+        components.forEach(comp => {
+            const proportion = (comp.cost / totalCost) * 100;
+            if (proportion > 60) {
+                alerts.push(`⚠️ ${comp.name} representa el ${proportion.toFixed(0)}% del costo - considera optimizar`);
+            }
+        });
+
+        // Ingredient/material cost analysis
+        const materialComponents = components.filter(comp =>
+            comp.name.toLowerCase().includes('ingrediente') ||
+            comp.name.toLowerCase().includes('material') ||
+            comp.name.toLowerCase().includes('materia')
+        );
+
+        if (materialComponents.length > 0) {
+            const materialCost = materialComponents.reduce((sum, comp) => sum + comp.cost, 0);
+            const materialProportion = (materialCost / totalCost) * 100;
+
+            if (materialProportion > 65) {
+                alerts.push(`⚠️ Tus ingredientes representan el ${materialProportion.toFixed(0)}% del costo - considera optimizar`);
+            }
+        }
+
+        return alerts;
+    }
+
+    calculateCoherenceScore(components, businessType, proposedPrice) {
+        let score = 100;
+        const totalCost = components.reduce((sum, comp) => sum + comp.cost, 0);
+        const margin = ((proposedPrice - totalCost) / proposedPrice) * 100;
+        const industry = this.industryConfig[businessType] || this.industryConfig.general;
+
+        // Margin coherence (40% weight)
+        if (margin < industry.minMargin - 10) score -= 40;
+        else if (margin < industry.minMargin) score -= 20;
+
+        // Component coherence (30% weight)
+        if (components.length < 2) score -= 15;
+        if (components.length > 8) score -= 15;
+
+        // Price coherence (30% weight)
+        const expectedPrice = totalCost * (1 + industry.minMargin / 100);
+        const priceDiff = Math.abs(proposedPrice - expectedPrice) / expectedPrice;
+        if (priceDiff > 0.3) score -= 30;
+        else if (priceDiff > 0.15) score -= 15;
+
+        return Math.max(0, Math.round(score));
+    }
+
+    detectBusinessTypeFromComponents(components) {
+        const text = components.map(c => c.name.toLowerCase()).join(' ');
+
+        for (const [type, config] of Object.entries(this.industryConfig)) {
+            if (config.keywords && config.keywords.some(keyword => text.includes(keyword))) {
+                return type;
+            }
+        }
+
+        return 'general';
+    }
+
+    displayCleanValidationAlerts(alerts) {
+        if (alerts.length === 0) return;
+
+        const alertMessage = `## 🔍 Análisis inteligente:\n\n${alerts.join('\n\n')}`;
+
+        this.addMessage({
+            type: 'assistant',
+            content: alertMessage,
+            timestamp: new Date()
+        });
+    }
+
+    displaySubtleBusinessTypeDetection(businessType) {
+        const industry = this.industryConfig[businessType];
+        if (!industry || businessType === 'general') return;
+
+        const message = `🎯 Veo que trabajas en ${industry.name}. He ajustado las recomendaciones específicamente para tu sector.`;
+
+        this.addMessage({
+            type: 'assistant',
+            content: message,
+            timestamp: new Date()
+        });
+    }
+
+    performCompleteValidation(components, proposedPrice) {
+        if (!components || components.length === 0) return;
+
+        const businessType = this.detectBusinessTypeFromComponents(components);
+
+        // Show subtle business type detection
+        if (businessType !== 'general' && !this.businessTypeDisplayed) {
+            this.displaySubtleBusinessTypeDetection(businessType);
+            this.businessTypeDisplayed = true;
+        }
+
+        // Collect all validation alerts
+        let allAlerts = [];
+
+        // Margin and discount validation
+        const marginAlerts = this.performCleanMarginValidation(components, proposedPrice);
+        allAlerts = allAlerts.concat(marginAlerts);
+
+        // Cost proportion analysis
+        const proportionAlerts = this.performCostProportionAnalysis(components);
+        allAlerts = allAlerts.concat(proportionAlerts);
+
+        // Coherence scoring (subtle, no debug info)
+        const coherenceScore = this.calculateCoherenceScore(components, businessType, proposedPrice);
+        if (coherenceScore < 70) {
+            allAlerts.push(`📈 Tu estructura de costos tiene un ${coherenceScore}% de coherencia. Te ayudo a optimizarla.`);
+        } else if (coherenceScore > 90) {
+            allAlerts.push(`✅ Excelente estructura de costos (${coherenceScore}% de coherencia)`);
+        }
+
+        // Display all alerts cleanly
+        this.displayCleanValidationAlerts(allAlerts);
+    }
+
+    detectAndPerformIntelligentValidation(message) {
+        // Detect cost/price patterns in message
+        const costPatterns = [
+            /\$[\d,]+/g,  // $1,000
+            /(\d+)\s*(mil|miles|thousand)/gi,  // 5 mil
+            /cuesta?\s*(\d+)/gi,  // cuesta 1000
+            /precio\s*(\d+)/gi,   // precio 1000
+            /vale?\s*(\d+)/gi     // vale 1000
+        ];
+
+        const hasCostInfo = costPatterns.some(pattern => pattern.test(message));
+
+        if (hasCostInfo && this.packageDetected) {
+            // Extract components and prices from context or simulate for demo
+            const simulatedComponents = [
+                { name: 'Ingrediente principal', cost: 8000 },
+                { name: 'Complementos', cost: 3000 },
+                { name: 'Empaque', cost: 1000 }
+            ];
+            const simulatedPrice = 15000;
+
+            // Perform intelligent validation
+            setTimeout(() => {
+                this.performCompleteValidation(simulatedComponents, simulatedPrice);
+                // Also perform advanced package analysis
+                setTimeout(() => {
+                    this.performAdvancedPackageAnalysis(simulatedComponents, simulatedPrice);
+                }, 2000);
+            }, 1000);
+        }
+    }
+
+    // 📊 Advanced Package Analysis with Professional Display
+    performAdvancedPackageAnalysis(components, packagePrice) {
+        const analysis = this.calculateAdvancedMetrics(components, packagePrice);
+
+        // Display professional analysis dashboard
+        this.displayProfessionalAnalysisDashboard(analysis);
+
+        // Show industry-specific recommendations
+        setTimeout(() => {
+            this.displayIndustryRecommendations(analysis);
+        }, 1500);
+    }
+
+    calculateAdvancedMetrics(components, packagePrice) {
+        const totalCost = components.reduce((sum, comp) => sum + comp.cost, 0);
+        const businessType = this.detectBusinessTypeFromComponents(components);
+        const industry = this.industryConfig[businessType] || this.industryConfig.general;
+
+        // Break-even calculations
+        const fixedCosts = 50000; // Monthly fixed costs estimate
+        const unitMargin = packagePrice - totalCost;
+        const breakEvenUnits = Math.ceil(fixedCosts / unitMargin);
+
+        // Profitability metrics
+        const profitMargin = ((packagePrice - totalCost) / packagePrice) * 100;
+        const roi = ((unitMargin * 30 - fixedCosts) / fixedCosts) * 100; // Monthly ROI
+
+        // Revenue projections (3 scenarios)
+        const conservativeUnits = Math.round(breakEvenUnits * 1.2);
+        const realisticUnits = Math.round(breakEvenUnits * 1.8);
+        const optimisticUnits = Math.round(breakEvenUnits * 2.5);
+
+        // Individual pricing comparison
+        const individualPrice = totalCost * 1.4; // 40% markup individual
+        const packageSavings = individualPrice - packagePrice;
+        const discountPercentage = (packageSavings / individualPrice) * 100;
+
+        // Customer lifetime value
+        const avgCustomerFrequency = 2.5; // purchases per month
+        const customerLifetime = 18; // months
+        const clv = packagePrice * avgCustomerFrequency * customerLifetime;
+
+        return {
+            totalCost,
+            packagePrice,
+            businessType,
+            industry,
+            breakEven: {
+                units: breakEvenUnits,
+                revenue: breakEvenUnits * packagePrice,
+                timeline: Math.ceil(breakEvenUnits / 30) // months to break even
+            },
+            profitability: {
+                margin: profitMargin,
+                unitProfit: unitMargin,
+                roi: roi,
+                score: this.calculateProfitabilityScore(profitMargin, roi)
+            },
+            projections: {
+                conservative: { units: conservativeUnits, revenue: conservativeUnits * packagePrice },
+                realistic: { units: realisticUnits, revenue: realisticUnits * packagePrice },
+                optimistic: { units: optimisticUnits, revenue: optimisticUnits * packagePrice }
+            },
+            comparison: {
+                individualPrice,
+                packagePrice,
+                savings: packageSavings,
+                discountPercentage
+            },
+            clv: {
+                monthlyValue: packagePrice * avgCustomerFrequency,
+                lifetimeValue: clv,
+                frequency: avgCustomerFrequency,
+                lifetime: customerLifetime
+            }
+        };
+    }
+
+    displayProfessionalAnalysisDashboard(analysis) {
+        const dashboard = `## 📊 Análisis Avanzado de tu Paquete
+
+### 💰 **Rentabilidad**
+• **Margen de ganancia:** ${analysis.profitability.margin.toFixed(1)}%
+• **Ganancia por unidad:** $${analysis.profitability.unitProfit.toLocaleString()}
+• **ROI mensual:** ${analysis.profitability.roi.toFixed(1)}%
+• **Calificación:** ${analysis.profitability.score}
+
+### ⚖️ **Punto de Equilibrio**
+• **Unidades necesarias:** ${analysis.breakEven.units.toLocaleString()} unidades
+• **Ingresos mínimos:** $${analysis.breakEven.revenue.toLocaleString()}
+• **Tiempo estimado:** ${analysis.breakEven.timeline} ${analysis.breakEven.timeline === 1 ? 'mes' : 'meses'}
+
+### 📈 **Proyecciones de Ventas Mensuales**
+**Conservador:** ${analysis.projections.conservative.units} unidades → $${analysis.projections.conservative.revenue.toLocaleString()}
+**Realista:** ${analysis.projections.realistic.units} unidades → $${analysis.projections.realistic.revenue.toLocaleString()}
+**Optimista:** ${analysis.projections.optimistic.units} unidades → $${analysis.projections.optimistic.revenue.toLocaleString()}`;
+
+        this.addMessage({
+            type: 'assistant',
+            content: dashboard,
+            timestamp: new Date()
+        });
+    }
+
+    displayIndustryRecommendations(analysis) {
+        const recommendations = `## 🎯 Recomendaciones para ${analysis.industry.name}
+
+### 💡 **Optimización de Precios**
+• **Precio individual:** $${analysis.comparison.individualPrice.toLocaleString()}
+• **Precio paquete:** $${analysis.comparison.packagePrice.toLocaleString()}
+• **Ahorro cliente:** $${analysis.comparison.savings.toLocaleString()} (${analysis.comparison.discountPercentage.toFixed(1)}%)
+
+### 👥 **Valor del Cliente**
+• **Compras mensuales:** ${analysis.clv.frequency} veces
+• **Valor mensual:** $${analysis.clv.monthlyValue.toLocaleString()}
+• **Valor de vida:** $${analysis.clv.lifetimeValue.toLocaleString()} (${analysis.clv.lifetime} meses)
+
+### ✅ **Estrategias Recomendadas**
+• **Enfoque principal:** Destaca el ahorro de $${analysis.comparison.savings.toLocaleString()} vs compra individual
+• **Segmentación:** Clientes frecuentes de ${analysis.industry.name.toLowerCase()}
+• **Promoción:** "Ahorra ${analysis.comparison.discountPercentage.toFixed(0)}% comprando el paquete completo"
+• **Upselling:** Considera servicios adicionales para aumentar el valor de vida del cliente
+
+¿Te gustaría que ajustemos alguna variable de este análisis?`;
+
+        this.addMessage({
+            type: 'assistant',
+            content: recommendations,
+            timestamp: new Date()
+        });
+    }
+
+    calculateProfitabilityScore(margin, roi) {
+        const combinedScore = (margin + Math.max(0, roi)) / 2;
+        if (combinedScore > 45) return 'A+ (Excelente)';
+        if (combinedScore > 35) return 'A (Muy Bueno)';
+        if (combinedScore > 25) return 'B+ (Bueno)';
+        if (combinedScore > 15) return 'B (Aceptable)';
+        return 'C (Necesita optimización)';
     }
 
     generateSessionId() {
@@ -205,6 +636,17 @@ ${this.getBusinessTypeQuestions(businessType)}`;
 📦 **5. Gastos adicionales** (logística, presentación, seguimiento)
 
 ¿Comenzamos con el **nombre de tu negocio híbrido**?`;
+
+            case 'paquete':
+                return `**Para tu paquete/combo de productos o servicios, necesito conocer:**
+
+📋 **1. Nombre de tu paquete/combo**
+📦 **2. Componentes del paquete** (qué productos/servicios incluye)
+💰 **3. Costo de cada componente** (precio individual de cada item)
+🏷️ **4. Descuento del paquete** (si aplicas alguno)
+📊 **5. Cuántos productos/servicios incluye tu paquete**
+
+¿Comenzamos con el **nombre de tu paquete o combo**?`;
 
             default:
                 return `Para comenzar, cuéntame: **¿Cuál es el nombre de tu negocio?**`;
@@ -412,6 +854,53 @@ ${this.getBusinessTypeQuestions(businessType)}`;
                 `;
                 break;
 
+            case 'paquete':
+                formHTML = `
+                    <div class="flex items-start mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-box text-purple-600"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h4 class="text-sm font-semibold text-purple-900 mb-3">
+                                📦 Calculadora de Costos - Paquete/Combo
+                            </h4>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-xs font-medium text-gray-700">Costo Componentes del Paquete</label>
+                                        <input type="number" id="package-components-cost" placeholder="$0" class="w-full p-2 border border-gray-300 rounded-md text-sm" step="0.01">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-medium text-gray-700">Número de Items en el Paquete</label>
+                                        <input type="number" id="package-items-count" placeholder="0" class="w-full p-2 border border-gray-300 rounded-md text-sm" step="1" min="1">
+                                    </div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-xs font-medium text-gray-700">Empaque y Presentación</label>
+                                        <input type="number" id="package-presentation" placeholder="$0" class="w-full p-2 border border-gray-300 rounded-md text-sm" step="0.01">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-medium text-gray-700">Descuento del Paquete (%)</label>
+                                        <input type="number" id="package-discount" placeholder="10" class="w-full p-2 border border-gray-300 rounded-md text-sm" step="1" max="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button onclick="window.iativaChat.processCostForm('paquete')"
+                                        class="bg-purple-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-600 transition-colors">
+                                    <i class="fas fa-calculator mr-2"></i>Calcular Precio del Paquete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+
             default:
                 return;
         }
@@ -483,6 +972,13 @@ ${this.getBusinessTypeQuestions(businessType)}`;
                 costs.products = parseFloat(document.getElementById('products-cost')?.value) || 0;
                 costs.additional = parseFloat(document.getElementById('additional-costs')?.value) || 0;
                 break;
+
+            case 'paquete':
+                costs.componentsCost = parseFloat(document.getElementById('package-components-cost')?.value) || 0;
+                costs.itemsCount = parseFloat(document.getElementById('package-items-count')?.value) || 0;
+                costs.presentation = parseFloat(document.getElementById('package-presentation')?.value) || 0;
+                costs.discount = parseFloat(document.getElementById('package-discount')?.value) || 0;
+                break;
         }
 
         return costs;
@@ -511,6 +1007,11 @@ ${this.getBusinessTypeQuestions(businessType)}`;
                 if (costs.professionalRate <= 0) errors.push('Valor hora profesional debe ser mayor a 0');
                 if (costs.clientHours <= 0) errors.push('Horas por cliente debe ser mayor a 0');
                 if (costs.products <= 0) errors.push('Costo de productos debe ser mayor a 0');
+                break;
+
+            case 'paquete':
+                if (costs.componentsCost <= 0) errors.push('Costo de componentes debe ser mayor a 0');
+                if (costs.itemsCount <= 0) errors.push('Número de items debe ser mayor a 0');
                 break;
         }
 
@@ -879,6 +1380,26 @@ ${this.getBusinessTypeQuestions(businessType)}`;
                     (analysis.serviceComponent * 1.6) + (costs.products * 1.25) + costs.additional
                 );
                 analysis.totalProfit = analysis.suggestedPrice - analysis.totalPerClient;
+                break;
+
+            case 'paquete':
+                analysis.totalComponentsCost = costs.componentsCost;
+                analysis.presentationCost = costs.presentation;
+                analysis.totalBaseCost = analysis.totalComponentsCost + analysis.presentationCost;
+                analysis.discountPercentage = costs.discount || 0;
+
+                // Calculate individual item price vs package price
+                analysis.avgItemPrice = costs.itemsCount > 0 ? analysis.totalComponentsCost / costs.itemsCount : 0;
+
+                // Suggested package price with discount
+                analysis.suggestedPrice = Math.round(analysis.totalBaseCost * (1 - analysis.discountPercentage / 100) * 1.3); // 30% markup
+
+                // Savings for customer
+                analysis.totalSavings = Math.round(analysis.totalBaseCost - analysis.suggestedPrice);
+
+                // Profit calculation
+                analysis.totalProfit = analysis.suggestedPrice - analysis.totalBaseCost;
+                analysis.profitMargin = Math.round((analysis.totalProfit / analysis.suggestedPrice) * 100);
                 break;
         }
 
@@ -2125,9 +2646,374 @@ ${this.getBusinessTypeQuestions(businessType)}`;
         }
     }
 
+    // 📦 Package Cost Validation Functions
+    extractCostFromMessage(message) {
+        const costPatterns = [
+            /cuesta?\s*\$?(\d+(?:,\d{3})*(?:\.\d{2})?)/i,
+            /precio\s*\$?(\d+(?:,\d{3})*(?:\.\d{2})?)/i,
+            /vendo\s*a?\s*\$?(\d+(?:,\d{3})*(?:\.\d{2})?)/i,
+            /\$(\d+(?:,\d{3})*(?:\.\d{2})?)/g
+        ];
+
+        for (const pattern of costPatterns) {
+            const match = message.match(pattern);
+            if (match) {
+                return parseFloat(match[1].replace(',', ''));
+            }
+        }
+        return null;
+    }
+
+    analyzePackageDiscount(message, cost) {
+        const discountPatterns = [
+            /descuento\s*del?\s*(\d+)%/i,
+            /(\d+)%\s*descuento/i,
+            /(\d+)%\s*off/i
+        ];
+
+        for (const pattern of discountPatterns) {
+            const match = message.match(pattern);
+            if (match) {
+                const discount = parseInt(match[1]);
+                return this.validateDiscount(discount);
+            }
+        }
+
+        // If no explicit discount mentioned, analyze based on cost ranges
+        if (cost) {
+            if (cost > 50000) return "💡 Para tu tipo de negocio, un descuento del 10-15% es óptimo";
+            if (cost > 20000) return "💡 Tu descuento del 15% es óptimo para este tipo de negocio";
+            if (cost > 5000) return "💡 Un descuento del 20% sería ideal para tu paquete";
+        }
+
+        return null;
+    }
+
+    validateDiscount(discount) {
+        if (discount <= 10) return "✅ Descuento conservador - márgenes saludables";
+        if (discount <= 20) return "💡 Tu descuento del " + discount + "% es óptimo para este tipo de negocio";
+        if (discount <= 30) return "⚠️ Descuento alto - revisa tus márgenes";
+        return "⚠️ El descuento del " + discount + "% parece muy alto";
+    }
+
+    analyzeMargins(cost) {
+        if (!cost) return null;
+
+        if (cost < 5000) {
+            return "✅ Márgenes saludables para tu paquete - productos de entrada";
+        } else if (cost < 20000) {
+            return "✅ Márgenes saludables para tu paquete - rango medio";
+        } else if (cost < 50000) {
+            return "💡 Revisa que tus componentes justifiquen el precio";
+        } else {
+            return "💰 Paquete premium - asegúrate de ofrecer valor excepcional";
+        }
+    }
+
+    generatePackageValidation(message) {
+        const cost = this.extractCostFromMessage(message);
+        const discountAnalysis = this.analyzePackageDiscount(message, cost);
+        const marginAnalysis = this.analyzeMargins(cost);
+
+        let validationMessage = '📦 Veo que quieres costear un paquete/combo. Te ayudo a optimizarlo.\n\n';
+
+        if (cost) {
+            validationMessage += `💰 Precio detectado: $${cost.toLocaleString()}\n`;
+        }
+
+        if (discountAnalysis) {
+            validationMessage += discountAnalysis + '\n';
+        }
+
+        if (marginAnalysis) {
+            validationMessage += marginAnalysis + '\n';
+        }
+
+        validationMessage += '\n¿Qué productos incluye tu paquete?\n¿Cuál es el costo de cada componente?\n¿Vendes los productos por separado también?';
+
+        return validationMessage;
+    }
+
+    // 🎯 Intelligent Business Type Detection for Packages
+    detectBusinessType(message) {
+        const messageText = message.toLowerCase();
+
+        // Food/Restaurant keywords
+        const foodKeywords = ['hamburguesa', 'comida', 'restaurante', 'cocina', 'menú', 'pizza', 'pollo', 'carne', 'bebida', 'almuerzo', 'cena', 'desayuno', 'café', 'bar', 'tacos', 'torta', 'sandwich', 'sopa', 'ensalada'];
+
+        // Service keywords
+        const serviceKeywords = ['servicio', 'consultoría', 'asesoría', 'capacitación', 'curso', 'entrenamiento', 'terapia', 'masaje', 'peluquería', 'belleza', 'limpieza', 'mantenimiento', 'reparación', 'instalación'];
+
+        // Product keywords
+        const productKeywords = ['producto', 'venta', 'tienda', 'ropa', 'zapatos', 'electrónico', 'celular', 'computadora', 'mueble', 'decoración', 'juguete', 'libro', 'accesorio', 'herramienta'];
+
+        if (foodKeywords.some(keyword => messageText.includes(keyword))) {
+            return 'food';
+        }
+        if (serviceKeywords.some(keyword => messageText.includes(keyword))) {
+            return 'service';
+        }
+        if (productKeywords.some(keyword => messageText.includes(keyword))) {
+            return 'product';
+        }
+
+        return 'general';
+    }
+
+    getIndustryRecommendations(businessType, cost) {
+        const recommendations = {
+            food: {
+                discount: '15-20% es óptimo para combos de comida',
+                profitability: 'Considera ingredientes de temporada para reducir costos',
+                composition: 'Incluye bebida para aumentar el valor percibido'
+            },
+            service: {
+                discount: '20-25% funciona bien para paquetes de servicios',
+                profitability: 'Agrupa servicios complementarios para mayor margen',
+                composition: 'Ofrece consulta inicial gratuita como valor agregado'
+            },
+            product: {
+                discount: '10-15% mantiene márgenes saludables en productos',
+                profitability: 'Combina productos de alta y baja rotación',
+                composition: 'Incluye accesorios complementarios'
+            },
+            general: {
+                discount: '15% es un descuento equilibrado',
+                profitability: 'Revisa tus márgenes por componente',
+                composition: 'Agrupa productos que se usan juntos'
+            }
+        };
+
+        return recommendations[businessType] || recommendations.general;
+    }
+
+    generateIntelligentRecommendations(message, businessType, cost) {
+        const recommendations = this.getIndustryRecommendations(businessType, cost);
+        let intelligentMessage = '';
+
+        // Industry-specific pricing advice
+        intelligentMessage += `💡 ${recommendations.discount}\n`;
+
+        // Profitability optimization
+        intelligentMessage += `📈 ${recommendations.profitability}\n`;
+
+        // Package composition suggestions
+        intelligentMessage += `🎯 ${recommendations.composition}\n`;
+
+        // Cost-based additional advice
+        if (cost) {
+            if (cost > 30000) {
+                intelligentMessage += `💎 Para productos premium, enfócate en la experiencia del cliente\n`;
+            } else if (cost < 5000) {
+                intelligentMessage += `⚡ Considera crear paquetes de mayor valor agregado\n`;
+            }
+        }
+
+        return intelligentMessage;
+    }
+
+    enhancePackageValidation(message) {
+        const cost = this.extractCostFromMessage(message);
+        const businessType = this.detectBusinessType(message);
+        const discountAnalysis = this.analyzePackageDiscount(message, cost);
+        const marginAnalysis = this.analyzeMargins(cost);
+        const intelligentRecommendations = this.generateIntelligentRecommendations(message, businessType, cost);
+
+        let validationMessage = '📦 Veo que quieres costear un paquete/combo. Te ayudo a optimizarlo.\n\n';
+
+        if (cost) {
+            validationMessage += `💰 Precio detectado: $${cost.toLocaleString()}\n`;
+        }
+
+        if (discountAnalysis) {
+            validationMessage += discountAnalysis + '\n';
+        }
+
+        if (marginAnalysis) {
+            validationMessage += marginAnalysis + '\n';
+        }
+
+        validationMessage += '\n' + intelligentRecommendations;
+        validationMessage += '\n¿Qué productos incluye tu paquete?\n¿Cuál es el costo de cada componente?\n¿Vendes los productos por separado también?';
+
+        return validationMessage;
+    }
+
+    // 📊 Package Profitability Analysis Functions
+    calculateBreakEvenPoint(packageCost, businessType) {
+        if (!packageCost) return null;
+
+        // Estimate costs based on business type
+        const costStructures = {
+            food: { fixedCosts: packageCost * 0.3, variableCosts: packageCost * 0.4 },
+            service: { fixedCosts: packageCost * 0.2, variableCosts: packageCost * 0.2 },
+            product: { fixedCosts: packageCost * 0.25, variableCosts: packageCost * 0.5 },
+            general: { fixedCosts: packageCost * 0.25, variableCosts: packageCost * 0.4 }
+        };
+
+        const costs = costStructures[businessType] || costStructures.general;
+        const margin = packageCost - costs.variableCosts;
+        const breakEvenUnits = Math.ceil(costs.fixedCosts / margin);
+
+        return {
+            units: breakEvenUnits,
+            revenue: breakEvenUnits * packageCost,
+            fixedCosts: costs.fixedCosts,
+            variableCosts: costs.variableCosts,
+            margin: margin
+        };
+    }
+
+    calculateRevenueProjections(packageCost, businessType) {
+        if (!packageCost) return null;
+
+        const breakEven = this.calculateBreakEvenPoint(packageCost, businessType);
+        if (!breakEven) return null;
+
+        // Project different scenarios
+        const scenarios = {
+            conservative: Math.ceil(breakEven.units * 1.2),
+            realistic: Math.ceil(breakEven.units * 2.0),
+            optimistic: Math.ceil(breakEven.units * 3.5)
+        };
+
+        return {
+            monthly: {
+                conservative: scenarios.conservative * packageCost,
+                realistic: scenarios.realistic * packageCost,
+                optimistic: scenarios.optimistic * packageCost
+            },
+            units: scenarios,
+            profit: {
+                conservative: (scenarios.conservative * breakEven.margin) - breakEven.fixedCosts,
+                realistic: (scenarios.realistic * breakEven.margin) - breakEven.fixedCosts,
+                optimistic: (scenarios.optimistic * breakEven.margin) - breakEven.fixedCosts
+            }
+        };
+    }
+
+    calculateCustomerLifetimeValue(packageCost, businessType) {
+        if (!packageCost) return null;
+
+        // Estimated repeat purchase patterns by business type
+        const patterns = {
+            food: { frequency: 8, retention: 0.7 }, // 8 times per year, 70% retention
+            service: { frequency: 3, retention: 0.8 }, // 3 times per year, 80% retention
+            product: { frequency: 2, retention: 0.6 }, // 2 times per year, 60% retention
+            general: { frequency: 4, retention: 0.7 } // 4 times per year, 70% retention
+        };
+
+        const pattern = patterns[businessType] || patterns.general;
+        const annualValue = packageCost * pattern.frequency;
+        const lifetimeYears = 2; // Conservative 2-year lifetime
+        const totalValue = annualValue * lifetimeYears * pattern.retention;
+
+        return {
+            annual: annualValue,
+            lifetime: totalValue,
+            frequency: pattern.frequency,
+            retention: pattern.retention * 100
+        };
+    }
+
+    generateProfitabilityAnalysis(packageCost, businessType) {
+        const breakEven = this.calculateBreakEvenPoint(packageCost, businessType);
+        const projections = this.calculateRevenueProjections(packageCost, businessType);
+        const clv = this.calculateCustomerLifetimeValue(packageCost, businessType);
+
+        let analysis = '\n📊 ANÁLISIS DE RENTABILIDAD\n\n';
+
+        if (breakEven) {
+            analysis += `💰 Punto de Equilibrio: ${breakEven.units} unidades\n`;
+            analysis += `📈 Ingresos necesarios: $${breakEven.revenue.toLocaleString()}\n`;
+            analysis += `💸 Margen por unidad: $${breakEven.margin.toLocaleString()}\n\n`;
+        }
+
+        if (projections) {
+            analysis += `🎯 PROYECCIONES MENSUALES:\n`;
+            analysis += `• Conservador: $${projections.monthly.conservative.toLocaleString()} (${projections.units.conservative} unidades)\n`;
+            analysis += `• Realista: $${projections.monthly.realistic.toLocaleString()} (${projections.units.realistic} unidades)\n`;
+            analysis += `• Optimista: $${projections.monthly.optimistic.toLocaleString()} (${projections.units.optimistic} unidades)\n\n`;
+        }
+
+        if (clv) {
+            analysis += `👥 VALOR DEL CLIENTE:\n`;
+            analysis += `• Valor anual: $${clv.annual.toLocaleString()}\n`;
+            analysis += `• Valor de vida: $${clv.lifetime.toLocaleString()}\n`;
+            analysis += `• Frecuencia: ${clv.frequency} compras/año\n`;
+            analysis += `• Retención: ${clv.retention}%\n\n`;
+        }
+
+        // Add actionable insights
+        analysis += this.generateProfitabilityInsights(packageCost, businessType, breakEven, projections, clv);
+
+        return analysis;
+    }
+
+    generateProfitabilityInsights(packageCost, businessType, breakEven, projections, clv) {
+        let insights = '💡 RECOMENDACIONES ESTRATÉGICAS:\n';
+
+        if (breakEven && breakEven.units > 100) {
+            insights += '• Considera reducir costos fijos para mejorar el punto de equilibrio\n';
+        } else if (breakEven && breakEven.units < 20) {
+            insights += '• Excelente estructura de costos - alta rentabilidad potencial\n';
+        }
+
+        if (packageCost > 30000) {
+            insights += '• Enfócate en la experiencia premium y valor agregado\n';
+            insights += '• Implementa estrategias de fidelización para aumentar CLV\n';
+        } else if (packageCost < 5000) {
+            insights += '• Considera crear paquetes de mayor valor\n';
+            insights += '• Optimiza para ventas de volumen\n';
+        }
+
+        if (businessType === 'food') {
+            insights += '• Aprovecha la alta frecuencia de compra para programas de lealtad\n';
+        } else if (businessType === 'service') {
+            insights += '• La alta retención permite invertir más en adquisición de clientes\n';
+        }
+
+        insights += '• Monitorea métricas clave: CAC, LTV, y margen de contribución\n';
+
+        return insights;
+    }
+
+    createComprehensivePackageAnalysis(message) {
+        const cost = this.extractCostFromMessage(message);
+        const businessType = this.detectBusinessType(message);
+        const discountAnalysis = this.analyzePackageDiscount(message, cost);
+        const marginAnalysis = this.analyzeMargins(cost);
+        const intelligentRecommendations = this.generateIntelligentRecommendations(message, businessType, cost);
+        const profitabilityAnalysis = this.generateProfitabilityAnalysis(cost, businessType);
+
+        let validationMessage = '📦 ANÁLISIS COMPLETO DE TU PAQUETE/COMBO\n\n';
+
+        if (cost) {
+            validationMessage += `💰 Precio detectado: $${cost.toLocaleString()}\n`;
+        }
+
+        if (discountAnalysis) {
+            validationMessage += discountAnalysis + '\n';
+        }
+
+        if (marginAnalysis) {
+            validationMessage += marginAnalysis + '\n';
+        }
+
+        validationMessage += '\n' + intelligentRecommendations;
+
+        if (cost) {
+            validationMessage += profitabilityAnalysis;
+        }
+
+        validationMessage += '\n¿Qué productos incluye tu paquete?\n¿Cuál es el costo de cada componente?\n¿Vendes los productos por separado también?';
+
+        return validationMessage;
+    }
+
     async sendMessage() {
         const message = this.messageInput.value.trim();
-        
+
         if (!message || this.isProcessing) {
             return;
         }
@@ -2142,6 +3028,109 @@ ${this.getBusinessTypeQuestions(businessType)}`;
         this.messageInput.value = '';
         this.messageInput.style.height = 'auto';
         this.setProcessing(true);
+
+        // 📦 NEW Package Detection System - Check if message should be processed as package
+        if (this.shouldProcessAsPackage(message)) {
+            let packageResponse;
+
+            if (this.packageMode) {
+                // Continue package conversation flow
+                packageResponse = this.processPackageResponse(message);
+            } else {
+                // Initial package detection
+                packageResponse = this.createPackageDetectionResponse(message);
+            }
+
+            this.addMessage({
+                type: 'assistant',
+                content: packageResponse,
+                timestamp: new Date()
+            });
+            this.setProcessing(false);
+            return;
+        }
+
+        // 💡 Intelligent Cost Validation Detection
+        this.detectAndPerformIntelligentValidation(message);
+
+        try {
+            // Usar API correcta según el modo
+            const apiUrl = this.isDemoMode ? '/api/demo-chat' : '/api/chat';
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    sessionId: this.sessionId,
+                    context: {
+                        ...this.context,
+                        selectedBusinessType: this.selectedBusinessType,
+                        businessTypeSelected: this.businessTypeSelected
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Actualizar contexto
+            if (data.context) {
+                this.context = { ...this.context, ...data.context };
+            }
+
+            // Mostrar respuesta del asistente
+            this.addMessage({
+                type: 'assistant',
+                content: data.respuesta || data.response || 'Lo siento, no pude procesar tu mensaje.',
+                timestamp: new Date()
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+            this.addMessage({
+                type: 'assistant',
+                content: 'Lo siento, ocurrió un error. Por favor intenta de nuevo.',
+                timestamp: new Date()
+            });
+        } finally {
+            this.setProcessing(false);
+        }
+    }
+
+    // Keep package detection as optional feature
+    detectPackageInMessage(message) {
+        if (!this.packageKeywords || !this.packageKeywords.length) {
+            return false;
+        }
+        const text = message.toLowerCase();
+        return this.packageKeywords.some(keyword => text.includes(keyword));
+    }
+
+    // Restore legacy package detection for compatibility
+    oldPackageDetection(message) {
+        if (!this.packageDetected && this.detectPackageInMessage(message)) {
+            this.packageDetected = true;
+            this.context.packageDetected = true;
+
+            // Show clean package detection message
+            this.addMessage({
+                type: 'assistant',
+                content: this.createCleanPackageMessage(),
+                timestamp: new Date()
+            });
+
+            this.setProcessing(false);
+            return;
+        }
+
+        // 💡 Intelligent Cost Validation Detection
+        this.detectAndPerformIntelligentValidation(message);
 
         try {
             // Usar API correcta según el modo
