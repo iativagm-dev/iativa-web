@@ -116,7 +116,7 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Opción 1: Producto que fabricas/transformas -->
                     <div class="business-type-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-iativa-blue group"
                          data-business-type="manufactura"
@@ -172,6 +172,20 @@
                             <p class="text-xs text-gray-500 mt-2">Servicio más insumos/productos</p>
                         </div>
                     </div>
+
+                    <!-- Opción 5: Paquete/Combo -->
+                    <div class="business-type-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-iativa-blue group"
+                         data-business-type="paquete"
+                         data-business-name="Paquete o combo de productos/servicios">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">📦</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Paquete/Combo</h3>
+                            <p class="text-gray-600 text-sm">Paquete o combo de productos/servicios</p>
+                            <p class="text-xs text-gray-500 mt-2">Análisis de bundles, combos, kits</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="text-center">
@@ -182,31 +196,287 @@
                 </div>
             </div>
 
+            <!-- Package Builder Interface -->
+            <div id="package-builder-interface" class="p-6 space-y-6 bg-gradient-to-br from-blue-50 to-purple-50" style="display: none;">
+                <!-- Package Builder Header -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-iativa-blue to-purple-600 rounded-full mb-4">
+                        <i class="fas fa-box-open text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-wrench mr-2 text-iativa-blue"></i>
+                        Constructor de Paquetes
+                    </h2>
+                    <p class="text-gray-600">
+                        Crea y optimiza tu paquete con análisis detallado de componentes
+                    </p>
+                </div>
+
+                <!-- Package Information Card -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">
+                            <i class="fas fa-info-circle mr-2 text-blue-500"></i>
+                            Información del Paquete
+                        </h3>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                            📦 Modo Paquete
+                        </span>
+                    </div>
+                    <div id="package-info-display" class="bg-blue-50 rounded-lg p-4">
+                        <p class="text-gray-700 mb-2"><strong>Descripción:</strong></p>
+                        <p id="package-description" class="text-gray-600 italic">
+                            Se mostrará la descripción de tu paquete aquí...
+                        </p>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            <span id="sells-individually" class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium" style="display: none;">
+                                ✅ Venta Individual
+                            </span>
+                            <span id="has-discount" class="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs font-medium" style="display: none;">
+                                🏷️ Con Descuento
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Components Builder -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800">
+                            <i class="fas fa-puzzle-piece mr-2 text-green-500"></i>
+                            Componentes del Paquete
+                        </h3>
+                        <button id="add-component-btn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                            <i class="fas fa-plus mr-2"></i>
+                            Agregar Producto
+                        </button>
+                    </div>
+
+                    <!-- Components List -->
+                    <div id="package-components-list" class="space-y-3">
+                        <!-- Components will be added dynamically -->
+                    </div>
+
+                    <!-- Add Component Form -->
+                    <div id="add-component-form" class="mt-6 p-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300" style="display: none;">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-tag mr-1"></i>
+                                    Nombre del Producto
+                                </label>
+                                <input type="text" id="component-name" placeholder="Ej: Hamburguesa"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-dollar-sign mr-1"></i>
+                                    Costo Individual
+                                </label>
+                                <input type="number" id="component-cost" placeholder="5000"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div class="flex items-end">
+                                <button id="save-component-btn" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Package Totals -->
+                    <div class="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-200">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Componentes</p>
+                                <p id="total-components" class="text-2xl font-bold text-blue-600">0</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Costo Total</p>
+                                <p id="total-package-cost" class="text-2xl font-bold text-green-600">$0</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Precio Sugerido</p>
+                                <p id="suggested-package-price" class="text-2xl font-bold text-purple-600">$0</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Ganancia</p>
+                                <p id="package-profit" class="text-2xl font-bold text-orange-600">$0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package vs Individual Comparison -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">
+                        <i class="fas fa-balance-scale mr-2 text-purple-500"></i>
+                        Comparación: Paquete vs Individual
+                    </h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-700">Producto</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-center font-semibold text-gray-700">Costo</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-center font-semibold text-gray-700">Precio Individual</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-center font-semibold text-gray-700">En Paquete</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-center font-semibold text-gray-700">Ahorro</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comparison-table-body">
+                                <!-- Rows will be added dynamically -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-gradient-to-r from-blue-50 to-purple-50 font-bold">
+                                    <td class="border border-gray-200 px-4 py-3">TOTAL</td>
+                                    <td id="total-cost-comparison" class="border border-gray-200 px-4 py-3 text-center text-green-600">$0</td>
+                                    <td id="total-individual-comparison" class="border border-gray-200 px-4 py-3 text-center text-blue-600">$0</td>
+                                    <td id="total-package-comparison" class="border border-gray-200 px-4 py-3 text-center text-purple-600">$0</td>
+                                    <td id="total-savings-comparison" class="border border-gray-200 px-4 py-3 text-center text-orange-600">$0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- Discount Recommendations -->
+                    <div class="mt-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-4 border border-yellow-200">
+                        <h4 class="font-semibold text-gray-800 mb-3">
+                            <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                            Recomendaciones de Descuento
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="text-center">
+                                <p class="text-sm font-medium text-gray-600">Descuento Óptimo</p>
+                                <p id="optimal-discount" class="text-xl font-bold text-orange-600">15%</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm font-medium text-gray-600">Ahorro Cliente</p>
+                                <p id="customer-savings" class="text-xl font-bold text-green-600">$0</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm font-medium text-gray-600">Margen Mantenido</p>
+                                <p id="maintained-margin" class="text-xl font-bold text-blue-600">25%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Industry Configuration & Validation Alerts -->
+                <div class="space-y-6">
+                    <!-- Industry-specific Configuration -->
+                    <div id="industry-info">
+                        <!-- Industry configuration will be displayed here -->
+                    </div>
+
+                    <!-- Validation Alerts -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                            Validación y Alertas
+                        </h3>
+                        <div id="validation-alerts">
+                            <!-- Validation alerts will be displayed here -->
+                        </div>
+                    </div>
+
+                    <!-- Profitability Analysis -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">
+                            <i class="fas fa-chart-pie mr-2 text-teal-500"></i>
+                            Análisis de Rentabilidad Avanzado
+                        </h3>
+                        <div id="profitability-analysis">
+                            <!-- Profitability analysis will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Recommendations Panel -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">
+                        <i class="fas fa-magic mr-2 text-indigo-500"></i>
+                        Recomendaciones Estratégicas
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Bundle Optimization -->
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                            <h4 class="font-semibold text-blue-800 mb-3">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Optimización de Paquetes
+                            </h4>
+                            <ul class="space-y-2 text-sm text-blue-700">
+                                <li><i class="fas fa-check mr-2"></i>Considera crear niveles (Básico, Premium, Deluxe)</li>
+                                <li><i class="fas fa-check mr-2"></i>Agrupa productos complementarios</li>
+                                <li><i class="fas fa-check mr-2"></i>Ofrece personalización del paquete</li>
+                                <li><i class="fas fa-check mr-2"></i>Promociona el valor agregado</li>
+                            </ul>
+                        </div>
+
+                        <!-- Cross-selling Opportunities -->
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                            <h4 class="font-semibold text-green-800 mb-3">
+                                <i class="fas fa-arrows-alt mr-2"></i>
+                                Oportunidades de Venta Cruzada
+                            </h4>
+                            <ul class="space-y-2 text-sm text-green-700">
+                                <li><i class="fas fa-plus mr-2"></i>Productos de temporada especiales</li>
+                                <li><i class="fas fa-plus mr-2"></i>Complementos de último momento</li>
+                                <li><i class="fas fa-plus mr-2"></i>Servicios adicionales premium</li>
+                                <li><i class="fas fa-plus mr-2"></i>Membresías o suscripciones</li>
+                            </ul>
+                        </div>
+
+                        <!-- Margin Optimization -->
+                        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200">
+                            <h4 class="font-semibold text-purple-800 mb-3">
+                                <i class="fas fa-percentage mr-2"></i>
+                                Optimización de Márgenes
+                            </h4>
+                            <ul class="space-y-2 text-sm text-purple-700">
+                                <li><i class="fas fa-arrow-up mr-2"></i>Aumenta valor percibido del conjunto</li>
+                                <li><i class="fas fa-arrow-up mr-2"></i>Destaca ahorro vs compra individual</li>
+                                <li><i class="fas fa-arrow-up mr-2"></i>Crea urgencia con ofertas limitadas</li>
+                                <li><i class="fas fa-arrow-up mr-2"></i>Implementa programas de lealtad</li>
+                            </ul>
+                        </div>
+
+                        <!-- Market Positioning -->
+                        <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg p-4 border border-orange-200">
+                            <h4 class="font-semibold text-orange-800 mb-3">
+                                <i class="fas fa-target mr-2"></i>
+                                Posicionamiento de Mercado
+                            </h4>
+                            <ul class="space-y-2 text-sm text-orange-700">
+                                <li><i class="fas fa-star mr-2"></i>Enfatiza conveniencia y practicidad</li>
+                                <li><i class="fas fa-star mr-2"></i>Resalta beneficios únicos del paquete</li>
+                                <li><i class="fas fa-star mr-2"></i>Compara con competencia de forma ventajosa</li>
+                                <li><i class="fas fa-star mr-2"></i>Utiliza testimonios de clientes satisfechos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Continue to Chat Button -->
+                <div class="text-center pt-2">
+                    <button id="continue-with-package-btn" class="bg-gradient-to-r from-iativa-blue to-purple-600 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Continuar con Análisis de Costeo
+                    </button>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Proceder al cálculo detallado de costos del paquete
+                    </p>
+                </div>
+            </div>
+
             <!-- Chat Messages -->
             <div id="chat-messages" class="p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto bg-gray-50" style="display: none;">
                 <!-- Los mensajes aparecerán aquí -->
             </div>
 
-            <!-- Chat Input -->
-            <div class="p-6 bg-white border-t border-gray-200">
-                <div class="flex space-x-3">
-                    <input type="text" 
-                           id="message-input" 
-                           placeholder="Escribe tu mensaje... (ej: Mi negocio se llama...)" 
-                           class="flex-1 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-iativa-blue focus:border-transparent text-lg"
-                           maxlength="500">
-                    <button id="send-button" 
-                            class="px-8 py-4 bg-gradient-to-r from-iativa-blue to-iativa-green text-white rounded-xl hover:shadow-lg transition-all transform hover:scale-105 font-semibold">
-                        <i class="fas fa-paper-plane mr-2"></i>Enviar
-                    </button>
-                </div>
-                
-                <!-- Contador de caracteres -->
-                <div class="flex justify-between items-center mt-2 text-sm text-gray-500">
-                    <span>💡 Tip: Sé específico para obtener mejores resultados</span>
-                    <span id="char-counter">0/500</span>
-                </div>
-            </div>
         </div>
 
         <!-- Información adicional -->
@@ -301,6 +571,12 @@
         });
     </script>
     <script src="/js/chat.js"></script>
+    <script src="/js/nuclear-mode.js"></script>
+    <script src="/js/package-detection.js"></script>
+    <script src="/js/package-calculator.js"></script>
+    <script src="/js/package-recommendation-engine.js"></script>
+    <script src="/js/visual-package-analysis.js"></script>
+    <script src="/js/iativa-package-integration.js"></script>
     <script>
         // Sobrescribir algunas funciones para modo demo
         document.addEventListener('DOMContentLoaded', function() {
@@ -368,6 +644,51 @@
                     saveModal.classList.add('flex');
                 }
             };
+        });
+    </script>
+
+    <!-- Package Builder JavaScript -->
+    <script src="/js/package-builder.js"></script>
+
+    <!-- Package Integration Script -->
+    <script>
+        // Initialize package integration when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to initialize package chat flow
+            window.initializePackageChat = function(packageData) {
+                console.log('🚀 Initializing package chat with data:', packageData);
+
+                // Add package context message to chat
+                const packageSummary = `
+📦 **Paquete Configurado:**
+- ${packageData.components.length} componentes
+- Costo total: $${packageData.totals.cost.toLocaleString()}
+- Componentes: ${packageData.components.map(c => c.name).join(', ')}
+
+Continuemos con el análisis de costeo...
+                `.trim();
+
+                if (window.addMessageToChat) {
+                    window.addMessageToChat(packageSummary, 'assistant');
+                }
+
+                // Send package data to agent for analysis
+                if (window.sendMessage) {
+                    const packageMessage = `Analizar paquete con componentes: ${JSON.stringify(packageData)}`;
+                    window.sendMessage(packageMessage, true); // Silent message for processing
+                }
+            };
+
+            // Function to show package builder from agent
+            window.showPackageBuilder = function(packageInfo) {
+                if (window.packageBuilder) {
+                    window.packageBuilder.showPackageBuilder(packageInfo);
+                }
+            };
+
+            // Production mode - debug functionality disabled
+
+            console.log('📦 Package integration initialized');
         });
     </script>
 </body>
